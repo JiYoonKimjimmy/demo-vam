@@ -1,8 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.springframework.boot.gradle.tasks.bundling.BootJar
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 plugins {
     val kotlinVersion = "2.0.0"
@@ -12,23 +10,23 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     id("org.springframework.boot") version "3.3.0"
     id("io.spring.dependency-management") version "1.1.5"
-    id("com.gorylenko.gradle-git-properties") version "2.4.2"
+    id("com.gorylenko.gradle-git-properties") version "2.4.1"
     jacoco
 }
 
 repositories {
     mavenCentral()
+    maven { url = uri("http://nexus.konadev.com/content/repositories/public"); isAllowInsecureProtocol = true }
 }
 
 subprojects {
 
     apply(plugin = "java")
     apply(plugin = "kotlin")
+    apply(plugin = "kotlin-kapt")
     apply(plugin = "kotlin-spring")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
-    apply(plugin = "com.gorylenko.gradle-git-properties")
-    apply(plugin = "jacoco")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -41,6 +39,7 @@ subprojects {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url = uri("http://nexus.konadev.com/content/repositories/public"); isAllowInsecureProtocol = true }
         maven { url = uri("http://nexus.konadev.com/content/repositories/release"); isAllowInsecureProtocol = true }
@@ -52,22 +51,12 @@ subprojects {
 
     dependencies {
         implementation(kotlin("stdlib-jdk8"))
-        implementation("org.springframework.boot:spring-boot-starter-web")
-//        implementation("org.springframework.boot:spring-boot-starter-actuator")
-//        implementation("org.springframework.boot:spring-boot-starter-undertow")
-//        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-
-//        implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
-//        kapt("org.springframework.boot:spring-boot-configuration-processor")
-
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 //        implementation("com.konasl.commonlibs:spring-web:7.0.1")
 //        implementation("com.konasl.commonlibs:logger:7.0.1")
 //        implementation("com.cubeone", "CubeOneAPI", "1.0.0")
-
-//        runtimeOnly("com.oracle.database.jdbc:ojdbc11")
 
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "junit")
@@ -86,59 +75,52 @@ subprojects {
         testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
     }
 
-    gitProperties {
-        val primary = "${project.property("version.primary")}"
-        val major = "${project.property("version.major")}"
-        val minor = "${project.property("version.minor")}"
-
-        val buildVersion = listOf(primary, major, minor).joinToString(".")
-        val buildTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-
-        println("buildVersion = $buildVersion")
-        println("buildDateTime = $buildTime")
-
-        customProperty("git.build.version", buildVersion)
-        customProperty("git.build.time", buildTime)
-    }
-
     tasks.withType(KotlinCompilationTask::class.java) {
         compilerOptions.freeCompilerArgs.add("-Xjsr305=strict")
     }
+}
 
-    tasks.withType<Test> {
-        useJUnitPlatform()
-        finalizedBy(tasks.jacocoTestReport)
+tasks.withType<Test> {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        html.required = true
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
     }
 
-    jacoco {
-        toolVersion = "0.8.11"
-    }
+    finalizedBy("jacocoTestCoverageVerification")
+}
 
-    tasks.jacocoTestReport {
-        dependsOn(tasks.test)
-    }
-
-    tasks.jacocoTestReport {
-        reports {
-            html.required = true
-            xml.required = false
-            csv.required = false
-            html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
-        }
-
-        finalizedBy("jacocoTestCoverageVerification")
-    }
-
-    tasks.jacocoTestCoverageVerification {
-        violationRules {
-            rule {
-                enabled = false
-                limit {
-                    minimum = "0.10".toBigDecimal()
-                }
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = false
+            limit {
+                minimum = "0.10".toBigDecimal()
             }
         }
     }
+}
+
+project("module-core") {
+    // bootJar task disabled 처리
+    val jar: Jar by tasks
+    val bootJar: BootJar by tasks
+    jar.enabled = true
+    bootJar.enabled = false
 }
 
 project("module-api") {
@@ -146,3 +128,4 @@ project("module-api") {
     bootJar.enabled = true
     bootJar.archiveFileName.set("vam.jar")
 }
+
