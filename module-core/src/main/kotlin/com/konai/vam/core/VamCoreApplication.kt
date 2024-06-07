@@ -1,11 +1,11 @@
-package com.konai.vam.api
+package com.konai.vam.core
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class VamApiApplication
+class VamCoreApplication
 
 fun main(args: Array<String>) {
-    runApplication<VamApiApplication>(*args)
+    runApplication<VamCoreApplication>(*args)
 }
