@@ -1,31 +1,5 @@
-server:
-  port: 11020
-  servlet:
-    context-path: /vam
-
-management:
-  endpoints:
-    web:
-      base-path: /
-      exposure:
-        include: health
-
+# spring
 spring:
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@118.33.122.24:15322:kmdbp19
-    username: fxs
-    password: StgFXS1104#
-    hikari:
-      driver-class-name: oracle.jdbc.driver.OracleDriver
-      minimum-idle: 2
-      maximum-pool-size: 10
-      max-lifetime: 3000
-      idle-timeout: 1000
-      keepalive-time: 1000
-      connection-timeout: 10000
-
-logging:
-  level:
-    com.zaxxer.hikari: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
+  profiles:
+    active: dev
+    include: base
