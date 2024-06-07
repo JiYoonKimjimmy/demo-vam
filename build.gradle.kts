@@ -55,7 +55,7 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-web")
 //        implementation("org.springframework.boot:spring-boot-starter-actuator")
 //        implementation("org.springframework.boot:spring-boot-starter-undertow")
-        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+//        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
 //        implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
 //        kapt("org.springframework.boot:spring-boot-configuration-processor")
@@ -67,7 +67,7 @@ subprojects {
 //        implementation("com.konasl.commonlibs:logger:7.0.1")
 //        implementation("com.cubeone", "CubeOneAPI", "1.0.0")
 
-        runtimeOnly("com.oracle.database.jdbc:ojdbc11")
+//        runtimeOnly("com.oracle.database.jdbc:ojdbc11")
 
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "junit")
