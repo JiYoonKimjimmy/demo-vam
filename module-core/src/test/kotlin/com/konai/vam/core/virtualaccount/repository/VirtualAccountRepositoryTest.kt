@@ -1,5 +1,6 @@
 package com.konai.vam.core.virtualaccount.repository
 
+import com.konai.vam.core.config.VamCoreTestConfig
 import com.konai.vam.core.virtualaccount.repository.entity.VirtualAccountEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -7,8 +8,10 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.context.annotation.Import
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(VamCoreTestConfig::class)
 @DataJpaTest
 class VirtualAccountRepositoryTest {
 
@@ -52,6 +55,18 @@ class VirtualAccountRepositoryTest {
 
     	// then
         assertThat(result.id).isEqualTo(accountId)
+    }
+
+    @Test
+    fun `가상 계좌 단건 entity 조회 후 정보 업데이트하여 성공한다`() {
+    	// given
+        val entity = virtualAccountRepository.getById(saved.id!!).apply { status = "MAPPING" }
+
+    	// when
+    	val result = virtualAccountRepository.save(entity)
+
+    	// then
+        assertThat(result.status).isEqualTo("MAPPING")
     }
 
 }

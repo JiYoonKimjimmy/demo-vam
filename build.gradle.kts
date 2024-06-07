@@ -8,6 +8,7 @@ plugins {
     kotlin("kapt") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
+    id("org.jetbrains.kotlin.plugin.noarg") version kotlinVersion
     id("org.springframework.boot") version "3.3.0"
     id("io.spring.dependency-management") version "1.1.5"
     id("com.gorylenko.gradle-git-properties") version "2.4.2"
@@ -25,6 +26,7 @@ subprojects {
     apply(plugin = "kotlin")
     apply(plugin = "kotlin-kapt")
     apply(plugin = "kotlin-spring")
+    apply(plugin = "org.jetbrains.kotlin.plugin.noarg")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.gorylenko.gradle-git-properties")

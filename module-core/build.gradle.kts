@@ -7,3 +7,7 @@ dependencies {
 
     runtimeOnly("com.oracle.database.jdbc:ojdbc11")
 }
+
+noArg {
+    annotation("jakarta.persistence.Entity")
+}

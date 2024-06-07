@@ -1,7 +1,7 @@
 package com.konai.vam.core.common.model
 
+import com.konai.vam.core.common.COMPONENT_CODE
 import com.konai.vam.core.common.enumerate.ResultStatus
-import com.konai.vam.core.common.error.COMPONENT_CODE
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.FeatureCode
 
