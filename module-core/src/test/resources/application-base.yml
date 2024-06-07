@@ -34,7 +34,7 @@ masking:
 
 # encrypt cubeone
 database:
-  encrypt-provider: CUBE_ONE
+  encrypt-provider: NONE
 
 # spring
 spring:
@@ -43,7 +43,8 @@ spring:
       pool-name: hikaricp-pool
       driver-class-name: oracle.jdbc.driver.OracleDriver
       minimum-idle: 5
-      maximum-pool-size: 10
+      maximum-pool-size: 20
+      max-lifetime: 60000
       idle-timeout: 30000
       connection-timeout: 10000
       connection-test-query: SELECT 1 FROM DUAL
@@ -65,89 +66,7 @@ spring:
       on-profile: dev
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@10.40.10.24:15322:KMDBP19
-    username: fxs
-    password: CXWLYpdVO7die8haH1l9+A==
-  jpa:
-    generate-ddl: true
-    properties:
-      hibernate:
-        ddl-auto: update
-        format_sql: true
-        show_sql: true
-  data:
-    redis:
-      host: 10.30.210.121
-      password: 123456
-      port: 6379
-      timeout: 500
-      sentinel:
-        master: mymaster
-        nodes: ['10.30.210.121:26379']
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: qa
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@10.30.200.114:15321:KMDBP
-    username: fxs
-    password: StgFXS1104#
-  jpa:
-    generate-ddl: false
-    properties:
-      hibernate:
-        ddl-auto: validate
-        show_sql: false
-  data:
-    redis:
-      host: redis.kpp.com
-      password: 123456
-      port: 6379
-      timeout: 500
-      sentinel:
-        master: mymaster
-        nodes: ['redis.kpp.com:26379']
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@db.konadc.com:15321:kmdbp
-    username: fxs
-    password: CXWLYpdVO7die8haH1l9+A==
-  jpa:
-    generate-ddl: false
-    properties:
-      hibernate:
-        ddl-auto: validate
-        show_sql: false
-  data:
-    redis:
-      host: redis.kpp.com
-      password: 123456
-      port: 6379
-      timeout: 500
-      sentinel:
-        master: mymaster
-        nodes: ['redis.kpp.com:26379']
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: test
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@10.40.10.24:15322:KMDBP19
+    url: jdbc:oracle:thin:@118.33.122.24:15322:kmdbp19
     username: fxs
     password: StgFXS1104#
   jpa:
