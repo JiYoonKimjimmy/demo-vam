@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 @Component
 class VirtualAccountModelMapper {
 
-    fun requestToDomain(request: CreateVirtualAccountRequest): VirtualAccount {
+    fun requestToDomain(request: CreateVirtualAccount.Request): VirtualAccount {
         return VirtualAccount(
             accountNumber = request.accountNumber,
             bankCode = request.bankCode,

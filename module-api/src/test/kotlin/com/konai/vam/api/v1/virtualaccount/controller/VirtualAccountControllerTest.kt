@@ -1,7 +1,7 @@
 package com.konai.vam.api.v1.virtualaccount.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
+import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccount
 import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModelMapper
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountUseCase
 import com.konai.vam.core.common.enumerate.ResultStatus
@@ -34,7 +34,7 @@ class VirtualAccountControllerTest(
 
     given("가상 계좌 등록 요청하였지만") {
         `when`("계좌 번호 요청 정보가 없는 경우") {
-            val request = CreateVirtualAccountRequest(
+            val request = CreateVirtualAccount.Request(
                 accountNumber = "",
                 bankCode = "001",
                 bankName = "bankName"
@@ -59,7 +59,7 @@ class VirtualAccountControllerTest(
         val accountNumber = "accountNumber001"
         val bankCode = "001"
         val bankName = "우리은행"
-        val request = CreateVirtualAccountRequest(
+        val request = CreateVirtualAccount.Request(
             accountNumber = accountNumber,
             bankCode = bankCode,
             bankName = bankName
