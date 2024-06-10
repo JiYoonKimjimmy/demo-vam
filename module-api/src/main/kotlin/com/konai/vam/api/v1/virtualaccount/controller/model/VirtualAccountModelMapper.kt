@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class VirtualAccountModelMapper {
 
-    fun requestToDomain(request: CreateVirtualAccount.Request): VirtualAccount {
+    fun requestToDomain(request: CreateVirtualAccountRequest): VirtualAccount {
         return VirtualAccount(
             accountNumber = request.accountNumber,
             bankCode = request.bankCode,
@@ -16,7 +16,7 @@ class VirtualAccountModelMapper {
         )
     }
 
-    fun requestToPredicate(request: FindAllVirtualAccount.Request): VirtualAccountPredicate {
+    fun requestToPredicate(request: FindAllVirtualAccountRequest): VirtualAccountPredicate {
         return VirtualAccountPredicate(
             accountNumber = request.accountNumber,
             bankCode = request.bankCode,

@@ -58,6 +58,13 @@ logging:
     com.zaxxer.hikari.HikariConfig: DEBUG
     org.apache.hc.client5.http: DEBUG
 
+# springdoc
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    doc-expansion: none
+
 ---
 
 spring:

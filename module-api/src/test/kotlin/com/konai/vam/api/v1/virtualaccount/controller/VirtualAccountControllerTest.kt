@@ -1,8 +1,8 @@
 package com.konai.vam.api.v1.virtualaccount.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccount
-import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccount
+import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
+import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModelMapper
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountUseCase
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
@@ -39,7 +39,7 @@ class VirtualAccountControllerTest(
 
     given("가상 계좌 등록 요청하였지만") {
         `when`("계좌 번호 요청 정보가 없는 경우") {
-            val request = CreateVirtualAccount.Request(
+            val request = CreateVirtualAccountRequest(
                 accountNumber = "",
                 bankCode = "001",
                 bankName = "bankName"
@@ -64,7 +64,7 @@ class VirtualAccountControllerTest(
         val accountNumber = "accountNumber001"
         val bankCode = "001"
         val bankName = "우리은행"
-        val request = CreateVirtualAccount.Request(
+        val request = CreateVirtualAccountRequest(
             accountNumber = accountNumber,
             bankCode = bankCode,
             bankName = bankName
@@ -115,7 +115,7 @@ class VirtualAccountControllerTest(
 
         `when`("'accountNumber' 일치한 가상 계좌 목록 조회인 경우") {
             val accountNumber = "accountNumber"
-            val request = FindAllVirtualAccount.Request(accountNumber = accountNumber, pageable = PageableRequest(number, size))
+            val request = FindAllVirtualAccountRequest(accountNumber = accountNumber, pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
             val content = listOf(VirtualAccount(1L, accountNumber, EMPTY, EMPTY, EMPTY))
@@ -138,7 +138,7 @@ class VirtualAccountControllerTest(
         }
 
         `when`("정상 목록 조회인 경우") {
-            val request = FindAllVirtualAccount.Request(pageable = PageableRequest(number, size))
+            val request = FindAllVirtualAccountRequest(pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
             val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, EMPTY, EMPTY))
