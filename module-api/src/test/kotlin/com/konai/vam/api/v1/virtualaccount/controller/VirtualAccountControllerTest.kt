@@ -117,7 +117,7 @@ class VirtualAccountControllerTest(
         `when`("정상 목록 조회인 경우") {
             val pageable = BasePageable.Pageable(numberOfElements = size)
             val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, EMPTY, EMPTY))
-            every { virtualAccountUseCase.findAll(any()) } returns BasePageable(pageable, content)
+            every { virtualAccountUseCase.findPage(any()) } returns BasePageable(pageable, content)
 
             then("조회 결과 정상 응답한다") {
                 mockMvc

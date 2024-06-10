@@ -19,8 +19,8 @@ class VirtualAccountService(
             .let { virtualAccountMapper.entityToDomain(it) }
     }
 
-    override fun findAll(pageable: PageableRequest): BasePageable<VirtualAccount> {
-        return virtualAccountRepository.findAll(pageable)
+    override fun findPage(pageable: PageableRequest): BasePageable<VirtualAccount> {
+        return virtualAccountRepository.findPage(pageable)
             .let { virtualAccountMapper.entitiesToDomain(it) }
     }
 }

@@ -8,6 +8,6 @@ interface VirtualAccountUseCase {
 
     fun create(account: VirtualAccount): VirtualAccount
 
-    fun findAll(pageable: PageableRequest): BasePageable<VirtualAccount>
+    fun findPage(pageable: PageableRequest): BasePageable<VirtualAccount>
 
 }

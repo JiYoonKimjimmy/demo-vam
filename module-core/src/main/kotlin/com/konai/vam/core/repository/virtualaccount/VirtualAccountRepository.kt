@@ -28,8 +28,12 @@ class VirtualAccountRepository(
         }
     }
 
-    fun findAll(pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity> {
-        return virtualAccountJpaRepository.findAll(pageableRequest.toPageRequest()).toBasePageable()
+    fun findPage(pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity?> {
+        return virtualAccountJpaRepository.findPage(pageableRequest.toPageRequest()) {
+            select(
+                entity(VirtualAccountEntity::class)
+            ).from(entity(VirtualAccountEntity::class))
+        }.toBasePageable()
     }
 
 }
