@@ -1,6 +1,7 @@
 package com.konai.vam.api.v1.virtualaccount.controller
 
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccount
+import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccount
 import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModelMapper
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountUseCase
 import jakarta.validation.Valid
@@ -25,6 +26,13 @@ class VirtualAccountController(
             .let { virtualAccountModelMapper.domainToModel(it) }
             .let { CreateVirtualAccount.Response(it) }
             .success(HttpStatus.CREATED)
+    }
+
+    @PostMapping("/all")
+    fun findAll(@RequestBody @Valid request: FindAllVirtualAccount.Request): ResponseEntity<FindAllVirtualAccount.Response> {
+        return virtualAccountUseCase.findAll(request.pageRequest)
+            .let { FindAllVirtualAccount.Response(it, virtualAccountModelMapper::domainToModel) }
+            .success(HttpStatus.OK)
     }
 
 }

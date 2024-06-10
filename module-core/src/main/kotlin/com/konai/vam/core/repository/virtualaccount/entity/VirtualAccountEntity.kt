@@ -1,11 +1,8 @@
-package com.konai.vam.core.virtualaccount.repository.entity
+package com.konai.vam.core.repository.virtualaccount.entity
 
 import com.konai.vam.core.common.converter.DatabaseCustomerInfoColumnConverter
 import com.konai.vam.core.common.entity.BaseEntity
-import jakarta.persistence.Convert
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity(name = "VIRTUAL_ACCOUNT")
 class VirtualAccountEntity(

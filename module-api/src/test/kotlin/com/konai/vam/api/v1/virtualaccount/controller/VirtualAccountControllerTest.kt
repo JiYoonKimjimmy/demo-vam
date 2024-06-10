@@ -2,11 +2,17 @@ package com.konai.vam.api.v1.virtualaccount.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccount
+import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccount
 import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModelMapper
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountUseCase
+import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
+import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccounts
+import com.konai.vam.core.common.EMPTY
 import com.konai.vam.core.common.enumerate.ResultStatus
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
+import com.konai.vam.core.common.model.BasePageable
+import com.konai.vam.core.common.model.PageableRequest
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.core.spec.style.BehaviorSpec
@@ -100,6 +106,32 @@ class VirtualAccountControllerTest(
                     .andExpect(jsonPath("result.code").isEmpty)
                     .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
                     .andExpect(jsonPath("data.id").value(id))
+            }
+        }
+    }
+
+    given("가상 계좌 다건 조회 1건 요청하면") {
+        val number = 0
+        val size = 1
+        val request = FindAllVirtualAccount.Request(pageRequest = PageableRequest(number, size))
+
+        `when`("정상 목록 조회인 경우") {
+            val pageable = BasePageable.Pageable(numberOfElements = size)
+            val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, EMPTY, EMPTY))
+            every { virtualAccountUseCase.findAll(any()) } returns VirtualAccounts(pageable, content)
+
+            then("조회 결과 정상 응답한다") {
+                mockMvc
+                    .perform(
+                        post("/api/v1/virtual-account/all")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jacksonObjectMapper().writeValueAsString(request))
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("result.code").isEmpty)
+                    .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
+                    .andExpect(jsonPath("pageable.numberOfElements").value(size))
             }
         }
     }

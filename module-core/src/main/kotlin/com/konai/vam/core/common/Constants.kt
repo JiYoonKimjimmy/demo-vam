@@ -4,5 +4,5 @@ const val COMPONENT_NAME = "VAM"
 const val COMPONENT_CODE = "218"
 
 const val EMPTY = ""
-const val SUCCESS = "SUCCESS"
-const val FAILED = "FAILED"
+const val DEFAULT_SORT_ORDER = "DESC"
+const val DEFAULT_SORT_BY = "id"
