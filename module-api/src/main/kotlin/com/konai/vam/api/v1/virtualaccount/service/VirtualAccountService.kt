@@ -5,6 +5,7 @@ import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.virtualaccount.VirtualAccountRepository
+import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,8 +20,8 @@ class VirtualAccountService(
             .let { virtualAccountMapper.entityToDomain(it) }
     }
 
-    override fun findPage(pageable: PageableRequest): BasePageable<VirtualAccount> {
-        return virtualAccountRepository.findPage(pageable)
+    override fun findPage(predicate: VirtualAccountPredicate, pageable: PageableRequest): BasePageable<VirtualAccount> {
+        return virtualAccountRepository.findPage(predicate, pageable)
             .let { virtualAccountMapper.entitiesToDomain(it) }
     }
 }

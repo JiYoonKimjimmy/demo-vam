@@ -5,8 +5,15 @@ import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
+import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import com.konai.vam.core.util.PageRequestUtil.toBasePageable
 import com.konai.vam.core.util.PageRequestUtil.toPageRequest
+import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
+import com.linecorp.kotlinjdsl.dsl.jpql.select.SelectQueryWhereStep
+import com.linecorp.kotlinjdsl.querymodel.jpql.JpqlQueryable
+import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicatable
+import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicate
+import com.linecorp.kotlinjdsl.querymodel.jpql.select.SelectQuery
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -28,12 +35,16 @@ class VirtualAccountRepository(
         }
     }
 
-    fun findPage(pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity?> {
-        return virtualAccountJpaRepository.findPage(pageableRequest.toPageRequest()) {
-            select(
-                entity(VirtualAccountEntity::class)
-            ).from(entity(VirtualAccountEntity::class))
-        }.toBasePageable()
+    fun findPage(predicate: VirtualAccountPredicate, pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity?> {
+        val query: (Jpql.() -> JpqlQueryable<SelectQuery<VirtualAccountEntity>>) = {
+            select(entity(VirtualAccountEntity::class))
+                .from(entity(VirtualAccountEntity::class))
+                .whereAnd(
+                    predicate.accountNumber?.let { path(VirtualAccountEntity::accountNumber).eq(it) },
+                    predicate.bankCode?.let { path(VirtualAccountEntity::bankCode).eq(it) },
+                )
+        }
+        return virtualAccountJpaRepository.findPage(pageableRequest.toPageRequest(), query).toBasePageable()
     }
 
 }

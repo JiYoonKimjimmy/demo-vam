@@ -6,6 +6,7 @@ import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.config.VamCoreTestConfig
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
+import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.autoconfigure.KotlinJdslAutoConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -105,18 +106,20 @@ class VirtualAccountRepositoryTest {
     }
 
     @Test
-    fun `가상 계좌 다건 조회 성공한다`() {
+    fun `요청 'accountNumber' 와 일치한 가상 계좌 다건 조회 성공한다`() {
     	// given
-        val number = 1
+        val number = 0
         val size = 1
     	val pageableRequest = PageableRequest(number, size)
+        val predicate = VirtualAccountPredicate(accountNumber = saved.accountNumber, bankCode = saved.bankCode)
 
     	// when
-    	val result = virtualAccountRepository.findPage(pageableRequest)
+    	val result = virtualAccountRepository.findPage(predicate, pageableRequest)
 
     	// then
         assertThat(result.pageable.numberOfElements).isEqualTo(size)
         assertThat(result.content.size).isEqualTo(size)
+        assertThat(result.content.first()?.id).isEqualTo(saved.id)
     }
 
 }

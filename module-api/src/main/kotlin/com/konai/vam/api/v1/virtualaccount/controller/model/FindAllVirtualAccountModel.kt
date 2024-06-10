@@ -11,6 +11,10 @@ import org.springframework.http.ResponseEntity
 class FindAllVirtualAccount {
 
     data class Request(
+        val accountNumber: String? = null,
+        val bankCode: String? = null,
+        val mappingType: String? = null,
+        val isMapping: Boolean? = null,
         @field:NotNull
         val pageable: PageableRequest
     )

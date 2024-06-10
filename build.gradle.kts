@@ -30,6 +30,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.gorylenko.gradle-git-properties")
+    apply(plugin = "jacoco")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -80,41 +81,38 @@ subprojects {
     tasks.withType(KotlinCompilationTask::class.java) {
         compilerOptions.freeCompilerArgs.add("-Xjsr305=strict")
     }
-}
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
-}
-
-jacoco {
-    toolVersion = "0.8.11"
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-}
-
-tasks.jacocoTestReport {
-    reports {
-        html.required = true
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    tasks.withType<Test> {
+        useJUnitPlatform()
+        finalizedBy(tasks.jacocoTestReport)
     }
 
-    finalizedBy("jacocoTestCoverageVerification")
-}
+    jacoco {
+        toolVersion = "0.8.12"
+    }
 
-tasks.jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            enabled = false
-            limit {
-                minimum = "0.10".toBigDecimal()
+    tasks.jacocoTestReport {
+        reports {
+            html.required = true
+            xml.required = false
+            csv.required = false
+            html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+        }
+
+        finalizedBy("jacocoTestCoverageVerification")
+    }
+
+    tasks.jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                enabled = false
+                limit {
+                    minimum = "0.10".toBigDecimal()
+                }
             }
         }
     }
+
 }
 
 project("module-core") {
@@ -130,4 +128,3 @@ project("module-api") {
     bootJar.enabled = true
     bootJar.archiveFileName.set("vam.jar")
 }
-

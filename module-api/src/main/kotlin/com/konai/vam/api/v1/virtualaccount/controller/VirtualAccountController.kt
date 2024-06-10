@@ -30,7 +30,8 @@ class VirtualAccountController(
 
     @PostMapping("/all")
     fun findPage(@RequestBody @Valid request: FindAllVirtualAccount.Request): ResponseEntity<FindAllVirtualAccount.Response> {
-        return virtualAccountUseCase.findPage(request.pageable)
+        return virtualAccountModelMapper.requestToPredicate(request)
+            .let { virtualAccountUseCase.findPage(it, request.pageable) }
             .let { FindAllVirtualAccount.Response(it, virtualAccountModelMapper::domainToModel) }
             .success(HttpStatus.OK)
     }

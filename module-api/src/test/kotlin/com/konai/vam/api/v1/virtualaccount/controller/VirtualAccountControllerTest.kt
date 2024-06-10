@@ -112,12 +112,37 @@ class VirtualAccountControllerTest(
     given("가상 계좌 다건 조회 1건 요청하면") {
         val number = 0
         val size = 1
-        val request = FindAllVirtualAccount.Request(pageable = PageableRequest(number, size))
+
+        `when`("'accountNumber' 일치한 가상 계좌 목록 조회인 경우") {
+            val accountNumber = "accountNumber"
+            val request = FindAllVirtualAccount.Request(accountNumber = accountNumber, pageable = PageableRequest(number, size))
+
+            val pageable = BasePageable.Pageable(numberOfElements = size)
+            val content = listOf(VirtualAccount(1L, accountNumber, EMPTY, EMPTY, EMPTY))
+            every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
+
+            then("1건 조회하여 정상 응답한다") {
+                mockMvc
+                    .perform(
+                        post("/api/v1/virtual-account/all")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jacksonObjectMapper().writeValueAsString(request))
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("result.code").isEmpty)
+                    .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
+                    .andExpect(jsonPath("pageable.numberOfElements").value(size))
+                    .andExpect(jsonPath("content[0].accountNumber").value(accountNumber))
+            }
+        }
 
         `when`("정상 목록 조회인 경우") {
+            val request = FindAllVirtualAccount.Request(pageable = PageableRequest(number, size))
+
             val pageable = BasePageable.Pageable(numberOfElements = size)
             val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, EMPTY, EMPTY))
-            every { virtualAccountUseCase.findPage(any()) } returns BasePageable(pageable, content)
+            every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("조회 결과 정상 응답한다") {
                 mockMvc
