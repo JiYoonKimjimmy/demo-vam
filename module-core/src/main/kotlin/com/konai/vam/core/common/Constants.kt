@@ -5,4 +5,4 @@ const val COMPONENT_CODE = "218"
 
 const val EMPTY = ""
 const val DEFAULT_SORT_ORDER = "DESC"
-const val DEFAULT_SORT_BY = "id"
+const val DEFAULT_SORT_BY = "createdDate"
