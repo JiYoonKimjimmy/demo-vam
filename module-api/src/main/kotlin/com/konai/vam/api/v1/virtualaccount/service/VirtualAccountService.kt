@@ -2,7 +2,7 @@ package com.konai.vam.api.v1.virtualaccount.service
 
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
-import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccounts
+import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.virtualaccount.VirtualAccountRepository
 import org.springframework.stereotype.Service
@@ -19,13 +19,8 @@ class VirtualAccountService(
             .let { virtualAccountMapper.entityToDomain(it) }
     }
 
-    override fun getById(id: Long): VirtualAccount {
-        TODO("Not yet implemented")
-    }
-
-    override fun findAll(pageable: PageableRequest): VirtualAccounts {
+    override fun findAll(pageable: PageableRequest): BasePageable<VirtualAccount> {
         return virtualAccountRepository.findAll(pageable)
-            .let { virtualAccountMapper.pageableToDomain(it) }
+            .let { virtualAccountMapper.entitiesToDomain(it) }
     }
-
 }

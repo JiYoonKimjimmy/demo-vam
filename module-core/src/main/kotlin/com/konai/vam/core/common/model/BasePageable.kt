@@ -1,7 +1,5 @@
 package com.konai.vam.core.common.model
 
-import org.springframework.data.domain.Page
-
 open class BasePageable<T>(
     open val pageable: Pageable = Pageable(),
     open val content: List<T> = emptyList(),
@@ -17,16 +15,4 @@ open class BasePageable<T>(
         val totalElements: Int = 0,
     )
 
-    constructor(result: Page<T>) : this(
-        pageable = Pageable(
-            first = result.isFirst,
-            last = result.isLast,
-            number = result.number,
-            numberOfElements = result.numberOfElements,
-            size = result.size,
-            totalPages = result.totalPages,
-            totalElements = result.numberOfElements,
-        ),
-        content = result.content
-    )
 }

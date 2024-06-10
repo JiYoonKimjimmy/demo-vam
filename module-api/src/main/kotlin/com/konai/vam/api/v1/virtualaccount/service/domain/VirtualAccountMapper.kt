@@ -26,10 +26,10 @@ class VirtualAccountMapper {
         )
     }
 
-    fun pageableToDomain(page: BasePageable<VirtualAccountEntity>): VirtualAccounts {
-        return VirtualAccounts(
-            pageable = page.pageable,
-            content = page.content.map(this::entityToDomain)
+    fun entitiesToDomain(entities: BasePageable<VirtualAccountEntity>): BasePageable<VirtualAccount> {
+        return BasePageable(
+            pageable = entities.pageable,
+            content = entities.content.map(this::entityToDomain)
         )
     }
 

@@ -5,6 +5,7 @@ import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
+import com.konai.vam.core.util.PageRequestUtil.toBasePageable
 import com.konai.vam.core.util.PageRequestUtil.toPageRequest
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -28,7 +29,7 @@ class VirtualAccountRepository(
     }
 
     fun findAll(pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity> {
-        return BasePageable(virtualAccountJpaRepository.findAll(pageableRequest.toPageRequest()))
+        return virtualAccountJpaRepository.findAll(pageableRequest.toPageRequest()).toBasePageable()
     }
 
 }

@@ -1,7 +1,6 @@
 package com.konai.vam.api.v1.virtualaccount.controller.model
 
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
-import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccounts
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.BaseResponse
 import com.konai.vam.core.common.model.PageableRequest
@@ -13,7 +12,7 @@ class FindAllVirtualAccount {
 
     data class Request(
         @field:NotNull
-        val pageRequest: PageableRequest
+        val pageable: PageableRequest
     )
 
     data class Response(
@@ -21,9 +20,9 @@ class FindAllVirtualAccount {
         val content: List<VirtualAccountModel>
     ) : BaseResponse<Response>() {
 
-        constructor(virtualAccounts: VirtualAccounts, converter: (VirtualAccount) -> VirtualAccountModel): this(
-            pageable = virtualAccounts.pageable,
-            content = virtualAccounts.content.map(converter)
+        constructor(pageable: BasePageable<VirtualAccount>, mapper: (VirtualAccount) -> VirtualAccountModel): this(
+            pageable = pageable.pageable,
+            content = pageable.content.map(mapper)
         )
 
         override fun success(httpStatus: HttpStatus): ResponseEntity<Response> {
