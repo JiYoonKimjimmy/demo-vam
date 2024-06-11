@@ -17,7 +17,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url = uri("http://nexus.konadev.com/content/repositories/public"); isAllowInsecureProtocol = true }
 }
 
 subprojects {
@@ -44,12 +43,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven { url = uri("http://nexus.konadev.com/content/repositories/public"); isAllowInsecureProtocol = true }
-        maven { url = uri("http://nexus.konadev.com/content/repositories/release"); isAllowInsecureProtocol = true }
-        maven { url = uri("http://nexus.konadev.com/content/repositories/jcenter"); isAllowInsecureProtocol = true }
-        maven { url = uri("http://nexus.konadev.com/content/repositories/thirdparty"); isAllowInsecureProtocol = true }
-        maven { url = uri("http://nexus.konasldev.com:8082/repository/gradle-plugins/"); isAllowInsecureProtocol = true }
-        maven { url = uri("http://nexus.konasldev.com:8082/repository/thirdparty"); isAllowInsecureProtocol = true }
     }
 
     dependencies {
@@ -60,6 +53,7 @@ subprojects {
 //        implementation("com.konasl.commonlibs:spring-web:7.0.1")
 //        implementation("com.konasl.commonlibs:logger:7.0.1")
 //        implementation("com.cubeone", "CubeOneAPI", "1.0.0")
+        implementation(files("libs/CubeOneAPI-1.0.0.jar"))
 
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "junit")
