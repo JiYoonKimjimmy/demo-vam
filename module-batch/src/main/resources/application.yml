@@ -2,4 +2,4 @@
 spring:
   profiles:
     active: dev
-    include: batch-base
+    include: base
