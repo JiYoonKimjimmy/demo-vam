@@ -108,6 +108,10 @@ subprojects {
 
 }
 
+tasks.bootJar {
+    enabled = false
+}
+
 project("module-core") {
     // bootJar task disabled 처리
     val jar: Jar by tasks
