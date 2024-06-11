@@ -5,6 +5,10 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.config.VamCoreTestConfig
+import com.konai.vam.core.enumerate.VirtualAccountMappingType.FIX
+import com.konai.vam.core.enumerate.VirtualAccountStatus.MAPPING
+import com.konai.vam.core.enumerate.VirtualAccountStatus.REGISTERED
+import com.konai.vam.core.enumerate.YesOrNo.N
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.autoconfigure.KotlinJdslAutoConfiguration
@@ -39,15 +43,16 @@ class VirtualAccountRepositoryTest {
             accountNumber = "accountNumber",
             bankCode = "001",
             bankName = "우리은행",
-            status = "REGISTERED"
+            mappingType = FIX,
+            mappingYn = N,
+            status = REGISTERED
         ).let { virtualAccountRepository.save(it) }
     }
 
     @Test
     fun `가상 계좌 단건 entity 생성하여 저장 성공한다`() {
     	// given
-        val entity = VirtualAccountEntity(accountNumber = "accountNumber", bankCode = "001", bankName = "우리은행", status = "REGISTERED")
-
+        val entity = VirtualAccountEntity(accountNumber = "accountNumber", bankCode = "001", bankName = "우리은행", mappingType = FIX, mappingYn = N, status = REGISTERED)
         // when
         val result = virtualAccountRepository.save(entity)
 
@@ -86,7 +91,7 @@ class VirtualAccountRepositoryTest {
     	val accountId = SecureRandom().nextLong()
 
     	// when
-        val result = virtualAccountRepository.findOneById(accountId) { it.orElse(VirtualAccountEntity(id = accountId, accountNumber = EMPTY, bankCode = EMPTY, bankName = EMPTY, status = EMPTY)) }
+        val result = virtualAccountRepository.findOneById(accountId) { it.orElse(VirtualAccountEntity(id = accountId, accountNumber = EMPTY, bankCode = EMPTY, bankName = EMPTY, mappingType = FIX, mappingYn = N, status = REGISTERED)) }
 
     	// then
         assertThat(result).isNotNull()
@@ -96,13 +101,13 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `가상 계좌 단건 entity 조회 후 정보 업데이트하여 성공한다`() {
         // given
-        val entity = virtualAccountRepository.findOneById(saved.id!!).apply { status = "MAPPING" }
+        val entity = virtualAccountRepository.findOneById(saved.id!!).apply { status = MAPPING }
 
         // when
         val result = virtualAccountRepository.save(entity)
 
         // then
-        assertThat(result.status).isEqualTo("MAPPING")
+        assertThat(result.status).isEqualTo(MAPPING)
     }
 
     @Test

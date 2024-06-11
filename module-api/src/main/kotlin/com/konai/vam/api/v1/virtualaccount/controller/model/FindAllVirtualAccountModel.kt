@@ -4,14 +4,19 @@ import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.BaseResponse
 import com.konai.vam.core.common.model.PageableRequest
+import com.konai.vam.core.enumerate.VirtualAccountMappingType
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
+import org.hibernate.validator.constraints.Length
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 data class FindAllVirtualAccountRequest(
+    @field:Length(min = 1, max = 20, message = "Account number lengths are allowed from 1 to 20 characters.")
     val accountNumber: String? = null,
+    @field:Pattern(regexp = "\\d{3}", message = "Bank code must be exactly 3 digits")
     val bankCode: String? = null,
-    val mappingType: String? = null,
+    val mappingType: VirtualAccountMappingType? = null,
     val isMapping: Boolean? = null,
     @field:NotNull
     val pageable: PageableRequest

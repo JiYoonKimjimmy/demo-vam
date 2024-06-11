@@ -53,7 +53,6 @@ subprojects {
 //        implementation("com.konasl.commonlibs:spring-web:7.0.1")
 //        implementation("com.konasl.commonlibs:logger:7.0.1")
 //        implementation("com.cubeone", "CubeOneAPI", "1.0.0")
-        implementation(files("libs/CubeOneAPI-1.0.0.jar"))
 
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "junit")

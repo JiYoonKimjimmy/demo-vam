@@ -7,6 +7,8 @@ dependencies {
     implementation("com.linecorp.kotlin-jdsl:jpql-render:3.4.1")
     implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.4.1")
 
+    implementation(files("libs/CubeOneAPI-1.0.0.jar"))
+
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     runtimeOnly("com.oracle.database.jdbc:ojdbc11")

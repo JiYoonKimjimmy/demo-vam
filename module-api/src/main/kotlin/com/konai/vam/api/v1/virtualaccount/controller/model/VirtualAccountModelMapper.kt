@@ -1,6 +1,8 @@
 package com.konai.vam.api.v1.virtualaccount.controller.model
 
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
+import com.konai.vam.core.enumerate.VirtualAccountStatus
+import com.konai.vam.core.enumerate.YesOrNo
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import org.springframework.stereotype.Component
 
@@ -12,7 +14,9 @@ class VirtualAccountModelMapper {
             accountNumber = request.accountNumber,
             bankCode = request.bankCode,
             bankName = request.bankName,
-            status = "CREATED",
+            mappingType = request.mappingType,
+            mappingYn = YesOrNo.N,
+            status = VirtualAccountStatus.REGISTERED,
         )
     }
 

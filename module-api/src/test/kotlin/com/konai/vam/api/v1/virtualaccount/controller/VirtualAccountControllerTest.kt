@@ -12,6 +12,10 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
+import com.konai.vam.core.enumerate.VirtualAccountMappingType.FIX
+import com.konai.vam.core.enumerate.VirtualAccountStatus
+import com.konai.vam.core.enumerate.VirtualAccountStatus.REGISTERED
+import com.konai.vam.core.enumerate.YesOrNo.N
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.core.spec.style.BehaviorSpec
@@ -42,7 +46,8 @@ class VirtualAccountControllerTest(
             val request = CreateVirtualAccountRequest(
                 accountNumber = "",
                 bankCode = "001",
-                bankName = "bankName"
+                bankName = "bankName",
+                mappingType = FIX
             )
 
             then("MethodArgumentNotValidException 예외 발생하여 실패한다") {
@@ -67,7 +72,8 @@ class VirtualAccountControllerTest(
         val request = CreateVirtualAccountRequest(
             accountNumber = accountNumber,
             bankCode = bankCode,
-            bankName = bankName
+            bankName = bankName,
+            mappingType = FIX
         )
 
         `when`("중복 계좌번호 & 은행코드 예외 발생하는 경우") {
@@ -118,7 +124,7 @@ class VirtualAccountControllerTest(
             val request = FindAllVirtualAccountRequest(accountNumber = accountNumber, pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(VirtualAccount(1L, accountNumber, EMPTY, EMPTY, EMPTY))
+            val content = listOf(VirtualAccount(1L, accountNumber, EMPTY, EMPTY, FIX, N, REGISTERED))
             every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("1건 조회하여 정상 응답한다") {
@@ -141,7 +147,7 @@ class VirtualAccountControllerTest(
             val request = FindAllVirtualAccountRequest(pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, EMPTY, EMPTY))
+            val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, EMPTY, FIX, N, REGISTERED))
             every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("조회 결과 정상 응답한다") {

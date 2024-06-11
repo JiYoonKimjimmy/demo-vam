@@ -12,6 +12,8 @@ class VirtualAccountMapper {
             accountNumber = domain.accountNumber,
             bankCode = domain.bankCode,
             bankName = domain.bankName,
+            mappingType = domain.mappingType,
+            mappingYn = domain.mappingYn,
             status = domain.status,
         )
     }
@@ -22,6 +24,8 @@ class VirtualAccountMapper {
             accountNumber = entity.accountNumber,
             bankCode = entity.bankCode,
             bankName = entity.bankName,
+            mappingType = entity.mappingType,
+            mappingYn = entity.mappingYn,
             status = entity.status,
         )
     }
