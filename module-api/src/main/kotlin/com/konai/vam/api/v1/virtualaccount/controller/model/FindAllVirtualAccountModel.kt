@@ -18,7 +18,7 @@ data class FindAllVirtualAccountRequest(
     val bankCode: String? = null,
     val mappingType: VirtualAccountMappingType? = null,
     val isMapping: Boolean? = null,
-    @field:NotNull
+    @field:NotNull(message = "Pageable request cannot be empty")
     val pageable: PageableRequest
 )
 
