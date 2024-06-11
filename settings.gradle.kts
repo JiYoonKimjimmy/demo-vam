@@ -10,4 +10,4 @@ pluginManagement {
     }
 }
 
-include("module-core", "module-api")
+include("module-core", "module-api", "module-batch")

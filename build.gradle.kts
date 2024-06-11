@@ -121,3 +121,9 @@ project("module-api") {
     bootJar.enabled = true
     bootJar.archiveFileName.set("vam.jar")
 }
+
+project("module-batch") {
+    val bootJar: BootJar by tasks
+    bootJar.enabled = true
+    bootJar.archiveFileName.set("vam-batch.jar")
+}
