@@ -1,0 +1,6 @@
+# external url
+fep.url    : 118.33.122.30:30005
+koditn.url : 118.33.122.28:10200
+cs.url     : 118.33.122.28:15820/cs
+cardse.url : 118.33.122.28:10300/cardse-service
+cp.url     : 118.33.122.28:10000/cloud-platform-1.0

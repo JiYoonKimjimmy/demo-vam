@@ -1,0 +1,6 @@
+# external url
+fep.url    : fep2.konadc.com:30005
+koditn.url : koditn.konadc.com:10200
+cs.url     : cs.konadc.com:15820/cs
+cardse.url : cardse.konadc.com:10300/cardse-service
+cp.url     : dcp.konadc.com:10000/cloud-platform-1.0

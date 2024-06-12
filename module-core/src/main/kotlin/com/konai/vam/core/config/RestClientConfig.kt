@@ -15,5 +15,4 @@ class RestClientConfig : RestClientAutoConfiguration() {
             .build()
     }
 
-
 }
