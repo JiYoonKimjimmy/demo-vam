@@ -1,6 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.springframework.boot.gradle.tasks.bundling.BootJar
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 plugins {
     val kotlinVersion = "2.0.0"
@@ -50,6 +52,8 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+        implementation("org.springframework.boot:spring-boot-starter-actuator")
+
 //        implementation("com.konasl.commonlibs:spring-web:7.0.1")
 //        implementation("com.konasl.commonlibs:logger:7.0.1")
 //        implementation("com.cubeone", "CubeOneAPI", "1.0.0")
@@ -69,6 +73,25 @@ subprojects {
         testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
 
         testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
+
+        runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+    }
+
+    gitProperties {
+        if (project.name != "module-core") {
+            val primary = "${project.property("version.primary")}"
+            val major = "${project.property("version.major")}"
+            val minor = "${project.property("version.minor")}"
+
+            val buildVersion = listOf(primary, major, minor).joinToString(".")
+            val buildTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+            println("buildVersion = $buildVersion")
+            println("buildDateTime = $buildTime")
+
+            customProperty("git.build.version", buildVersion)
+            customProperty("git.build.time", buildTime)
+        }
     }
 
     tasks.withType(KotlinCompilationTask::class.java) {
