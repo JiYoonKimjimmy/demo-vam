@@ -1,4 +1,4 @@
-package com.konai.vam.api.exceptionhandler
+package com.konai.vam.api.exception
 
 import com.konai.vam.api.v1.virtualaccount.controller.VirtualAccountController
 import com.konai.vam.core.common.error.FeatureCode
