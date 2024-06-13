@@ -17,15 +17,15 @@ class KodItnRestClientTest {
     @Test
     fun `KOD_ITN 상품 정보 조회 요청하여 정상 응답 확인한다`() {
     	// given
-    	val serviceIds = listOf("953365002513000")
-        val request = KodItnGetMinimalInfoListRequest(serviceIds)
+    	val productId = "953365002513000"
+        val request = KodItnGetProductsBasicInfoRequest(productId)
 
     	// when
-        val response = kodItnRestClient.getMinimalInfoList(request)
+        val response = kodItnRestClient.getProductsBasicInfo(request)
 
         // then
-        assertThat(response).isNotEmpty.hasSize(serviceIds.size)
-        assertThat(response[0].productId).isEqualTo(serviceIds[0])
+        assertThat(response).isNotNull
+        assertThat(response?.productId).isEqualTo(productId)
     }
 
 }

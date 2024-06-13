@@ -1,9 +1,9 @@
 package com.konai.vam.core.restclient.koditn
 
-data class KodItnGetMinimalInfoListRequest(
-    val serviceIds: List<String>
+data class KodItnGetProductsBasicInfoRequest(
+    val productId: String
 ) {
-    val url = "/api/kod/v2/products/getMinimalInfoList"
+    val url by lazy { "/api/kod/v2/products/$productId/basicInfo" }
 }
 
 data class KodItnProduct(
