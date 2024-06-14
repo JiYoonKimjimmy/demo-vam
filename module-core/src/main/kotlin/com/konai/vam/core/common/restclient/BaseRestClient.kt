@@ -2,6 +2,7 @@ package com.konai.vam.core.common.restclient
 
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
@@ -10,12 +11,14 @@ import java.util.*
 
 @Component
 abstract class BaseRestClient {
+    // logger
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     @Autowired
-    lateinit var externalUrlProperties: Properties
+    private lateinit var externalUrlProperties: Properties
 
     @Autowired
-    lateinit var restClient: RestClient
+    private lateinit var restClient: RestClient
 
     protected abstract val baseUrl: String
 
@@ -44,6 +47,7 @@ abstract class BaseRestClient {
     }
 
     private fun throwException(e: Exception): Nothing {
+        logger.error(e.stackTraceToString())
         throw when(e) {
             is NullPointerException -> InternalServiceException(ErrorCode.EXTERNAL_SERVICE_RESPONSE_IS_NULL)
             else -> InternalServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR)
