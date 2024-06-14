@@ -9,13 +9,11 @@ class KodItnRestClient : BaseRestClient() {
 
     override val baseUrl: String by lazy { generateBaseUrl(ComponentName.KOD_ITN) }
 
-    fun getProductsBasicInfo(request: KodItnGetProductsBasicInfoRequest): KodItnProduct? {
-        return restClient
-            .get()
-            .uri("$baseUrl${request.url}")
-            .retrieve()
-            .toEntity(KodItnProduct::class.java)
-            .body
+    fun getProductsBasicInfo(request: KodItnGetProductsBasicInfoRequest): KodItnProduct {
+        return get(
+            url = "$baseUrl${request.url}",
+            response = KodItnProduct::class.java
+        )
     }
 
 }

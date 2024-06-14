@@ -22,8 +22,8 @@ class CardSeRestClientTest {
 
         // then
         assertThat(response).isNotNull
-        assertThat(response?.cardSeInfoList).isNotEmpty
-        assertThat(response?.cardSeInfoList).hasSizeGreaterThan(0)
+        assertThat(response.cardSeInfoList).isNotEmpty
+        assertThat(response.cardSeInfoList).hasSizeGreaterThan(0)
     }
 
     @Test
@@ -37,7 +37,7 @@ class CardSeRestClientTest {
 
         // then
         assertThat(response).isNotNull
-        assertThat(response?.token).isEqualTo(token)
+        assertThat(response.token).isEqualTo(token)
     }
 
 }

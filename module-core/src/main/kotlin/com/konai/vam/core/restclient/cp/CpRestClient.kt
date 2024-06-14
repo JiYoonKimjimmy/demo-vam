@@ -9,13 +9,11 @@ class CpRestClient : BaseRestClient() {
 
     override val baseUrl: String by lazy { generateBaseUrl(ComponentName.CP) }
 
-    fun getCardsToken(request: CpGetCardsTokenRequest): CpGetCardsTokenResponse? {
-        return restClient
-            .get()
-            .uri("$baseUrl${request.url}")
-            .retrieve()
-            .toEntity(CpGetCardsTokenResponse::class.java)
-            .body
+    fun getCardsToken(request: CpGetCardsTokenRequest): CpGetCardsTokenResponse {
+        return get(
+            url = "$baseUrl${request.url}",
+            response = CpGetCardsTokenResponse::class.java
+        )
     }
 
 }

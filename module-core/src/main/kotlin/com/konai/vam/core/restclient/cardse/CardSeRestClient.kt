@@ -9,22 +9,18 @@ class CardSeRestClient : BaseRestClient() {
 
     override val baseUrl: String by lazy { generateBaseUrl(ComponentName.CARD_SE) }
 
-    fun getCardsInfoBatchId(request: CardSeGetCardsInfoBatchIdRequest): CardSeGetCardsInfoBatchIdResponse? {
-        return restClient
-            .get()
-            .uri("$baseUrl${request.url}")
-            .retrieve()
-            .toEntity(CardSeGetCardsInfoBatchIdResponse::class.java)
-            .body
+    fun getCardsInfoBatchId(request: CardSeGetCardsInfoBatchIdRequest): CardSeGetCardsInfoBatchIdResponse {
+        return get(
+            url = "$baseUrl${request.url}",
+            response = CardSeGetCardsInfoBatchIdResponse::class.java
+        )
     }
 
-    fun getCardsInfoToken(request: CardSeGetCardsInfoTokenRequest): CardSeGetCardsInfoTokenResponse? {
-        return restClient
-            .get()
-            .uri("$baseUrl${request.url}")
-            .retrieve()
-            .toEntity(CardSeGetCardsInfoTokenResponse::class.java)
-            .body
+    fun getCardsInfoToken(request: CardSeGetCardsInfoTokenRequest): CardSeGetCardsInfoTokenResponse {
+        return get(
+            url = "$baseUrl${request.url}",
+            response = CardSeGetCardsInfoTokenResponse::class.java
+        )
     }
 
 }

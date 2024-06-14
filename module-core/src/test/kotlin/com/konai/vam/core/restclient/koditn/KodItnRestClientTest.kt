@@ -25,7 +25,7 @@ class KodItnRestClientTest {
 
         // then
         assertThat(response).isNotNull
-        assertThat(response?.productId).isEqualTo(productId)
+        assertThat(response.productId).isEqualTo(productId)
     }
 
 }

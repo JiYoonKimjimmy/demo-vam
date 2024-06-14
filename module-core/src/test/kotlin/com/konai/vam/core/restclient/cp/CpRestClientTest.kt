@@ -22,7 +22,7 @@ class CpRestClientTest {
 
     	// then
         assertThat(response).isNotNull
-        assertThat(response?.token).isEqualTo(token)
+        assertThat(response.token).isEqualTo(token)
     }
 
 }
