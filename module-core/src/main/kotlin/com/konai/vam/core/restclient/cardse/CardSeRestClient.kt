@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class CardSeRestClient : BaseRestClient() {
 
-    private final val baseUrl: String by lazy { generateBaseUrl(ComponentName.CARD_SE) }
+    override val baseUrl: String by lazy { generateBaseUrl(ComponentName.CARD_SE) }
 
     fun getCardsInfoBatchId(request: CardSeGetCardsInfoBatchIdRequest): CardSeGetCardsInfoBatchIdResponse? {
         return restClient

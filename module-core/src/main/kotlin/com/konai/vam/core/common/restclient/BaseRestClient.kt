@@ -8,7 +8,7 @@ import org.springframework.web.client.RestClient
 import java.util.*
 
 @Component
-class BaseRestClient {
+ abstract class BaseRestClient {
 
     @Autowired
     lateinit var externalUrlProperties: Properties
@@ -16,7 +16,9 @@ class BaseRestClient {
     @Autowired
     lateinit var restClient: RestClient
 
-    fun generateBaseUrl(componentName: ComponentName): String {
+    internal abstract val baseUrl: String
+
+    internal fun generateBaseUrl(componentName: ComponentName): String {
         val propertyName = componentName.getPropertyName()
         return externalUrlProperties["$propertyName.url"]
             .takeIf { it != null }

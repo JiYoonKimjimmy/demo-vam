@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class KodItnRestClient : BaseRestClient() {
 
-    private final val baseUrl: String by lazy { generateBaseUrl(ComponentName.KOD_ITN) }
+    override val baseUrl: String by lazy { generateBaseUrl(ComponentName.KOD_ITN) }
 
     fun getProductsBasicInfo(request: KodItnGetProductsBasicInfoRequest): KodItnProduct? {
         return restClient
