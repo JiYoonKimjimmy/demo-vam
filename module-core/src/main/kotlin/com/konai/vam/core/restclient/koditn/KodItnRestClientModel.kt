@@ -7,5 +7,9 @@ data class KodItnGetProductsBasicInfoRequest(
 }
 
 data class KodItnProduct(
-    val productId: String
+    val productId: String,
+    val virtualAccountMappingType: String?,
+    val virtualAccountBankCode: String?,
+    val virtualAccountRechargeWaitAmountYn: String?,
+    val virtualAccountRechargeMaxWaitAmount: Long?,
 )
