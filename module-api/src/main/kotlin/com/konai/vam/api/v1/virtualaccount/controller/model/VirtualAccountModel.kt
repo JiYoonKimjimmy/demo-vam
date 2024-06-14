@@ -4,8 +4,7 @@ import com.konai.vam.core.enumerate.VirtualAccountStatus
 
 data class VirtualAccountModel(
     val id: Long? = null,
-    val accountNumber: String,
+    val accountNo: String,
     val bankCode: String,
-    val bankName: String,
     val status: VirtualAccountStatus,
 )

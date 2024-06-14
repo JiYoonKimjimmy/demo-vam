@@ -2,7 +2,6 @@ package com.konai.vam.api.v1.virtualaccount.controller.model
 
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.core.enumerate.VirtualAccountStatus
-import com.konai.vam.core.enumerate.YesOrNo
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import org.springframework.stereotype.Component
 
@@ -11,11 +10,9 @@ class VirtualAccountModelMapper {
 
     fun requestToDomain(request: CreateVirtualAccountRequest): VirtualAccount {
         return VirtualAccount(
-            accountNumber = request.accountNumber,
+            accountNo = request.accountNo,
             bankCode = request.bankCode,
-            bankName = request.bankName,
-            mappingType = request.mappingType,
-            mappingYn = YesOrNo.N,
+            connectType = request.connectType,
             status = VirtualAccountStatus.REGISTERED,
         )
     }
@@ -32,9 +29,8 @@ class VirtualAccountModelMapper {
     fun domainToModel(domain: VirtualAccount): VirtualAccountModel {
         return VirtualAccountModel(
             id = domain.id!!,
-            accountNumber = domain.accountNumber,
+            accountNo = domain.accountNo,
             bankCode = domain.bankCode,
-            bankName = domain.bankName,
             status = domain.status,
         )
     }

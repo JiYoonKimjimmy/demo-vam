@@ -40,9 +40,9 @@ class VirtualAccountRepository(
             select(entity(VirtualAccountEntity::class))
                 .from(entity(VirtualAccountEntity::class))
                 .whereAnd(
-                    predicate.accountNumber?.let { path(VirtualAccountEntity::accountNumber).eq(it) },
+                    predicate.accountNumber?.let { path(VirtualAccountEntity::accountNo).eq(it) },
                     predicate.bankCode?.let { path(VirtualAccountEntity::bankCode).eq(it) },
-                    predicate.mappingType?.let { path(VirtualAccountEntity::mappingType).eq(it) }
+                    predicate.mappingType?.let { path(VirtualAccountEntity::connectType).eq(it) }
                 )
         }
         return virtualAccountJpaRepository.findPage(pageableRequest.toPageRequest(), query).toBasePageable()

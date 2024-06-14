@@ -5,9 +5,8 @@ import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.core.common.EMPTY
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
-import com.konai.vam.core.enumerate.VirtualAccountMappingType.FIX
+import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.konai.vam.core.enumerate.VirtualAccountStatus.REGISTERED
-import com.konai.vam.core.enumerate.YesOrNo.N
 import com.konai.vam.core.repository.virtualaccount.VirtualAccountRepository
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
@@ -49,8 +48,8 @@ class VirtualAccountServiceTest : BehaviorSpec({
             val pageableRequest = PageableRequest(number, size)
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val entities = listOf(VirtualAccountEntity(id = SecureRandom().nextLong(), EMPTY, EMPTY, EMPTY, FIX, N, REGISTERED))
-            val content = listOf(VirtualAccount(id = SecureRandom().nextLong(), EMPTY, EMPTY, EMPTY, FIX, N, REGISTERED))
+            val entities = listOf(VirtualAccountEntity(id = SecureRandom().nextLong(), EMPTY, EMPTY, FIXATION, REGISTERED))
+            val content = listOf(VirtualAccount(id = SecureRandom().nextLong(), EMPTY, EMPTY, FIXATION, REGISTERED))
 
             every { virtualAccountRepository.findPage(any(), any()) } returns BasePageable(pageable, entities)
             every { virtualAccountMapper.entitiesToDomain(any()) } returns BasePageable(pageable, content)

@@ -4,7 +4,7 @@ import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.BaseResponse
 import com.konai.vam.core.common.model.PageableRequest
-import com.konai.vam.core.enumerate.VirtualAccountMappingType
+import com.konai.vam.core.enumerate.VirtualAccountConnectType
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import org.hibernate.validator.constraints.Length
@@ -16,7 +16,7 @@ data class FindAllVirtualAccountRequest(
     val accountNumber: String? = null,
     @field:Pattern(regexp = "\\d{3}", message = "Bank code must be exactly 3 digits")
     val bankCode: String? = null,
-    val mappingType: VirtualAccountMappingType? = null,
+    val mappingType: VirtualAccountConnectType? = null,
     val isMapping: Boolean? = null,
     @field:NotNull(message = "Pageable request cannot be empty")
     val pageable: PageableRequest

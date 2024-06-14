@@ -12,10 +12,8 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
-import com.konai.vam.core.enumerate.VirtualAccountMappingType.FIX
-import com.konai.vam.core.enumerate.VirtualAccountStatus
+import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.konai.vam.core.enumerate.VirtualAccountStatus.REGISTERED
-import com.konai.vam.core.enumerate.YesOrNo.N
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.core.spec.style.BehaviorSpec
@@ -44,10 +42,9 @@ class VirtualAccountControllerTest(
     given("가상 계좌 등록 요청하였지만") {
         `when`("계좌 번호 요청 정보가 없는 경우") {
             val request = CreateVirtualAccountRequest(
-                accountNumber = "",
+                accountNo = "",
                 bankCode = "001",
-                bankName = "bankName",
-                mappingType = FIX
+                connectType = FIXATION
             )
 
             then("MethodArgumentNotValidException 예외 발생하여 실패한다") {
@@ -68,12 +65,10 @@ class VirtualAccountControllerTest(
     given("가상 계좌 등록 요청하면") {
         val accountNumber = "accountNumber001"
         val bankCode = "001"
-        val bankName = "우리은행"
         val request = CreateVirtualAccountRequest(
-            accountNumber = accountNumber,
+            accountNo = accountNumber,
             bankCode = bankCode,
-            bankName = bankName,
-            mappingType = FIX
+            connectType = FIXATION
         )
 
         `when`("중복 계좌번호 & 은행코드 예외 발생하는 경우") {
@@ -119,12 +114,12 @@ class VirtualAccountControllerTest(
         val number = 0
         val size = 1
 
-        `when`("'accountNumber' 일치한 가상 계좌 목록 조회인 경우") {
-            val accountNumber = "accountNumber"
+        `when`("'accountNo' 일치한 가상 계좌 목록 조회인 경우") {
+            val accountNumber = "accountNo"
             val request = FindAllVirtualAccountRequest(accountNumber = accountNumber, pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(VirtualAccount(1L, accountNumber, EMPTY, EMPTY, FIX, N, REGISTERED))
+            val content = listOf(VirtualAccount(1L, accountNumber, EMPTY, FIXATION, REGISTERED))
             every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("1건 조회하여 정상 응답한다") {
@@ -139,7 +134,7 @@ class VirtualAccountControllerTest(
                     .andExpect(jsonPath("result.code").isEmpty)
                     .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
                     .andExpect(jsonPath("pageable.numberOfElements").value(size))
-                    .andExpect(jsonPath("content[0].accountNumber").value(accountNumber))
+                    .andExpect(jsonPath("content[0].accountNo").value(accountNumber))
             }
         }
 
@@ -147,7 +142,7 @@ class VirtualAccountControllerTest(
             val request = FindAllVirtualAccountRequest(pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, EMPTY, FIX, N, REGISTERED))
+            val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, FIXATION, REGISTERED))
             every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("조회 결과 정상 응답한다") {

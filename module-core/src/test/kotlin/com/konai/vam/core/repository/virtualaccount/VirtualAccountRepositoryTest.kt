@@ -5,10 +5,9 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.config.VamCoreTestConfig
-import com.konai.vam.core.enumerate.VirtualAccountMappingType.FIX
+import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.konai.vam.core.enumerate.VirtualAccountStatus.MAPPING
 import com.konai.vam.core.enumerate.VirtualAccountStatus.REGISTERED
-import com.konai.vam.core.enumerate.YesOrNo.N
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.autoconfigure.KotlinJdslAutoConfiguration
@@ -40,11 +39,9 @@ class VirtualAccountRepositoryTest {
     @BeforeEach
     fun before() {
         saved = VirtualAccountEntity(
-            accountNumber = "accountNumber",
+            accountNo = "accountNo",
             bankCode = "001",
-            bankName = "우리은행",
-            mappingType = FIX,
-            mappingYn = N,
+            connectType = FIXATION,
             status = REGISTERED
         ).let { virtualAccountRepository.save(it) }
     }
@@ -52,13 +49,13 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `가상 계좌 단건 entity 생성하여 저장 성공한다`() {
     	// given
-        val entity = VirtualAccountEntity(accountNumber = "accountNumber", bankCode = "001", bankName = "우리은행", mappingType = FIX, mappingYn = N, status = REGISTERED)
+        val entity = VirtualAccountEntity(accountNo = "accountNo", bankCode = "001", connectType = FIXATION, status = REGISTERED)
         // when
         val result = virtualAccountRepository.save(entity)
 
     	// then
         assertThat(result.id).isNotNull()
-        assertThat(result.accountNumber).isEqualTo(entity.accountNumber)
+        assertThat(result.accountNo).isEqualTo(entity.accountNo)
     }
 
     @Test
@@ -91,7 +88,7 @@ class VirtualAccountRepositoryTest {
     	val accountId = SecureRandom().nextLong()
 
     	// when
-        val result = virtualAccountRepository.findOneById(accountId) { it.orElse(VirtualAccountEntity(id = accountId, accountNumber = EMPTY, bankCode = EMPTY, bankName = EMPTY, mappingType = FIX, mappingYn = N, status = REGISTERED)) }
+        val result = virtualAccountRepository.findOneById(accountId) { it.orElse(VirtualAccountEntity(id = accountId, accountNo = EMPTY, bankCode = EMPTY, connectType = FIXATION, status = REGISTERED)) }
 
     	// then
         assertThat(result).isNotNull()
@@ -116,7 +113,7 @@ class VirtualAccountRepositoryTest {
         val number = 0
         val size = 1
     	val pageableRequest = PageableRequest(number, size)
-        val predicate = VirtualAccountPredicate(accountNumber = saved.accountNumber, bankCode = saved.bankCode)
+        val predicate = VirtualAccountPredicate(accountNumber = saved.accountNo, bankCode = saved.bankCode)
 
     	// when
     	val result = virtualAccountRepository.findPage(predicate, pageableRequest)
