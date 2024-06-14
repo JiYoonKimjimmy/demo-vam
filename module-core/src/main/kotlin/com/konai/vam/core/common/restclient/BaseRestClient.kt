@@ -2,9 +2,11 @@ package com.konai.vam.core.common.restclient
 
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
+import com.konai.vam.core.common.error.exception.RestClientServiceException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClient
 import java.lang.NullPointerException
 import java.util.*
@@ -49,8 +51,9 @@ abstract class BaseRestClient {
     private fun throwException(e: Exception): Nothing {
         logger.error(e.stackTraceToString())
         throw when(e) {
-            is NullPointerException -> InternalServiceException(ErrorCode.EXTERNAL_SERVICE_RESPONSE_IS_NULL)
-            else -> InternalServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR)
+            is HttpClientErrorException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR, e.message)
+            is NullPointerException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_RESPONSE_IS_NULL)
+            else -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR)
         }
     }
 

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus
 enum class ErrorCode(
     val status: HttpStatus,
     val code: String,
-    val message: String
+    var message: String
 ) {
 
     VIRTUAL_ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "001", "Virtual account not found"),

@@ -17,6 +17,8 @@ class CsRestClientTest {
     @MockkBean
     private lateinit var restClient: RestClient
 
+    private val baseUrl = "http://118.33.122.28:15820/cs"
+
     @Test
     fun `CS 시스템 어드인 충전 요청하여 정상 응답 성공한다`() {
     	// given
@@ -28,8 +30,7 @@ class CsRestClientTest {
         val request = CsPostRechargesSystemManualsRequest(par, amount, serviceId, rechargerId, isPushRequired)
         val response = CsPostRechargesSystemManualsResponse(par = par, amount = amount, reason = "000")
 
-        val url = "http://118.33.122.28:15820/cs${request.url}"
-        every { restClient.post().uri(url).body(request).retrieve().toEntity(CsPostRechargesSystemManualsResponse::class.java).body!! } returns response
+        every { restClient.post().uri("$baseUrl${request.url}").body(request).retrieve().toEntity(CsPostRechargesSystemManualsResponse::class.java).body!! } returns response
 
     	// when
     	val result = csRestClient.postRechargesSystemManuals(request)
@@ -50,8 +51,7 @@ class CsRestClientTest {
         val request = CsPostRechargesSystemManualsReversalRequest(transactionId = transactionId, par = par, amount = amount)
         val response = CsPostRechargesSystemManualsReversalResponse(transactionId = transactionId, reason = "000")
 
-        val url = "http://118.33.122.28:15820/cs${request.url}"
-        every { restClient.post().uri(url).body(request).retrieve().toEntity(CsPostRechargesSystemManualsReversalResponse::class.java).body!! } returns response
+        every { restClient.post().uri("$baseUrl${request.url}").body(request).retrieve().toEntity(CsPostRechargesSystemManualsReversalResponse::class.java).body!! } returns response
 
     	// when
     	val result = csRestClient.postRechargesSystemManualsReversal(request)
