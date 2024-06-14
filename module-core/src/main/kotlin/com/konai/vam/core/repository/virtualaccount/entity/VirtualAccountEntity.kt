@@ -20,4 +20,4 @@ class VirtualAccountEntity(
     @Enumerated(EnumType.STRING)
     var status: VirtualAccountStatus,
 
-    ) : BaseEntity()
+) : BaseEntity()
