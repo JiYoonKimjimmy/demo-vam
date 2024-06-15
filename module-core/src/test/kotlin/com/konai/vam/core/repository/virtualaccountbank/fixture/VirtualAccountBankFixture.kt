@@ -1,6 +1,6 @@
-package com.konai.vam.core.repository.bank.fixture
+package com.konai.vam.core.repository.virtualaccountbank.fixture
 
-import com.konai.vam.core.repository.bank.entity.VirtualAccountBankEntity
+import com.konai.vam.core.repository.virtualaccountbank.entity.VirtualAccountBankEntity
 
 class VirtualAccountBankFixture {
 

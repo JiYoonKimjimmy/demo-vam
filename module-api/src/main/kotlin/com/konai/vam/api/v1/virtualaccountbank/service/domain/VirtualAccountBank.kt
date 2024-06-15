@@ -1,4 +1,4 @@
-package com.konai.vam.api.v1.bank.service.domain
+package com.konai.vam.api.v1.virtualaccountbank.service.domain
 
 data class VirtualAccountBank(
     val bankCode: String,

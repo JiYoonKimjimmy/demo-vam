@@ -1,6 +1,6 @@
-package com.konai.vam.api.v1.bank.fixture
+package com.konai.vam.api.v1.virtualaccountbank.fixture
 
-import com.konai.vam.api.v1.bank.service.domain.VirtualAccountBank
+import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBank
 
 class VirtualAccountBankFixture {
 
