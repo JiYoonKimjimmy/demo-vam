@@ -3,11 +3,8 @@ package com.konai.vam.api.v1.virtualaccount.service
 import com.konai.vam.api.v1.virtualaccount.fixture.VirtualAccountFixture
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
-import com.konai.vam.core.common.EMPTY
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
-import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
-import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
 import com.konai.vam.core.repository.virtualaccount.VirtualAccountRepository
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate

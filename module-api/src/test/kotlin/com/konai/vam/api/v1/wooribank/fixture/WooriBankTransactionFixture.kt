@@ -1,7 +1,6 @@
 package com.konai.vam.api.v1.wooribank.fixture
 
 import com.konai.vam.api.v1.wooribank.service.domain.WooriBankTransaction
-import org.junit.jupiter.api.Assertions.*
 
 class WooriBankTransactionFixture {
 

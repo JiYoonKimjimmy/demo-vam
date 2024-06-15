@@ -1,7 +1,6 @@
 package com.konai.vam.core.repository.wooribank.fixture
 
 import com.konai.vam.core.repository.wooribank.entity.WooriBankTransactionEntity
-import org.junit.jupiter.api.Assertions.*
 
 class WooriBankTransactionFixture {
 

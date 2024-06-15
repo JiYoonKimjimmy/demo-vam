@@ -1,10 +1,8 @@
 package com.konai.vam.api.v1.virtualaccount.service.domain
 
 import com.konai.vam.core.common.model.BasePageable
-import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
 
 @Component
 class VirtualAccountMapper {
