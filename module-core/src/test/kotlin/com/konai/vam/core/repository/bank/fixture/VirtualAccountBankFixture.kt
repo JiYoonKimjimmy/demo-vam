@@ -4,7 +4,7 @@ import com.konai.vam.core.repository.bank.entity.VirtualAccountBankEntity
 
 class VirtualAccountBankFixture {
 
-    fun getEntity(id: Long? = null): VirtualAccountBankEntity {
+    fun getEntity(): VirtualAccountBankEntity {
         return VirtualAccountBankEntity(
             bankCode = "020",
             bankName = "우리은행",

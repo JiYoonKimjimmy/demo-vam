@@ -4,7 +4,7 @@ import com.konai.vam.api.v1.bank.service.domain.VirtualAccountBank
 
 class VirtualAccountBankFixture {
 
-    fun getDomain(id: Long? = null): VirtualAccountBank {
+    fun getDomain(): VirtualAccountBank {
         return VirtualAccountBank(
             bankCode = "020",
             bankName = "우리 은행",
