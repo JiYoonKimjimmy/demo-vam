@@ -4,16 +4,14 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModelMapper
+import com.konai.vam.api.v1.virtualaccount.fixture.VirtualAccountFixture
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountUseCase
-import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
-import com.konai.vam.core.common.EMPTY
 import com.konai.vam.core.common.enumerate.ResultStatus
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
-import com.konai.vam.core.enumerate.VirtualAccountStatus.REGISTERED
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.core.spec.style.BehaviorSpec
@@ -38,6 +36,8 @@ class VirtualAccountControllerTest(
     @SpykBean private val virtualAccountModelMapper: VirtualAccountModelMapper,
 
 ) : BehaviorSpec({
+
+    val virtualAccountFixture = VirtualAccountFixture()
 
     given("가상 계좌 등록 요청하였지만") {
         `when`("계좌 번호 요청 정보가 없는 경우") {
@@ -89,8 +89,7 @@ class VirtualAccountControllerTest(
         }
 
         `when`("정상 가상 계좌 등록 정보인 경우") {
-            val id = 1L
-            val domain = virtualAccountModelMapper.requestToDomain(request).apply { this.id = id }
+            val domain = virtualAccountModelMapper.requestToDomain(request)
 
             every { virtualAccountUseCase.create(any()) } returns domain
 
@@ -105,7 +104,6 @@ class VirtualAccountControllerTest(
                     .andExpect(status().isCreated)
                     .andExpect(jsonPath("result.code").isEmpty)
                     .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
-                    .andExpect(jsonPath("data.id").value(id))
             }
         }
     }
@@ -119,7 +117,7 @@ class VirtualAccountControllerTest(
             val request = FindAllVirtualAccountRequest(accountNumber = accountNumber, pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(VirtualAccount(1L, accountNumber, EMPTY, FIXATION, REGISTERED))
+            val content = listOf(virtualAccountFixture.getDomain())
             every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("1건 조회하여 정상 응답한다") {
@@ -142,7 +140,7 @@ class VirtualAccountControllerTest(
             val request = FindAllVirtualAccountRequest(pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(VirtualAccount(1L, EMPTY, EMPTY, FIXATION, REGISTERED))
+            val content = listOf(virtualAccountFixture.getDomain())
             every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("조회 결과 정상 응답한다") {

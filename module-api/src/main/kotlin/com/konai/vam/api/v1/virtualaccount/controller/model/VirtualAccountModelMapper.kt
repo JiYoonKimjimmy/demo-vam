@@ -13,24 +13,24 @@ class VirtualAccountModelMapper {
             accountNo = request.accountNo,
             bankCode = request.bankCode,
             connectType = request.connectType,
-            status = VirtualAccountStatus.REGISTERED,
+            status = VirtualAccountStatus.ACTIVE,
         )
     }
 
     fun requestToPredicate(request: FindAllVirtualAccountRequest): VirtualAccountPredicate {
         return VirtualAccountPredicate(
-            accountNumber = request.accountNumber,
+            accountNo = request.accountNumber,
             bankCode = request.bankCode,
-            mappingType = request.mappingType,
+            connectType = request.mappingType,
             isMapping = request.isMapping,
         )
     }
 
     fun domainToModel(domain: VirtualAccount): VirtualAccountModel {
         return VirtualAccountModel(
-            id = domain.id!!,
             accountNo = domain.accountNo,
             bankCode = domain.bankCode,
+            connectType = domain.connectType,
             status = domain.status,
         )
     }

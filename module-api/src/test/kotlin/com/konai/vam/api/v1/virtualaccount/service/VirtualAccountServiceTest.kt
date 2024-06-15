@@ -1,12 +1,13 @@
 package com.konai.vam.api.v1.virtualaccount.service
 
+import com.konai.vam.api.v1.virtualaccount.fixture.VirtualAccountFixture
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.core.common.EMPTY
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
-import com.konai.vam.core.enumerate.VirtualAccountStatus.REGISTERED
+import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
 import com.konai.vam.core.repository.virtualaccount.VirtualAccountRepository
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
@@ -22,6 +23,7 @@ class VirtualAccountServiceTest : BehaviorSpec({
     val virtualAccountRepository: VirtualAccountRepository = mockk()
     val virtualAccountMapper: VirtualAccountMapper = mockk()
     val virtualAccountService = VirtualAccountService(virtualAccountRepository, virtualAccountMapper)
+    val virtualAccountFixture = VirtualAccountFixture()
 
     given("가상 계좌 등록 요청하면") {
 
@@ -48,8 +50,8 @@ class VirtualAccountServiceTest : BehaviorSpec({
             val pageableRequest = PageableRequest(number, size)
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val entities = listOf(VirtualAccountEntity(id = SecureRandom().nextLong(), EMPTY, EMPTY, FIXATION, REGISTERED))
-            val content = listOf(VirtualAccount(id = SecureRandom().nextLong(), EMPTY, EMPTY, FIXATION, REGISTERED))
+            val entities = listOf(virtualAccountFixture.getEntity(SecureRandom().nextLong()))
+            val content = listOf(virtualAccountFixture.getDomain())
 
             every { virtualAccountRepository.findPage(any(), any()) } returns BasePageable(pageable, entities)
             every { virtualAccountMapper.entitiesToDomain(any()) } returns BasePageable(pageable, content)
