@@ -53,7 +53,7 @@ abstract class BaseRestClient {
         throw when(e) {
             is HttpClientErrorException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR, e.message)
             is NullPointerException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_RESPONSE_IS_NULL)
-            else -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR)
+            else -> RestClientServiceException(ErrorCode.UNKNOWN_ERROR, e.message)
         }
     }
 
