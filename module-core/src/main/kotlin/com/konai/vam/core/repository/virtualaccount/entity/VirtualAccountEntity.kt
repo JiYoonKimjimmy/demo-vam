@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.virtualaccount.entity
 
-import com.konai.vam.core.common.converter.DatabaseCustomerInfoColumnConverter
+import com.konai.vam.core.common.converter.EncryptionCardInfoConverter
 import com.konai.vam.core.common.entity.BaseEntity
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus
 import com.konai.vam.core.enumerate.VirtualAccountConnectType
@@ -14,7 +14,7 @@ class VirtualAccountEntity(
     @Id
     @GeneratedValue
     val id: Long? = null,
-    @Convert(converter = DatabaseCustomerInfoColumnConverter::class)
+    @Convert(converter = EncryptionCardInfoConverter::class)
     val accountNo: String,
     val bankCode: String,
     @Enumerated(EnumType.STRING)

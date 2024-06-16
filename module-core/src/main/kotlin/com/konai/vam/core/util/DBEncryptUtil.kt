@@ -73,5 +73,7 @@ object DBEncryptUtil {
 
     fun encryptCustomInfo(text: String): String = encrypt(text, EncryptDataType.CUSTOMER_INFO)
     fun decryptCustomInfo(text: String): String = decrypt(text, EncryptDataType.CUSTOMER_INFO)
+    fun encryptCardInfo(text: String): String = encrypt(text, EncryptDataType.CARD_INFO)
+    fun decryptCardInfo(text: String): String = decrypt(text, EncryptDataType.CARD_INFO)
 
 }
