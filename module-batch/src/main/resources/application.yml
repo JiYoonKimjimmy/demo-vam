@@ -2,4 +2,8 @@
 spring:
   profiles:
     active: dev
-    include: base
+    include: base, batch, external-url
+
+# server
+server:
+  port: 11021

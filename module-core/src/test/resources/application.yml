@@ -1,10 +1,14 @@
 # spring
 spring:
   profiles:
-    active: dev
-    include: base
+    active: test
+    include: base, external-url
 
-logging:
-  level:
-    org.apache.hc.client5.http: DEBUG
-    org.springframework.web.client.RestClient: DEBUG
+# test properties
+git:
+  commit:
+    id:
+      abbrev:
+  build:
+    version:
+    time:

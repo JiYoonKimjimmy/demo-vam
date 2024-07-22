@@ -9,11 +9,13 @@ class VirtualAccountMapper {
 
     fun domainToEntity(domain: VirtualAccount): VirtualAccountEntity {
         return VirtualAccountEntity(
-            accountNo = domain.accountNo,
-            bankCode = domain.bankCode,
+            id = domain.id,
+            accountNo = domain.bankAccount.accountNo,
+            bankCode = domain.bankAccount.bankCode,
             connectType = domain.connectType,
             status = domain.status,
             par = domain.par,
+            serviceId = domain.serviceId,
             cardConnectStatus = domain.cardConnectStatus,
             cardConnected = domain.cardConnected,
             cardDisconnected = domain.cardDisconnected,
@@ -23,11 +25,12 @@ class VirtualAccountMapper {
 
     fun entityToDomain(entity: VirtualAccountEntity): VirtualAccount {
         return VirtualAccount(
-            accountNo = entity.accountNo,
-            bankCode = entity.bankCode,
+            id = entity.id,
+            bankAccount = BankAccount(entity.accountNo, entity.bankCode),
             connectType = entity.connectType,
             status = entity.status,
             par = entity.par,
+            serviceId = entity.serviceId,
             cardConnectStatus = entity.cardConnectStatus,
             cardConnected = entity.cardConnected,
             cardDisconnected = entity.cardDisconnected,

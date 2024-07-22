@@ -1,9 +1,10 @@
 package com.konai.vam.core.common.converter
 
+import com.konai.vam.core.util.DATE_TIME_BASIC_PATTERN
+import com.konai.vam.core.util.convertPatternOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class LocalDateTimeConverterTest {
 
@@ -11,7 +12,7 @@ class LocalDateTimeConverterTest {
     fun `LocalDateTime 을 'yyyyMMddHHmmSS' 패턴의 String 으로 변환한다`() {
     	// given
         val date = "20240616093130"
-        val localDateTime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern(DATE_TIME_BASIC_PATTERN))
+        val localDateTime = date.convertPatternOf(DATE_TIME_BASIC_PATTERN)
 
     	// when
         val result = LocalDateTimeToStringConverter().convert(localDateTime)

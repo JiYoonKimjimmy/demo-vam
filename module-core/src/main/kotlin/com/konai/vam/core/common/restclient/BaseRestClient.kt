@@ -5,13 +5,10 @@ import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.RestClientServiceException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClient
-import java.lang.NullPointerException
 import java.util.*
 
-@Component
 abstract class BaseRestClient {
     // logger
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -48,12 +45,13 @@ abstract class BaseRestClient {
         }
     }
 
-    private fun throwException(e: Exception): Nothing {
-        logger.error(e.stackTraceToString())
-        throw when(e) {
-            is HttpClientErrorException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR, e.message)
+    private fun throwException(exception: Exception): Nothing {
+        logger.error(exception.stackTraceToString())
+        throw when(exception) {
+            is RestClientServiceException -> exception
+            is HttpClientErrorException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR, exception.message)
             is NullPointerException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_RESPONSE_IS_NULL)
-            else -> RestClientServiceException(ErrorCode.UNKNOWN_ERROR, e.message)
+            else -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR, exception.message)
         }
     }
 

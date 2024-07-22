@@ -16,8 +16,8 @@ data class FindAllVirtualAccountRequest(
     val accountNumber: String? = null,
     @field:Pattern(regexp = "\\d{3}", message = "Bank code must be exactly 3 digits")
     val bankCode: String? = null,
-    val mappingType: VirtualAccountConnectType? = null,
-    val isMapping: Boolean? = null,
+    val connectType: VirtualAccountConnectType? = null,
+    val isConnected: Boolean? = null,
     @field:NotNull(message = "Pageable request cannot be empty")
     val pageable: PageableRequest
 )

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModelMapper
-import com.konai.vam.api.v1.virtualaccount.fixture.VirtualAccountFixture
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountUseCase
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountAdapter
 import com.konai.vam.core.common.enumerate.ResultStatus
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
@@ -14,6 +13,7 @@ import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
+import fixtures.VirtualAccountFixture
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,10 +32,10 @@ class VirtualAccountControllerTest(
 
     @Autowired private val mockMvc: MockMvc,
 
-    @MockkBean private val virtualAccountUseCase: VirtualAccountUseCase,
+    @MockkBean private val virtualAccountAdapter: VirtualAccountAdapter,
     @SpykBean private val virtualAccountModelMapper: VirtualAccountModelMapper,
 
-) : BehaviorSpec({
+    ) : BehaviorSpec({
 
     val virtualAccountFixture = VirtualAccountFixture()
 
@@ -72,7 +72,7 @@ class VirtualAccountControllerTest(
         )
 
         `when`("중복 계좌번호 & 은행코드 예외 발생하는 경우") {
-            every { virtualAccountUseCase.create(any()) } throws InternalServiceException(ErrorCode.INTERNAL_SERVER_ERROR)
+            every { virtualAccountAdapter.create(any()) } throws InternalServiceException(ErrorCode.INTERNAL_SERVER_ERROR)
 
             then("InternalServerException 예외 발생하여 실패한다") {
                 mockMvc
@@ -91,7 +91,7 @@ class VirtualAccountControllerTest(
         `when`("정상 가상 계좌 등록 정보인 경우") {
             val domain = virtualAccountModelMapper.requestToDomain(request)
 
-            every { virtualAccountUseCase.create(any()) } returns domain
+            every { virtualAccountAdapter.create(any()) } returns domain
 
             then("DB 저장하여 정상 응답한다") {
                 mockMvc
@@ -113,12 +113,12 @@ class VirtualAccountControllerTest(
         val size = 1
 
         `when`("'accountNo' 일치한 가상 계좌 목록 조회인 경우") {
-            val accountNumber = "accountNo"
+            val accountNumber = "1234567890"
             val request = FindAllVirtualAccountRequest(accountNumber = accountNumber, pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(virtualAccountFixture.getDomain())
-            every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
+            val content = listOf(virtualAccountFixture.make())
+            every { virtualAccountAdapter.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("1건 조회하여 정상 응답한다") {
                 mockMvc
@@ -140,8 +140,8 @@ class VirtualAccountControllerTest(
             val request = FindAllVirtualAccountRequest(pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(virtualAccountFixture.getDomain())
-            every { virtualAccountUseCase.findPage(any(), any()) } returns BasePageable(pageable, content)
+            val content = listOf(virtualAccountFixture.make())
+            every { virtualAccountAdapter.findPage(any(), any()) } returns BasePageable(pageable, content)
 
             then("조회 결과 정상 응답한다") {
                 mockMvc

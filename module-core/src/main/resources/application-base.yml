@@ -1,0 +1,94 @@
+server:
+  port: 11021
+  shutdown: graceful
+  servlet:
+    context-path: /vam
+  tomcat:
+    threads:
+      min-spare: 10
+      max: 200
+    connection-timeout: 20s
+
+# actuator
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health,shutdown,metrics,prometheus
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    shutdown:
+      enabled: true
+  health:
+    redis:
+      enabled: false
+    rabbit:
+      enabled: false
+
+# masking
+masking:
+  fields: FIELD|token|6|4, FIELD|aspId|4|4, FIELD|di|0|0, FIELD|ci|0|0, FIELD|mapId|0|0, FIELD|address|2|0, FIELD|mobileTokenList|2|0, FIELD|cardInfoList|2|0
+
+# encrypt cubeone
+database:
+  encrypt-provider: NONE
+
+# spring
+spring:
+  datasource:
+    hikari:
+      pool-name: hikaricp-pool
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      minimum-idle: 5
+      maximum-pool-size: 20
+      max-lifetime: 60000
+      idle-timeout: 30000
+      connection-timeout: 10000
+      connection-test-query: SELECT 1 FROM DUAL
+  jpa:
+    database: oracle
+
+# logging
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    org.apache.hc.client5.http: DEBUG
+
+# springdoc
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    doc-expansion: none
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@118.33.122.24:15322:kmdbp19
+    username: vam
+    password: StgVAM1104#
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        ddl-auto: update
+        format_sql: true
+        show_sql: true
+  data:
+    redis:
+      host: 10.30.210.121
+      password: 123456
+      port: 6379
+      timeout: 500
+      sentinel:
+        master: mymaster
+        nodes: ['10.30.210.121:26379']

@@ -6,7 +6,7 @@ open class BasePageable<T>(
 ) {
 
     data class Pageable(
-        val first: Boolean = false,
+        val first: Boolean = true,
         val last: Boolean = false,
         val number: Int = 0,
         val numberOfElements: Int = 0,

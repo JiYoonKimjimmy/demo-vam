@@ -1,35 +1,24 @@
 package com.konai.vam.core.config
 
-import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.web.client.RestClientAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestClient
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 @Configuration
 class RestClientConfig : RestClientAutoConfiguration() {
-    // logger
-    private val logger = LoggerFactory.getLogger(this::class.java)
 
     @Bean
     fun restClient(): RestClient {
         return RestClient
             .builder()
             .requestInitializer {
-                it.headers["X-KM-Correlation-Id"] = generateCorrelationId()
+//                it.headers[ASP_ID_HEADER_FIELD.getName()]         = MDC.get(ASP_ID_LOG_FIELD.getName())
+//                it.headers[MPA_ID_HEADER_FIELD.getName()]         = MDC.get(MPA_ID_LOG_FIELD.getName())
+//                it.headers[USER_ID_HEADER_FIELD.getName()]        = MDC.get(USER_ID_LOG_FIELD.getName())
+//                it.headers[CORRELATION_ID_HEADER_FIELD.getName()] = MDC.get(CORRELATION_ID_LOG_FIELD.getName()) ?: RequestContext.generateId()
             }
             .build()
-    }
-
-    private fun generateCorrelationId(): String {
-        val now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss"))
-        val uuid = UUID.randomUUID().toString().split("-")[0]
-        val correlationId = "$now-VAM-$uuid"
-        logger.info("Generate Correlation Id : $correlationId")
-        return correlationId
     }
 
 }

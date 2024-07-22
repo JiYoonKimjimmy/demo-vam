@@ -17,7 +17,7 @@ class CsRestClientTest {
     @MockkBean
     private lateinit var restClient: RestClient
 
-    private val baseUrl = "http://118.33.122.28:15820/cs"
+    private val baseUrl = "http://10.30.210.153:15820/cs"
 
     @Test
     fun `CS 시스템 어드인 충전 요청하여 정상 응답 성공한다`() {
@@ -28,7 +28,7 @@ class CsRestClientTest {
         val rechargerId = "rechargerId"
         val isPushRequired = false
         val request = CsPostRechargesSystemManualsRequest(par, amount, serviceId, rechargerId, isPushRequired)
-        val response = CsPostRechargesSystemManualsResponse(par = par, amount = amount, reason = "000")
+        val response = CsPostRechargesSystemManualsResponse(par = par, amount = amount, transactionId = "transactionId", nrNumber = "nrNumber", reason = "000")
 
         every { restClient.post().uri("$baseUrl${request.url}").body(request).retrieve().toEntity(CsPostRechargesSystemManualsResponse::class.java).body!! } returns response
 
@@ -47,7 +47,7 @@ class CsRestClientTest {
     	// given
         val transactionId = "transactionId"
         val par = "par"
-        val amount = 1000L
+        val amount = "1000"
         val request = CsPostRechargesSystemManualsReversalRequest(transactionId = transactionId, par = par, amount = amount)
         val response = CsPostRechargesSystemManualsReversalResponse(transactionId = transactionId, reason = "000")
 

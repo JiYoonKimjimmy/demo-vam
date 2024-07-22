@@ -14,6 +14,7 @@ plugins {
     id("org.springframework.boot") version "3.3.0"
     id("io.spring.dependency-management") version "1.1.5"
     id("com.gorylenko.gradle-git-properties") version "2.4.2"
+    id("java-test-fixtures")
     jacoco
 }
 
@@ -32,6 +33,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.gorylenko.gradle-git-properties")
     apply(plugin = "jacoco")
+    apply(plugin = "java-test-fixtures")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -51,7 +53,6 @@ subprojects {
         implementation(kotlin("stdlib-jdk8"))
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
         implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 //        implementation("com.konasl.commonlibs:spring-web:7.0.1")
@@ -73,12 +74,11 @@ subprojects {
         testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
 
         testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
-
-        runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     }
 
     gitProperties {
         if (project.name != "module-core") {
+            val projectName = project.name
             val primary = "${project.property("version.primary")}"
             val major = "${project.property("version.major")}"
             val minor = "${project.property("version.minor")}"
@@ -86,8 +86,10 @@ subprojects {
             val buildVersion = listOf(primary, major, minor).joinToString(".")
             val buildTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 
-            println("buildVersion = $buildVersion")
-            println("buildDateTime = $buildTime")
+            println()
+            println("projectName   : $projectName")
+            println("buildVersion  : $buildVersion")
+            println("buildDateTime : $buildTime")
 
             customProperty("git.build.version", buildVersion)
             customProperty("git.build.time", buildTime)
@@ -129,10 +131,12 @@ subprojects {
         }
     }
 
-}
+    sourceSets {
+        testFixtures {
+            kotlin.srcDir("src/test/kotlin/fixtures")
+        }
+    }
 
-tasks.bootJar {
-    enabled = false
 }
 
 project("module-core") {

@@ -24,6 +24,7 @@ class CpRestClientTest {
         val exception = assertThrows<RestClientServiceException> { cpRestClient.getCardsToken(request) }
 
         // then
+        println(exception.errorCode.message)
         assertThat(exception.errorCode).isEqualTo(ErrorCode.EXTERNAL_SERVICE_ERROR)
     }
 

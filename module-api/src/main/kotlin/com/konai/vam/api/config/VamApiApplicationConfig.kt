@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
-@EntityScan(basePackages = ["com.konai.vam.core"])
-@ComponentScan(basePackages = ["com.konai.vam.core"])
+@EntityScan(basePackages = ["com.konai.vam.core", "com.konai.vam.api"])
+@ComponentScan(basePackages = ["com.konai.vam.core", "com.konai.vam.api"])
 @Configuration
 class VamApiApplicationConfig

@@ -28,8 +28,8 @@ data class CsPostRechargesSystemManualsResponse(
     val userId: String? = null,
     val par: String? = null,
     val amount: String? = null,
-    val transactionId: String? = null,
-    val nrNumber: String? = null,
+    val transactionId: String,
+    val nrNumber: String,
     val reason: String? = null,
     val message: String? = null,
 )
@@ -37,7 +37,7 @@ data class CsPostRechargesSystemManualsResponse(
 data class CsPostRechargesSystemManualsReversalRequest(
     val transactionId: String,
     val par: String,
-    val amount: Long,
+    val amount: String,
     val saType: CsPostRechargesSystemManualsRequest.SaType = VT_ACN_WOORI,
 ) {
     val url by lazy { "/api/payments/recharges/system/manuals/reversal" }
