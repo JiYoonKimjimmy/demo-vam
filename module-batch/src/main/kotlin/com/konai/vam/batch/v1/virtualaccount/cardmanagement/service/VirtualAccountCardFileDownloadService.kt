@@ -33,7 +33,7 @@ class VirtualAccountCardFileDownloadService(
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun downloadBulkCardFile(batchId: String): VirtualAccountCardFile {
-        val batchHistory = findBatchHistoryMatchingBatchId(batchId).checkResultIsSuccessed()
+        val batchHistory = findBatchHistoryMatchingBatchId(batchId).checkIsSuccessResult()
         val filePath = batchHistory.filePath ?: throw ResourceNotFoundException(ErrorCode.BATCH_FILE_PATH_NOT_FOUND)
         return try {
             checkFileExist(filePath)

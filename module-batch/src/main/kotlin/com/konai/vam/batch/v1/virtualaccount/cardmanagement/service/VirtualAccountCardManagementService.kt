@@ -2,9 +2,8 @@ package com.konai.vam.batch.v1.virtualaccount.cardmanagement.service
 
 import com.konai.vam.batch.v1.virtualaccount.batchhistory.service.VirtualAccountBatchHistorySaveAdapter
 import com.konai.vam.batch.v1.virtualaccount.batchhistory.service.domain.VirtualAccountBatchHistory
-import com.konai.vam.batch.v1.virtualaccount.cardmanagement.batch.service.VirtaulAccountBatchExecuteAdapter
-import com.konai.vam.core.common.error.ErrorCode
-import com.konai.vam.core.common.error.exception.InternalServiceException
+import com.konai.vam.batch.v1.virtualaccount.cardmanagement.batch.service.VirtualAccountBatchExecuteAdapter
+import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.domain.VirtualAccountCardConnect
 import com.konai.vam.core.restclient.koditn.KodItnGetProductsBasicInfoRequest
 import com.konai.vam.core.restclient.koditn.KodItnRestClient
 import org.springframework.stereotype.Service
@@ -14,7 +13,7 @@ class VirtualAccountCardManagementService(
 
     private val virtualAccountCardConnectAdapter: VirtualAccountCardConnectAdapter,
     private val virtualAccountCardFetchAdapter: VirtualAccountCardFetchAdapter,
-    private val virtaulAccountBatchExecuteAdapter: VirtaulAccountBatchExecuteAdapter,
+    private val virtualAccountBatchExecuteAdapter: VirtualAccountBatchExecuteAdapter,
     private val virtualAccountBatchHistorySaveAdapter: VirtualAccountBatchHistorySaveAdapter,
     private val kodItnRestClient: KodItnRestClient
 
@@ -31,14 +30,14 @@ class VirtualAccountCardManagementService(
 
     private fun connectBulkCardToVirtualAccount(batchId: String, serviceId: String): VirtualAccountBatchHistory {
         // 고정 매핑을 지원하는지 판단한다.
-        val bankCode = fetchVirtaulAccountBankCode(serviceId)
+        val bankCode = fetchVirtualAccountBankCode(serviceId)
         // 배치 아이디로 발급된 실물카드를 조회한다.
         val pars = fetchParListMatchingBatchId(batchId)
         // 실물카드를 가상계좌에 매핑하고, 메타 정보들을 저장한다.
-        return virtualAccountCardConnectAdapter.connectVirtualAccountCard(batchId, serviceId, bankCode, pars)
+        return virtualAccountCardConnectAdapter.connectCardToVirtualAccounts(VirtualAccountCardConnect(batchId, serviceId, bankCode, pars))
     }
 
-    fun fetchVirtaulAccountBankCode(serviceId: String): String {
+    fun fetchVirtualAccountBankCode(serviceId: String): String {
         return kodItnRestClient.getProductsBasicInfo(KodItnGetProductsBasicInfoRequest(serviceId))
             .checkFixableVirtualAccountPolicy()
             .virtualAccountBankCode!!
@@ -56,7 +55,7 @@ class VirtualAccountCardManagementService(
     }
 
     private fun createSemFile(batchId: String, batchHistory: VirtualAccountBatchHistory): String {
-        return virtaulAccountBatchExecuteAdapter.executeCreateSemFileBatchJob(batchId, batchHistory)
+        return virtualAccountBatchExecuteAdapter.executeCreateSemFileBatchJob(batchId, batchHistory)
     }
 
     private fun saveBatchHistory(batchHistory: VirtualAccountBatchHistory): String {

@@ -32,7 +32,7 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
         return save(entity)
     }
 
-    override fun saveAll(entieis: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
+    override fun saveAll(entities: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
         return virtualAccountEntityFixture.entities
     }
 

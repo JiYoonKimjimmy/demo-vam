@@ -25,8 +25,8 @@ class VirtualAccountRepository(
         return virtualAccountJpaRepository.save(entity)
     }
 
-    override fun saveAll(entieis: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
-        return virtualAccountJpaRepository.saveAll(entieis)
+    override fun saveAll(entities: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
+        return virtualAccountJpaRepository.saveAll(entities)
     }
 
     override fun findById(id: Long, afterProc: ((Optional<VirtualAccountEntity>) -> VirtualAccountEntity)?): VirtualAccountEntity {

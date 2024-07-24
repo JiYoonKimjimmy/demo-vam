@@ -15,7 +15,7 @@ data class VirtualAccountBatchHistory(
     var filePath: String? = null,
 ) {
 
-    fun checkResultIsSuccessed(): VirtualAccountBatchHistory {
+    fun checkIsSuccessResult(): VirtualAccountBatchHistory {
         if (this.result == Result.FAILED) throw InternalServiceException(ErrorCode.BATCH_FILE_CREATION_RESULT_IS_NOT_SUCCESSFUL)
         return this
     }

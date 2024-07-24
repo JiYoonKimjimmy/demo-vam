@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 
 @Service
-class VirtaulAccountBatchExecuteService(
+class VirtualAccountBatchExecuteService(
     private val jobLauncher: JobLauncher,
     private val virtualAccountCardConnectBatchJob: Job,
 
@@ -22,7 +22,7 @@ class VirtaulAccountBatchExecuteService(
     @Value("\${batch.virtualAccountCardConnect.config.chunkSize}")
     private val chunkSize: Int
 
-) : VirtaulAccountBatchExecuteAdapter {
+) : VirtualAccountBatchExecuteAdapter {
 
     override fun executeCreateSemFileBatchJob(batchId: String, batchHistory: VirtualAccountBatchHistory): String {
         val jobParameters = generateJobParameter(batchId, batchHistory.serviceId, batchHistory.count, chunkSize, encryptionAdapter.fetchKmsEncryptKey(batchId))

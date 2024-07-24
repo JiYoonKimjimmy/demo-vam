@@ -10,7 +10,7 @@ interface VirtualAccountEntityAdapter {
 
     fun save(entity: VirtualAccountEntity): VirtualAccountEntity
 
-    fun saveAll(entieis: List<VirtualAccountEntity>): List<VirtualAccountEntity>
+    fun saveAll(entities: List<VirtualAccountEntity>): List<VirtualAccountEntity>
 
     fun findById(id: Long, afterProc: ((Optional<VirtualAccountEntity>) -> VirtualAccountEntity)? = null): VirtualAccountEntity
 

@@ -35,7 +35,7 @@ class VirtualAccountServiceTest : BehaviorSpec({
             val content = listOf(virtualAccountFixture.make())
 
             every { virtualAccountEntityAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, entities)
-            every { virtualAccountMapper.entitiesToDomain(any()) } returns BasePageable(pageable, content)
+            every { virtualAccountMapper.entitiesToPageable(any()) } returns BasePageable(pageable, content)
 
             val result = virtualAccountService.findPage(predicate, pageableRequest)
 
@@ -56,7 +56,7 @@ class VirtualAccountServiceTest : BehaviorSpec({
             val content = emptyList<VirtualAccount>()
 
             every { virtualAccountEntityAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, entities)
-            every { virtualAccountMapper.entitiesToDomain(any()) } returns BasePageable(pageable, content)
+            every { virtualAccountMapper.entitiesToPageable(any()) } returns BasePageable(pageable, content)
 
             val result = virtualAccountService.findPage(predicate, pageableRequest)
 

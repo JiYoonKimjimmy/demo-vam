@@ -22,7 +22,7 @@ class VirtualAccountService(
 
     override fun findPage(predicate: VirtualAccountPredicate, pageable: PageableRequest): BasePageable<VirtualAccount> {
         return virtualAccountEntityAdapter.findAllByPredicate(predicate, pageable)
-            .let { virtualAccountMapper.entitiesToDomain(it) }
+            .let { virtualAccountMapper.entitiesToPageable(it) }
     }
 
 }
