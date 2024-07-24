@@ -27,8 +27,11 @@ class VirtaulAccountBatchExecuteService(
     override fun executeCreateSemFileBatchJob(batchId: String, batchHistory: VirtualAccountBatchHistory): String {
         val jobParameters = generateJobParameter(batchId, batchHistory.serviceId, batchHistory.count, chunkSize, encryptionAdapter.fetchKmsEncryptKey(batchId))
         val jobExecution = jobLauncher.run(virtualAccountCardConnectBatchJob, jobParameters)
-        if (jobExecution.status.isUnsuccessful) throw InternalServiceException(ErrorCode.FAIL_TO_CREATE_BATCH_FILE)
-        return jobExecution.executionContext.getString("outputFileFullPath")
+        return if (jobExecution.status.isUnsuccessful) {
+            throw InternalServiceException(ErrorCode.BATCH_FILE_CREATION_FAILED)
+        } else {
+            jobExecution.executionContext.getString("outputFileFullPath")
+        }
     }
 
     private fun generateJobParameter(batchId: String, serviceId: String, quantity: Int, chunkSize: Int, encryptionKey: String): JobParameters =

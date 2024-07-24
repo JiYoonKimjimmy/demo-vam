@@ -5,6 +5,7 @@ import com.ninjasquad.springmockk.SpykBean
 import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.web.client.RestClient
 
@@ -17,7 +18,7 @@ class CsRestClientTest {
     @MockkBean
     private lateinit var restClient: RestClient
 
-    private val baseUrl = "http://10.30.210.153:15820/cs"
+    private val baseUrl = "http://118.33.122.28:15820/cs"
 
     @Test
     fun `CS 시스템 어드인 충전 요청하여 정상 응답 성공한다`() {

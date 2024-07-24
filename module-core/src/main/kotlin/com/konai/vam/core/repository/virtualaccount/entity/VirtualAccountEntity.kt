@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.virtualaccount.entity
 
-import com.konai.vam.core.common.converter.EncryptionCardInfoConverter
+import com.konai.vam.core.common.converter.EncryptionCustomerInfoConverter
 import com.konai.vam.core.common.entity.BaseEntity
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus
 import com.konai.vam.core.enumerate.VirtualAccountConnectType
@@ -18,8 +18,8 @@ class VirtualAccountEntity(
     @Column(name = "VT_ACN_LIST_SNO")
     val id: Long? = null,
 
-    @Convert(converter = EncryptionCardInfoConverter::class)
-    @Column(name = "VT_ACNO")
+    @Convert(converter = EncryptionCustomerInfoConverter::class)
+    @Column(name = "ENC_VT_ACNO")
     val accountNo: String,
 
     @Column(name = "BANK_CD")
@@ -41,7 +41,7 @@ class VirtualAccountEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "VT_ACN_CRD_CONN_ST_DV_CD")
-    val cardConnectStatus: VirtualAccountCardConnectStatus? = null,
+    val cardConnectStatus: VirtualAccountCardConnectStatus,
 
     @Column(name = "CONN_DTTM")
     val cardConnected: LocalDateTime? = null,

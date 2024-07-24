@@ -1,6 +1,8 @@
 package com.konai.vam.api.v1.wooribank.service.management.domain
 
 import com.konai.vam.api.v1.wooribank.service.common.WooriBankErrorResponse
+import com.konai.vam.core.common.WOORI_BANK_ACCOUNT_BALANCE
+import com.konai.vam.core.common.WOORI_BANK_ACCOUNT_NAME
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.enumerate.WooriBankMessage
@@ -31,14 +33,14 @@ data class WooriBankManagement(
     val trBranch: String,
     val depositorName: String,
     val accountNo: String,
+    val accountName: String = WOORI_BANK_ACCOUNT_NAME,
+    val accountBalance: Long = WOORI_BANK_ACCOUNT_BALANCE,
     val cashDepositYn: String,
     val cashierCheckAmount: Int,
     val branchCode: String,
     val depositConfirm: YesOrNo = YesOrNo.N,
     val responseMessage: String? = null
 ) {
-    val accountName: String = "KONA"
-    val accountBalance: Int = 0
 
     fun checkMessageTypeCode(): WooriBankManagement {
         return when (WooriBankMessage.find(this.messageTypeCode, this.businessTypeCode)) {

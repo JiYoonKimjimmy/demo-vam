@@ -94,6 +94,8 @@ class WooriBankManagementEntityFixture {
             trBranch = "trBranch",
             depositorName = "depositorName",
             accountNo = accountNo,
+            accountName = "KONA",
+            accountBalance = 0,
             cashDepositYn = "cashDepositYn",
             cashierCheckAmount = 0,
             branchCode = "branchCode",

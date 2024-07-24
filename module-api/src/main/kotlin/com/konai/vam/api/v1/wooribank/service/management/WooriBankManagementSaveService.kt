@@ -12,7 +12,7 @@ class WooriBankManagementSaveService(
 ) : WooriBankManagementSaveAdapter {
 
     override fun save(domain: WooriBankManagement): WooriBankManagement {
-        return wooriBankManagementMapper.domaintoEntity(domain)
+        return wooriBankManagementMapper.domainToEntity(domain)
             .let { wooriBankManagementEntityAdapter.save(it) }
             .let { wooriBankManagementMapper.entityToDomain(it) }
     }

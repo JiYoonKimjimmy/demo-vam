@@ -16,7 +16,7 @@ data class VirtualAccount(
     val status: VirtualAccountStatus,
     var par: String? = null,
     var serviceId: String? = null,
-    var cardConnectStatus: VirtualAccountCardConnectStatus? = null,
+    var cardConnectStatus: VirtualAccountCardConnectStatus = DISCONNECTED,
     var cardConnected: LocalDateTime? = null,
     val cardDisconnected: LocalDateTime? = null,
     var cardSeBatchId: String? = null,
@@ -26,7 +26,7 @@ data class VirtualAccount(
         par: String,
         serviceId: String,
         batchId: String,
-        cardConnectStatus: VirtualAccountCardConnectStatus? = DISCONNECTED,
+        cardConnectStatus: VirtualAccountCardConnectStatus,
         cardConnected: LocalDateTime? = LocalDateTime.now()
     ): VirtualAccount {
         this.par = par

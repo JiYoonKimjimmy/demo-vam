@@ -70,7 +70,7 @@ data class WooriBankManagementResponse(
     val management: WooriBankManagementModel,
 
     val accountName: String?,
-    val accountBalance: Int?,
+    val accountBalance: String?,
 ) : BaseResponse<WooriBankManagementResponse>() {
     override fun success(httpStatus: HttpStatus): ResponseEntity<WooriBankManagementResponse> {
         return ResponseEntity(this, HttpStatus.OK)

@@ -1,5 +1,5 @@
+# server
 server:
-  port: 11021
   shutdown: graceful
   servlet:
     context-path: /vam
@@ -8,6 +8,13 @@ server:
       min-spare: 10
       max: 200
     connection-timeout: 20s
+
+# springdoc
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    doc-expansion: none
 
 # actuator
 management:
@@ -30,11 +37,11 @@ management:
 
 # masking
 masking:
-  fields: FIELD|token|6|4, FIELD|aspId|4|4, FIELD|di|0|0, FIELD|ci|0|0, FIELD|mapId|0|0, FIELD|address|2|0, FIELD|mobileTokenList|2|0, FIELD|cardInfoList|2|0
+  fields: FIELD|token|6|4, FIELD|aspId|4|4, FIELD|di|0|0, FIELD|ci|0|0, FIELD|mpaId|0|0, FIELD|address|2|0, FIELD|mobileTokenList|2|0, FIELD|cardInfoList|2|0
 
 # encrypt cubeone
 database:
-  encrypt-provider: NONE
+  encrypt-provider: CUBE_ONE
 
 # spring
 spring:
@@ -54,16 +61,9 @@ spring:
 # logging
 logging:
   level:
-    com.zaxxer.hikari: DEBUG
+    com.zaxxer.hikari: TRACE
     com.zaxxer.hikari.HikariConfig: DEBUG
     org.apache.hc.client5.http: DEBUG
-
-# springdoc
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    doc-expansion: none
 
 ---
 
@@ -73,7 +73,7 @@ spring:
       on-profile: dev
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@118.33.122.24:15322:kmdbp19
+    url: jdbc:oracle:thin:@118.33.122.24:15322:KMDBP19
     username: vam
     password: StgVAM1104#
   jpa:
@@ -85,10 +85,15 @@ spring:
         show_sql: true
   data:
     redis:
-      host: 10.30.210.121
+      timeout: 10s
+      connect-timeout: 20s
       password: 123456
-      port: 6379
-      timeout: 500
       sentinel:
         master: mymaster
-        nodes: ['10.30.210.121:26379']
+        nodes:
+          - 118.33.122.28:26379
+      lettuce:
+        pool:
+          min-idle: 1
+          max-idle: 8
+          max-active: 30

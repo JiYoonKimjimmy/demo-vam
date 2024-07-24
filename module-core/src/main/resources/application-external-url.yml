@@ -1,6 +1,8 @@
 # external url
-fep.url    : fep2.konadc.com:30005
+fep.url    : fep2.konadc.com:25901
 koditn.url : koditn.konadc.com:10200
 cs.url     : cs.konadc.com:15820/cs
-cardse.url : cardse.konadc.com:10300/cardse-service
+cardse.url : cardse.konadc.com:10300/cardse-service/api/cardse
 cp.url     : dcp.konadc.com:10000/cloud-platform-1.0
+kms.url    : kms.konadc.com:10070/kms-core-1.0
+vam-batch.url : localhost:11021/vam

@@ -19,13 +19,13 @@ class VirtualAccountCardManagementController(
     private val virtualAccountCardFileDownloadAdapter: VirtualAccountCardFileDownloadAdapter,
 ) {
 
-    @PostMapping("/connect/bulk/card")
+    @PostMapping("/bulk/card/connect")
     fun connectBulkCard(@RequestBody @Valid request: ConnectBulkCardRequest): ResponseEntity<VoidResponse> {
         virtualAccountCardManagementAdapter.connectBulkCard(request.batchId, request.serviceId)
         return success(HttpStatus.OK)
     }
 
-    @GetMapping("/download/bulk/card/file/{batchId}")
+    @GetMapping("/bulk/card/download/file/{batchId}")
     fun downloadBulkCardFile(@PathVariable batchId: String): ResponseEntity<Resource> {
         return DownloadBulkCardFileResponse(batchFile = virtualAccountCardFileDownloadAdapter.downloadBulkCardFile(batchId))
             .success(HttpStatus.OK)

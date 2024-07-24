@@ -48,9 +48,4 @@ class BaseExceptionHandler(
         return ErrorResponse.toResponseEntity(featureCode, e.errorCode, e.detailMessage)
     }
 
-    @ExceptionHandler(Exception::class)
-    protected fun exceptionHandler(e: Exception): ResponseEntity<ErrorResponse> {
-        return ErrorResponse.toResponseEntity(featureCode, ErrorCode.UNKNOWN_ERROR, e.message)
-    }
-
 }

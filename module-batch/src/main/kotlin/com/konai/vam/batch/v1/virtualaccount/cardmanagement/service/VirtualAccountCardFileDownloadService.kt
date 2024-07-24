@@ -33,47 +33,47 @@ class VirtualAccountCardFileDownloadService(
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun downloadBulkCardFile(batchId: String): VirtualAccountCardFile {
-        val batchHistory = fetchBatchHistoryMatchingBatchId(batchId)
-        val filePath = batchHistory.filePath ?: throw ResourceNotFoundException(ErrorCode.FILE_PATH_NOT_FOUND)
-        try {
+        val batchHistory = findBatchHistoryMatchingBatchId(batchId).checkResultIsSuccessed()
+        val filePath = batchHistory.filePath ?: throw ResourceNotFoundException(ErrorCode.BATCH_FILE_PATH_NOT_FOUND)
+        return try {
             checkFileExist(filePath)
+            generateBatchFileResource(filePath)
         } catch (e: ResourceNotFoundException) {
             logger.error(e.stackTraceToString())
             handlingMissingFile(batchId, batchHistory)
         }
-        return generateBatchFileResource(filePath)
     }
 
-    private fun fetchBatchHistoryMatchingBatchId(batchId: String): VirtualAccountBatchHistory {
+    private fun findBatchHistoryMatchingBatchId(batchId: String): VirtualAccountBatchHistory {
         return virtualAccountBatchHistoryEntityAdapter.findByPredicate(
-            VirtualAccountBatchHistoryPredicate(cardSeBatchId = batchId, result = SUCCESS),
-            pageableRequest = PageableRequest(0)
-        )
+                VirtualAccountBatchHistoryPredicate(cardSeBatchId = batchId, result = SUCCESS),
+                pageableRequest = PageableRequest(0)
+            )
             .orElseThrow { InternalServiceException(ErrorCode.VIRTUAL_ACCOUNT_BATCH_HISTORY_NOT_FOUND) }
             .let { virtualAccountBatchHistoryMapper.entityToDomain(it) }
     }
 
     private fun checkFileExist(filePath: String) {
         if (!Files.exists(Paths.get(filePath))) {
-            throw ResourceNotFoundException(ErrorCode.FILE_NOT_FOUND_IN_PATH)
+            throw ResourceNotFoundException(ErrorCode.BATCH_FILE_NOT_EXIST_IN_PATH)
         }
     }
 
     private fun handlingMissingFile(batchId: String, batchHistory: VirtualAccountBatchHistory): VirtualAccountCardFile {
-        // 전문생성 전, 필요 조건인 카드와 계좌의 매핑 여부를 판단한다.
-        return if (isCardMapped(batchId)) {
+        return if (isAlreadyCardConnected(batchId)) {
+            // 요청 `batchId` 기준 카드 연결 완료 가상 계좌 정보가 있는 경우
             generateBatchFileResource(filePath = createAndEncryptSemFile(batchId, batchHistory))
         } else {
-            throw ResourceNotFoundException(ErrorCode.FAIL_TO_CREATE_BATCH_FILE)
+            throw ResourceNotFoundException(ErrorCode.BATCH_ID_INVALID)
         }
     }
 
-    private fun isCardMapped(batchId: String): Boolean {
-        val mappedVirtualAccounts = virtualAccountEntityAdapter.findAllByPredicate(
+    private fun isAlreadyCardConnected(batchId: String): Boolean {
+        val connectedVirtualAccounts = virtualAccountEntityAdapter.findAllByPredicate(
             VirtualAccountPredicate(cardSeBatchId = batchId, cardConnectStatus = CONNECTED),
             pageableRequest = PageableRequest(number = 0)
         )
-        return mappedVirtualAccounts.content.isNotEmpty()
+        return connectedVirtualAccounts.content.isNotEmpty()
     }
 
     private fun createAndEncryptSemFile(batchId: String, batchHistory: VirtualAccountBatchHistory): String {

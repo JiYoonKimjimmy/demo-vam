@@ -22,7 +22,6 @@ class WooriBankManagementController(
 
     @PostMapping("/virtual-account/management")
     fun virtualAccountManagement(@RequestBody @Valid request: WooriBankManagementRequest): ResponseEntity<WooriBankManagementResponse> {
-//        return wooriBankManagementModelMapper.requestToDomain(request, RequestContext.get(ContextField.CORRELATION_ID))
         return wooriBankManagementModelMapper.requestToDomain(request, UUID.randomUUID().toString())
             .let { wooriBankManagementAdapter.management(it) }
             .let { wooriBankManagementModelMapper.domainToResponse(it) }

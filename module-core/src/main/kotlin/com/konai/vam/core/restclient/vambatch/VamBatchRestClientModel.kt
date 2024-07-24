@@ -4,11 +4,11 @@ data class VamBatchVirtualAccountBulkCardConnectRequest(
     val batchId: String,
     val serviceId: String,
 ) {
-    val url by lazy { "/api/v1/batch/internal/virtual-account/connect/bulk/card" }
+    val url by lazy { "/api/v1/batch/internal/virtual-account/bulk/card/connect" }
 }
 
 data class VamBatchDownloadVirtualAccountBulkCardFileRequest(
     val batchId: String,
 ) {
-    val url by lazy { "/api/v1/batch/internal/virtual-account/download/bulk/card/file/$batchId" }
+    val url by lazy { "/api/v1/batch/internal/virtual-account/bulk/card/download/file/$batchId" }
 }

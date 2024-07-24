@@ -13,19 +13,19 @@ import org.springframework.util.FileCopyUtils
 import org.springframework.web.bind.annotation.*
 import java.io.BufferedInputStream
 
-@RequestMapping("/api/v1/batch")
+@RequestMapping("/api/v1/batch/virtual-account")
 @RestController
 class VirtualAccountBatchController(
     private val virtualAccountCardBatchAdapter: VirtualAccountCardBatchAdapter
 ) {
 
-    @PostMapping("/virtual-account/card/mapping", "/virtual-account/bulk/card/connect")
+    @PostMapping("/bulk/card/connect", "/card/mapping")
     fun virtualAccountBulkCardConnect(@RequestBody request: VirtualAccountBulkCardConnectRequest): ResponseEntity<VoidResponse> {
         virtualAccountCardBatchAdapter.virtualAccountBulkCardConnect(request.batchId, request.serviceId)
         return success(HttpStatus.OK)
     }
 
-    @GetMapping("/virtual-account/card/mapping/file/{batchId}", "/virtual-account/bulk/card/file/{batchId}")
+    @GetMapping("/bulk/card/download/file/{batchId}", "/card/mapping/file/{batchId}")
     fun downloadVirtualAccountBulkCardFile(response: HttpServletResponse, @PathVariable batchId: String) {
         val resource = virtualAccountCardBatchAdapter.downloadVirtualAccountBulkCardFile(batchId)
 

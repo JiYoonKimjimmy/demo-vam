@@ -42,6 +42,7 @@ class VirtualAccountCardConnectService(
             connectCardToVirtualAccount(batchId, serviceId, bankCode, parList)
             saveVirtualAccountBatchHistory(batchId, serviceId, parList, SUCCESS)
         } catch (e: Exception) {
+            logger.error(e.stackTraceToString())
             saveVirtualAccountBatchHistory(batchId, serviceId, parList, FAILED, e)
             throw e
         }
@@ -59,7 +60,8 @@ class VirtualAccountCardConnectService(
         val predicate = VirtualAccountPredicate(status = ACTIVE, connectType = FIXATION, cardConnectStatus = DISCONNECTED, bankCode = bankCode)
         val entities = virtualAccountEntityAdapter.findAllByPredicate(predicate, pageableRequest = PageableRequest(number = 0, pars.size))
         if (entities.content.isEmpty()) {
-            throw InternalServiceException(ErrorCode.INSUFFICIENT_VIRTUAL_ACCOUNTS)
+            // TODO("카드 상품 목록이 없거나 & `pars.size` 보다 작은 경우, 예외 발생")
+            throw InternalServiceException(ErrorCode.INSUFFICIENT_AVAILABLE_VIRTUAL_ACCOUNTS)
         }
         val accounts = virtualAccountMapper.entitiesToDomain(entities).content
 
@@ -71,7 +73,6 @@ class VirtualAccountCardConnectService(
 
     private fun generateVirtualAccountBatchHistory(batchId: String, serviceId: String, parList: List<String>, status: Result, exception: Exception? = null): VirtualAccountBatchHistory {
         val reason = exception?.let {
-            logger.error(it.stackTraceToString())
             when (exception) {
                 is BaseException -> exception.errorCode.message
                 else -> exception.message ?: ErrorCode.UNKNOWN_ERROR.message

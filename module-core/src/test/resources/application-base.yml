@@ -1,13 +1,20 @@
+# server
 server:
-  port: 11020
   shutdown: graceful
   servlet:
     context-path: /vam
-#  undertow:
-#    threads:
-#      io: 32
-#      worker: 256
-#    no-request-timeout: 300000
+  tomcat:
+    threads:
+      min-spare: 10
+      max: 200
+    connection-timeout: 20s
+
+# springdoc
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    doc-expansion: none
 
 # actuator
 management:
@@ -43,7 +50,8 @@ spring:
       pool-name: hikaricp-pool
       driver-class-name: oracle.jdbc.driver.OracleDriver
       minimum-idle: 5
-      maximum-pool-size: 10
+      maximum-pool-size: 20
+      max-lifetime: 60000
       idle-timeout: 30000
       connection-timeout: 10000
       connection-test-query: SELECT 1 FROM DUAL
@@ -65,89 +73,7 @@ spring:
       on-profile: dev
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@10.40.10.24:15322:KMDBP19
-    username: vam
-    password: xBA0tTwL9zl+MqCkvfkGQw==
-  jpa:
-    generate-ddl: true
-    properties:
-      hibernate:
-        ddl-auto: update
-        format_sql: true
-        show_sql: true
-  data:
-    redis:
-      host: 10.30.210.121
-      password: 123456
-      port: 6379
-      timeout: 500
-      sentinel:
-        master: mymaster
-        nodes: ['10.30.210.121:26379']
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: qa
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@10.30.200.114:15321:KMDBP
-    username: vam
-    password: xBA0tTwL9zl+MqCkvfkGQw==
-  jpa:
-    generate-ddl: false
-    properties:
-      hibernate:
-        ddl-auto: validate
-        show_sql: false
-  data:
-    redis:
-      host: redis.kpp.com
-      password: 123456
-      port: 6379
-      timeout: 500
-      sentinel:
-        master: mymaster
-        nodes: ['redis.kpp.com:26379']
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@db.konadc.com:15321:kmdbp
-    username: vam
-    password: xBA0tTwL9zl+MqCkvfkGQw==
-  jpa:
-    generate-ddl: false
-    properties:
-      hibernate:
-        ddl-auto: validate
-        show_sql: false
-  data:
-    redis:
-      host: redis.kpp.com
-      password: 123456
-      port: 6379
-      timeout: 500
-      sentinel:
-        master: mymaster
-        nodes: ['redis.kpp.com:26379']
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: test
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@10.40.10.24:15322:KMDBP19
+    url: jdbc:oracle:thin:@118.33.122.24:15322:KMDBP19
     username: vam
     password: StgVAM1104#
   jpa:
@@ -159,10 +85,15 @@ spring:
         show_sql: true
   data:
     redis:
-      host: 10.30.210.121
+      timeout: 10s
+      connect-timeout: 20s
       password: 123456
-      port: 6379
-      timeout: 500
       sentinel:
         master: mymaster
-        nodes: ['10.30.210.121:26379']
+        nodes:
+          - 118.33.122.28:26379
+      lettuce:
+        pool:
+          min-idle: 1
+          max-idle: 8
+          max-active: 30

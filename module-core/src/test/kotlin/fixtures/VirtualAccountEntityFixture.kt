@@ -21,7 +21,7 @@ class VirtualAccountEntityFixture {
         status: VirtualAccountStatus = ACTIVE,
         par: String? = null,
         serviceId: String? = null,
-        cardConnectStatus: VirtualAccountCardConnectStatus? = null,
+        cardConnectStatus: VirtualAccountCardConnectStatus = VirtualAccountCardConnectStatus.DISCONNECTED,
         cardSeBatchId: String? = null
     ): VirtualAccountEntity {
         return VirtualAccountEntity(

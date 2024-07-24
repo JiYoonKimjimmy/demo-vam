@@ -78,10 +78,10 @@ spring:
         show_sql: true
   data:
     redis:
-      host: 10.30.210.121
+      host: 118.33.122.28
       password: 123456
       port: 6379
       timeout: 500
       sentinel:
         master: mymaster
-        nodes: ['10.30.210.121:26379']
+        nodes: ['118.33.122.28:26379']

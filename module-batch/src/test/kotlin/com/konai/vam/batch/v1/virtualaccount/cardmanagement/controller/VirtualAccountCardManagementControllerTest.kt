@@ -42,7 +42,7 @@ class VirtualAccountCardManagementControllerTest(
 
             then("MethodArgumentNotValidException 예외 발생하여 실패한다") {
                 mockMvc.perform(
-                    post("/api/v1/batch/internal/virtual-account/connect/bulk/card")
+                    post("/api/v1/batch/internal/virtual-account/bulk/card/connect")
                             .contentType(APPLICATION_JSON)
                             .content(jacksonObjectMapper().writeValueAsString(request))
                     )
@@ -65,7 +65,7 @@ class VirtualAccountCardManagementControllerTest(
 
             then("MethodArgumentNotValidException 예외 발생하여 실패한다") {
                 mockMvc.perform(
-                    post("/api/v1/batch/internal/virtual-account/connect/bulk/card")
+                    post("/api/v1/batch/internal/virtual-account/bulk/card/connect")
                         .contentType(APPLICATION_JSON)
                         .content(jacksonObjectMapper().writeValueAsString(request))
                     )
@@ -90,7 +90,7 @@ class VirtualAccountCardManagementControllerTest(
 
             then("배치 매개변수가 유효하지 않다는 예외를 반환한다.") {
                 mockMvc.perform(
-                    post("/api/v1/batch/internal/virtual-account/connect/bulk/card")
+                    post("/api/v1/batch/internal/virtual-account/bulk/card/connect")
                         .contentType(APPLICATION_JSON)
                         .content(jacksonObjectMapper().writeValueAsString(request))
                     )

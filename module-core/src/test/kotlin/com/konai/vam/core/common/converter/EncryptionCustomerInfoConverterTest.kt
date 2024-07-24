@@ -3,7 +3,7 @@ package com.konai.vam.core.common.converter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class EncryptionCardInfoConverterTest {
+class EncryptionCustomerInfoConverterTest {
 
     @Test
     fun `DatabaseCustomerInfoColumnConverter 암호화 문자열 생성한다`() {
@@ -11,22 +11,22 @@ class EncryptionCardInfoConverterTest {
         val plain = "TEST"
 
     	// when
-        val encrypted = EncryptionCardInfoConverter().convertToDatabaseColumn(plain)
+        val encrypted = EncryptionCustomerInfoConverter().convertToDatabaseColumn(plain)
 
     	// then
-        assertEquals(plain, encrypted)
+        assertEquals("TEST", encrypted)
     }
 
     @Test
     fun `DatabaseCustomerInfoColumnConverter 복호화 문자열 생성한다`() {
     	// given
-        val plain = "KQpVAa59akgym4G011N8Gg=="
+        val plain = "vyZ6+Un/rWus6N6RB+va2A=="
 
     	// when
-        val encrypted = EncryptionCardInfoConverter().convertToEntityAttribute(plain)
+        val encrypted = EncryptionCustomerInfoConverter().convertToEntityAttribute(plain)
 
     	// then
-        assertEquals(plain, encrypted)
+        assertEquals("vyZ6+Un/rWus6N6RB+va2A==", encrypted)
     }
 
 }

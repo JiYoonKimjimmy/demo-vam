@@ -4,15 +4,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
-    implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.4.1")
-    implementation("com.linecorp.kotlin-jdsl:jpql-render:3.4.1")
-    implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.4.1")
-
-    implementation(files("libs/CubeOneAPI-1.0.0.jar"))
+    val jdslVersion = "3.4.1"
+    implementation("com.linecorp.kotlin-jdsl:jpql-dsl:$jdslVersion")
+    implementation("com.linecorp.kotlin-jdsl:jpql-render:$jdslVersion")
+    implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:$jdslVersion")
 
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     runtimeOnly("com.oracle.database.jdbc:ojdbc11")
+
+    testImplementation("it.ozimov:embedded-redis:0.7.2")
 }
 
 noArg {

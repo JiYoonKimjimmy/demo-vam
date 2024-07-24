@@ -1,10 +1,9 @@
 # spring
 spring:
   profiles:
-    active: test
+    active: dev
     include: base, external-url
 
-# test properties
 git:
   commit:
     id:

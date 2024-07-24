@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @PropertySource(value = ["classpath:/git.properties"])
 @Component(value = "application")
-class HealthEndpointConfig: HealthIndicator {
+class HealthEndpointConfig : HealthIndicator {
 
     @Value("\${git.commit.id.abbrev}")
     lateinit var hash: String

@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.rechargetransaction.entity
 
-import com.konai.vam.core.common.converter.EncryptionCardInfoConverter
+import com.konai.vam.core.common.converter.EncryptionCustomerInfoConverter
 import com.konai.vam.core.common.entity.BaseEntity
 import com.konai.vam.core.enumerate.RechargeTransactionType
 import com.konai.vam.core.enumerate.Result
@@ -32,8 +32,8 @@ class RechargeTransactionEntity(
     @Column(name = "CRD_CHRG_AMT")
     val amount: Long,
 
-    @Convert(converter = EncryptionCardInfoConverter::class)
-    @Column(name = "VT_ACNO")
+    @Convert(converter = EncryptionCustomerInfoConverter::class)
+    @Column(name = "ENC_VT_ACNO")
     val accountNo: String,
 
     @Column(name = "BANK_CD")

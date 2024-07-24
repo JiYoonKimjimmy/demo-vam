@@ -64,7 +64,7 @@ class WooriBankManagementModelMapper {
                 accountNo = domain.accountNo,
             ),
             accountName = domain.accountName,
-            accountBalance = domain.accountBalance,
+            accountBalance = domain.accountBalance.toString(),
         )
     }
 

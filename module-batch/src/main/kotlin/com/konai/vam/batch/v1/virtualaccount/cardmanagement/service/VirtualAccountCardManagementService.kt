@@ -50,6 +50,7 @@ class VirtualAccountCardManagementService(
 
     private fun createFileAndSaveBatchHistory(batchId: String, batchHistory: VirtualAccountBatchHistory): String {
         val filePath = createSemFile(batchId, batchHistory)
+        // TODO("파일 생성 실패인 경우. `FAILED` 상태로 Batch 이력 저장 처리")
         val updatedHistory = batchHistory.updateFilePathOnSuccess(filePath)
         return saveBatchHistory(updatedHistory)
     }
@@ -59,7 +60,7 @@ class VirtualAccountCardManagementService(
     }
 
     private fun saveBatchHistory(batchHistory: VirtualAccountBatchHistory): String {
-        return virtualAccountBatchHistorySaveAdapter.save(batchHistory).filePath ?: throw InternalServiceException(ErrorCode.FAIL_TO_CREATE_BATCH_FILE)
+        return virtualAccountBatchHistorySaveAdapter.save(batchHistory).filePath!!
     }
 
 }

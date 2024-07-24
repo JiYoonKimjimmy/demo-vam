@@ -41,6 +41,8 @@ class WooriBankManagementMapper {
             trBranch = entity.trBranch,
             depositorName = entity.depositorName,
             accountNo = entity.accountNo,
+            accountName = entity.accountName,
+            accountBalance = entity.accountBalance,
             cashDepositYn = entity.cashDepositYn,
             cashierCheckAmount = entity.cashierCheckAmount.toInt(),
             branchCode = entity.branchCode,
@@ -49,7 +51,7 @@ class WooriBankManagementMapper {
         )
     }
 
-    fun domaintoEntity(domain: WooriBankManagement): WooriBankManagementEntity {
+    fun domainToEntity(domain: WooriBankManagement): WooriBankManagementEntity {
         return WooriBankManagementEntity(
             identifierCode = domain.identifierCode,
             companyNo = domain.companyNo,
@@ -73,6 +75,8 @@ class WooriBankManagementMapper {
             trBranch = domain.trBranch,
             depositorName = domain.depositorName,
             accountNo = domain.accountNo,
+            accountName = domain.accountName,
+            accountBalance = domain.accountBalance,
             cashDepositYn = domain.cashDepositYn,
             cashierCheckAmount = domain.cashierCheckAmount.toLong(),
             branchCode = domain.branchCode,

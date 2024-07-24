@@ -46,7 +46,7 @@ class BaseRestClientTest {
 
         // then
         assertThat(result).isNotNull()
-        assertThat(result).isEqualTo("http://10.30.210.153:10300/cardse-service/api/cardse")
+        assertThat(result).isEqualTo("http://118.33.122.28:10300/cardse-service/api/cardse")
     }
 
     @Test

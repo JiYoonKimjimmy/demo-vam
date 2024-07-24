@@ -1,5 +1,6 @@
 package com.konai.vam.core.repository.wooribank.management.entity
 
+import com.konai.vam.core.common.converter.EncryptionCustomerInfoConverter
 import com.konai.vam.core.common.entity.BaseEntity
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.YesOrNo
@@ -30,7 +31,7 @@ class WooriBankManagementEntity(
     @Column(name = "WR_BANK_BS_TYPE_CD")
     val businessTypeCode: String,
 
-    @Column(name = "TRSF_TM_CNT")
+    @Column(name = "TRSF_TMCNT")
     val transmissionCount: Int,
 
     @Column(name = "WR_BANK_GMNO")
@@ -49,7 +50,8 @@ class WooriBankManagementEntity(
     @Column(name = "WR_BANK_ORG_GMNO")
     val orgMessageNo: String?,
 
-    @Column(name = "MACN_NO")
+    @Convert(converter = EncryptionCustomerInfoConverter::class)
+    @Column(name = "ENC_MACN_NO")
     val parentAccount: String,
 
     @Column(name = "TR_DT")
@@ -67,25 +69,33 @@ class WooriBankManagementEntity(
     @Column(name = "WR_BANK_TR_AMT")
     val trAmount: Long,
 
-    @Column(name = "OBR_CSHC_AMT")
+    @Column(name = "OBR_CSCK_AMT")
     val otherCashierCheckAmount: Long,
 
-    @Column(name = "ETC_OBR_CSHC_AMT")
+    @Column(name = "ETC_OBR_CSCK_AMT")
     val etcOtherCashierCheckAmount: Long,
 
     @Column(name = "WR_BANK_TR_BRCH_TYPE_CD")
     val trBranch: String,
 
-    @Column(name = "DEPSP_NM")
+    @Convert(converter = EncryptionCustomerInfoConverter::class)
+    @Column(name = "ENC_DEPSP_NM")
     val depositorName: String,
 
-    @Column(name = "VT_ACNO")
+    @Convert(converter = EncryptionCustomerInfoConverter::class)
+    @Column(name = "ENC_VT_ACNO")
     val accountNo: String,
 
-    @Column(name = "CSH_DPS_YN")
+    @Column(name = "VT_ACN_NM")
+    val accountName: String,
+
+    @Column(name = "VT_ACN_BALA")
+    val accountBalance: Long,
+
+    @Column(name = "CSH_DEPS_YN")
     val cashDepositYn: String,
 
-    @Column(name = "WR_BANK_CSHC_AMT")
+    @Column(name = "WR_BANK_CSCK_AMT")
     val cashierCheckAmount: Long,
 
     @Column(name = "WR_BANK_BRCH_TYPE_CD")

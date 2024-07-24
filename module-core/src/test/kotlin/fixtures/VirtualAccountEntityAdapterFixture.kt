@@ -4,6 +4,7 @@ import com.konai.vam.core.common.ifNotNullEquals
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus
+import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.DISCONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountStatus
 import com.konai.vam.core.repository.virtualaccount.VirtualAccountEntityAdapter
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
@@ -19,7 +20,7 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
         status: VirtualAccountStatus,
         par: String? = null,
         serviceId: String? = null,
-        cardConnectStatus: VirtualAccountCardConnectStatus? = null
+        cardConnectStatus: VirtualAccountCardConnectStatus = DISCONNECTED
     ): VirtualAccountEntity {
         val entity = virtualAccountEntityFixture.make(
             accountNo = accountNo,
@@ -32,7 +33,7 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
     }
 
     override fun saveAll(entieis: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
-        TODO("Not yet implemented")
+        return virtualAccountEntityFixture.entities
     }
 
     override fun save(entity: VirtualAccountEntity): VirtualAccountEntity {
@@ -40,7 +41,7 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
     }
 
     override fun findById(id: Long, afterProc: ((Optional<VirtualAccountEntity>) -> VirtualAccountEntity)?): VirtualAccountEntity {
-        TODO("Not yet implemented")
+        return virtualAccountEntityFixture.entities.first()
     }
 
     override fun findByPredicate(predicate: VirtualAccountPredicate): Optional<VirtualAccountEntity> {
@@ -58,11 +59,11 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
     }
 
     override fun findAllByPredicate(predicate: VirtualAccountPredicate, pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity?> {
-        TODO("Not yet implemented")
+        return BasePageable(content = virtualAccountEntityFixture.entities)
     }
 
     override fun findAllByPars(pars: List<String>): List<VirtualAccountEntity> {
-        TODO("Not yet implemented")
+        return virtualAccountEntityFixture.entities
     }
 
 }

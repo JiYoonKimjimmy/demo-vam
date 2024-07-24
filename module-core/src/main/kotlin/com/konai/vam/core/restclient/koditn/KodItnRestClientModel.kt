@@ -2,6 +2,7 @@ package com.konai.vam.core.restclient.koditn
 
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
+import com.konai.vam.core.enumerate.VirtualAccountConnectType
 
 data class KodItnGetProductsBasicInfoRequest(
     val productId: String
@@ -18,10 +19,8 @@ data class KodItnProduct(
 ) {
 
     fun checkFixableVirtualAccountPolicy(): KodItnProduct {
-        if (this.virtualAccountMappingType != "01" || this.virtualAccountBankCode == null) {
-            // 가상 계좌 연결 구분 '고정' 아니거나, 은행코드 정보가 없는 경우, 예외 발생
-            throw InternalServiceException(ErrorCode.SERVICE_ID_IS_INVALID)
-        }
+        if (this.virtualAccountBankCode == null) throw InternalServiceException(ErrorCode.SERVICE_ID_IS_INVALID)
+        if (this.virtualAccountMappingType != VirtualAccountConnectType.FIXATION.code) throw throw InternalServiceException(ErrorCode.SERVICE_POLICY_NOT_SUPPORT_FOR_FIXATION_TYPE)
         return this
     }
 
