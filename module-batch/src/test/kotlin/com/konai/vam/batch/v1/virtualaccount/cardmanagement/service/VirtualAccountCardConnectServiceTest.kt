@@ -116,9 +116,9 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
             every { virtualAccountBatchHistoryEntityAdapter.saveAndFlush(any()) } returns batchEntityWithSuccess
             every { virtualAccountBatchHistorySaveAdapter.saveAndFlush(any()) } returns batchHistory
 
-            then("BatchHistory의 reason 이 null 이다") {
-                val connectVirtualAccountCard = virtualAccountCardConnectService.connectCardToVirtualAccounts(domain)
-                connectVirtualAccountCard.reason shouldBe null
+            then("BatchHistory reason 이 null 이다") {
+                val result = virtualAccountCardConnectService.connectCardToVirtualAccounts(domain)
+                result.batchHistory.reason shouldBe null
             }
         }
 
@@ -140,4 +140,5 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
             }
         }
     }
+
 })

@@ -4,7 +4,6 @@ import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindAdapter
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountSaveAdapter
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.batch.v1.virtualaccount.batchhistory.service.VirtualAccountBatchHistorySaveAdapter
-import com.konai.vam.batch.v1.virtualaccount.batchhistory.service.domain.VirtualAccountBatchHistory
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.domain.VirtualAccountCardConnect
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.domain.VirtualAccountCardConnectMapper
 import com.konai.vam.core.common.error.ErrorCode
@@ -30,11 +29,10 @@ class VirtualAccountCardConnectService(
     private val virtualAccountBatchHistorySaveAdapter: VirtualAccountBatchHistorySaveAdapter
 
 ) : VirtualAccountCardConnectAdapter {
-
     // logger
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    override fun connectCardToVirtualAccounts(domain: VirtualAccountCardConnect): VirtualAccountBatchHistory {
+    override fun connectCardToVirtualAccounts(domain: VirtualAccountCardConnect): VirtualAccountCardConnect {
         return try {
             // 가상 계좌 연결 카드 정보 검증 처리
             validationCards(domain)
@@ -72,9 +70,10 @@ class VirtualAccountCardConnectService(
             ?: throw InternalServiceException(ErrorCode.INSUFFICIENT_AVAILABLE_VIRTUAL_ACCOUNTS)
     }
 
-    private fun saveBatchHistory(domain: VirtualAccountCardConnect, result: Result, exception: Exception? = null): VirtualAccountBatchHistory {
+    private fun saveBatchHistory(domain: VirtualAccountCardConnect, result: Result, exception: Exception? = null): VirtualAccountCardConnect {
         return virtualAccountCardConnectMapper.domainToHistory(domain, result, exception)
             .let { virtualAccountBatchHistorySaveAdapter.saveAndFlush(it) }
+            .let { domain.setBatchHistory(it) }
     }
 
 }
