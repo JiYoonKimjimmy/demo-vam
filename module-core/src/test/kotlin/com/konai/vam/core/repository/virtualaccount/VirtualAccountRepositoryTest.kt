@@ -159,4 +159,32 @@ class VirtualAccountRepositoryTest {
         assertThat(result.content.size).isGreaterThanOrEqualTo(1)
     }
 
+    @Test
+    fun `가상 계좌 동일한 'batchId' & 'connectStatus' 존재 여부 확인하여 'true' 정상 확인한다`() {
+    	// given
+        val connectStatus = CONNECTED
+        val cardSeBatchId = "batchId"
+        virtualAccountRepository.save(virtualAccountEntityFixture.make(cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId))
+
+    	// when
+        val result = virtualAccountRepository.existsByConnectStatusAndBatchId(connectStatus, cardSeBatchId)
+
+    	// then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `가상 계좌 동일한 'batchId' & 'connectStatus' 존재 여부 확인하여 'false' 정상 확인한다`() {
+    	// given
+        val connectStatus = CONNECTED
+        val cardSeBatchId = "batchId"
+        virtualAccountRepository.save(virtualAccountEntityFixture.make(cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId))
+
+    	// when
+        val result = virtualAccountRepository.existsByConnectStatusAndBatchId(connectStatus, "$cardSeBatchId-TEST")
+
+    	// then
+        assertThat(result).isFalse()
+    }
+
 }

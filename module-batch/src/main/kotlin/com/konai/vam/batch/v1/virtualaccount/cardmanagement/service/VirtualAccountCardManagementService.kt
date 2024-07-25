@@ -30,7 +30,7 @@ class VirtualAccountCardManagementService(
 
     override fun createBulkCardFile(batchId: String, batchHistory: VirtualAccountBatchHistory): String {
         return createSemFile(batchId, batchHistory.serviceId, batchHistory.count)
-            .let { batchHistory.updateFilePathOnSuccess(it) }
+            .let { batchHistory.update(it) }
             .let { saveBatchHistory(it) }
     }
 
