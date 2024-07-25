@@ -53,9 +53,7 @@ class VirtualAccountCardManagementService(
 
     private fun fetchPars(batchId: String): List<String> {
         return cardSeRestClient.getCardsInfoBatchId(CardSeGetCardsInfoBatchIdRequest(batchId))
-            .cardSeInfoList
-            ?.takeIf { it.isNotEmpty() }
-            ?.map { it.par }
+            .getPars()
             ?: throw InternalServiceException(ErrorCode.BATCH_ID_INVALID)
     }
 

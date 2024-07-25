@@ -24,6 +24,10 @@ data class CardSeGetCardsInfoBatchIdResponse(
         val par: String,
         val token: String,
     )
+
+    fun getPars(): List<String>? {
+        return cardSeInfoList?.takeIf { it.isNotEmpty() }?.map { it.par }
+    }
 }
 
 data class CardSeGetCardsInfoTokenRequest(
