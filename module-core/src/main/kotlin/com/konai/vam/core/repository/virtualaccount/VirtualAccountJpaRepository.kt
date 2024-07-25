@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface VirtualAccountJpaRepository : JpaRepository<VirtualAccountEntity, Long>, KotlinJdslJpqlExecutor {
 
-    fun findAllByParIn(pars: List<String>): List<VirtualAccountEntity>
+    fun existsByParIn(pars: List<String>): Boolean
 
 }

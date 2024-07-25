@@ -60,7 +60,7 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
             val batchEntityWithSuccess = virtualAccountBatchHistoryEntityFixture.make(id = id, result = FAILED)
             val batchHistory = virtualAccountBatchHistoryMapper.entityToDomain(batchEntityWithSuccess)
 
-            every { virtualAccountEntityAdapter.findAllByPars(parList) } returns listOf(virtualAccountEntity)
+            every { virtualAccountEntityAdapter.existsByPars(any()) } returns true
             every { virtualAccountBatchHistoryEntityAdapter.saveAndFlush(any()) } returns batchEntityWithSuccess
             every { virtualAccountBatchHistorySaveAdapter.save(any()) } returns batchHistory
             every { virtualAccountBatchHistorySaveAdapter.saveAndFlush(any()) } returns batchHistory.copy(reason = ErrorCode.BATCH_ID_ALREADY_CONNECTED.message)
@@ -82,7 +82,7 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
             val batchHistory = virtualAccountBatchHistoryMapper.entityToDomain(batchEntityWithSuccess)
 
             // 실물카드의 기 매핑여부 확인을 모킹
-            every { virtualAccountEntityAdapter.findAllByPars(any()) } returns emptyList()
+            every { virtualAccountEntityAdapter.existsByPars(any()) } returns false
             // 매핑되어 있지 않은 가상카드 조회 기능을 모킹
             every { virtualAccountEntityAdapter.findAllByPredicate(any(), any()) } returns BasePageable(BasePageable.Pageable(), listOf(virtualAccountNotMapped))
             // 매핑되어 있지 않은 가상 카드의 리스트를 저장하는 기능을 모킹
@@ -107,7 +107,7 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
         `when`("가상계좌 매핑에 성공할 때") {
 
             // 실물카드의 기 매핑여부 확인을 모킹
-            every { virtualAccountEntityAdapter.findAllByPars(parList) } returns emptyList()
+            every { virtualAccountEntityAdapter.existsByPars(any()) } returns false
             // 매핑되어 있지 않은 가상카드 조회 기능을 모킹
             every { virtualAccountEntityAdapter.findAllByPredicate(any(), any()) } returns BasePageable(BasePageable.Pageable(), listOf(virtualAccountNotMapped))
             // 매핑되어 있지 않은 가상 카드의 리스트를 저장하는 기능을 모킹
@@ -124,7 +124,7 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
 
         `when`("가상계좌 갯수가 모자랄 때") {
             // 실물카드의 기 매핑여부 확인을 모킹
-            every { virtualAccountEntityAdapter.findAllByPars(any()) } returns emptyList()
+            every { virtualAccountEntityAdapter.existsByPars(any()) } returns false
             // 가상 계좌가 없는 경우를 모킹
             every { virtualAccountEntityAdapter.findAllByPredicate(any(), any()) } returns BasePageable(BasePageable.Pageable(), emptyList())
             // 배치 정보 저장 기능을 모킹

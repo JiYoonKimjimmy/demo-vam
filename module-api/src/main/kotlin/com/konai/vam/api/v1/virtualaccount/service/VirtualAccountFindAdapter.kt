@@ -11,6 +11,6 @@ interface VirtualAccountFindAdapter {
 
     fun findAllByPredicate(predicate: VirtualAccountPredicate, pageable: PageableRequest): BasePageable<VirtualAccount>
 
-    fun existByPars(pars: List<String>): Boolean
+    fun existsByPars(pars: List<String>): Boolean
 
 }

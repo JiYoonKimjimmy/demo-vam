@@ -26,8 +26,8 @@ class VirtualAccountFindService(
             .let { virtualAccountMapper.entitiesToPageable(it) }
     }
 
-    override fun existByPars(pars: List<String>): Boolean {
-        return virtualAccountEntityAdapter.findAllByPars(pars).isNotEmpty()
+    override fun existsByPars(pars: List<String>): Boolean {
+        return virtualAccountEntityAdapter.existsByPars(pars)
     }
 
     private fun findByPredicate(predicate: VirtualAccountPredicate): VirtualAccount {

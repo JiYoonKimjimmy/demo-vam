@@ -18,6 +18,6 @@ interface VirtualAccountEntityAdapter {
 
     fun findAllByPredicate(predicate: VirtualAccountPredicate, pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity?>
 
-    fun findAllByPars(pars: List<String>): List<VirtualAccountEntity>
+    fun existsByPars(pars: List<String>): Boolean
 
 }

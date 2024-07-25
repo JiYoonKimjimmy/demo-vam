@@ -62,8 +62,8 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
         return BasePageable(content = virtualAccountEntityFixture.entities)
     }
 
-    override fun findAllByPars(pars: List<String>): List<VirtualAccountEntity> {
-        return virtualAccountEntityFixture.entities
+    override fun existsByPars(pars: List<String>): Boolean {
+        return virtualAccountEntityFixture.entities.any { it.par in pars }
     }
 
 }

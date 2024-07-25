@@ -54,7 +54,7 @@ class VirtualAccountRepository(
         ).toBasePageable()
     }
 
-    override fun findAllByPars(pars: List<String>): List<VirtualAccountEntity> {
-        return virtualAccountJpaRepository.findAllByParIn(pars)
+    override fun existsByPars(pars: List<String>): Boolean {
+        return virtualAccountJpaRepository.existsByParIn(pars)
     }
 }

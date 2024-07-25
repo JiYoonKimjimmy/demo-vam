@@ -129,16 +129,16 @@ class VirtualAccountRepositoryTest {
     }
 
     @Test
-    fun ` 요청 Par가 이미 가상계좌매핑에 사용되었으면 기 매핑 Par 1건 이상 조회된다`(){
+    fun `요청 Par 가 이미 가상계좌매핑에 사용되었으면 true 정상 확인한다`(){
         // given
         virtualAccountRepository.save(virtualAccountEntityFixture.make(par = "par"))
 
         // when
-        val mappedParList = virtualAccountJpaRepository.findAllByParIn(listOf("par"))
+        val result = virtualAccountJpaRepository.existsByParIn(listOf("par"))
 
         // then
         // 결과가 2건이다.
-        assertThat(mappedParList.size).isGreaterThanOrEqualTo(1)
+        assertThat(result).isTrue()
     }
 
     @Test

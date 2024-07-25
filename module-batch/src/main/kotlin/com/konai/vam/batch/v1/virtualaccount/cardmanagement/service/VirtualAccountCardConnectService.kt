@@ -53,8 +53,7 @@ class VirtualAccountCardConnectService(
     private fun validationCards(domain: VirtualAccountCardConnect) {
         // 가상 계좌 연결 카드 목록 중 이미 연결된 PAR 정보 있는지 확인
         domain.pars.chunked(1000)
-            .flatMap { listOf(virtualAccountFindAdapter.existByPars(it)) }
-            .any { it }
+            .any { virtualAccountFindAdapter.existsByPars(it) }
             .takeIf { it }
             ?.let { throw InternalServiceException(ErrorCode.BATCH_ID_ALREADY_CONNECTED) }
     }
@@ -79,4 +78,3 @@ class VirtualAccountCardConnectService(
     }
 
 }
-
