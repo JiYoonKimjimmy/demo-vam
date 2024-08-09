@@ -9,6 +9,7 @@ import com.konai.vam.api.v1.virtualaccountbank.service.VirtualAccountBankFindAda
 import com.konai.vam.api.v1.wooribank.service.aggregation.WooriBankAggregationAdapter
 import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransaction
 import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransactionMapper
+import com.konai.vam.core.common.error
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException

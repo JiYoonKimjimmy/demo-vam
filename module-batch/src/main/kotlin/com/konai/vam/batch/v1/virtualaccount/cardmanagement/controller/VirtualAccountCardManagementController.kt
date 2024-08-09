@@ -1,8 +1,8 @@
 package com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller
 
+import com.konai.vam.batch.v1.virtualaccount.batchfile.service.VirtualAccountBatchFileDownloadAdapter
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller.model.ConnectBulkCardRequest
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller.model.DownloadBulkCardFileResponse
-import com.konai.vam.batch.v1.virtualaccount.batchfile.service.VirtualAccountBatchFileDownloadAdapter
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.VirtualAccountCardManagementAdapter
 import com.konai.vam.core.common.model.VoidResponse
 import com.konai.vam.core.common.model.success

@@ -2,7 +2,8 @@ package com.konai.vam.core.config
 
 import com.konasl.commonlib.springweb.correlation.headerpropagator.CorrelationHeaderField.*
 import com.konasl.commonlib.springweb.correlation.loggercontext.CorrelationLoggingField.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +26,7 @@ class RestClientConfigTest(
         val correlationId = "$now-VAM-TEST"
         val aspId = "953365000000000"
         val userId = "3100000880"
-        val body = mapOf("userId" to 3100000880)
+        val body = mapOf("userId" to userId)
 
         MDC.put(CORRELATION_ID_LOG_FIELD.getName(), correlationId)
         MDC.put(ASP_ID_LOG_FIELD.getName(), aspId)
@@ -38,9 +39,9 @@ class RestClientConfigTest(
             .body(body)
             .exchange { _, response ->
                 assertFalse(response.statusCode.isError)
-                assertEquals(response.headers[CORRELATION_ID_HEADER_FIELD.getName()]?.first(), correlationId)
-                assertEquals(response.headers[ASP_ID_HEADER_FIELD.getName()]?.first(), aspId)
-                assertEquals(response.headers[USER_ID_HEADER_FIELD.getName()]?.first(), userId)
+                assertEquals(correlationId, response.headers[CORRELATION_ID_HEADER_FIELD.getName()]?.first(), )
+                assertEquals(aspId, response.headers[ASP_ID_HEADER_FIELD.getName()]?.first())
+                assertEquals(userId, response.headers[USER_ID_HEADER_FIELD.getName()]?.first())
             }
     }
 

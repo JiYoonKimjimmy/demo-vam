@@ -53,14 +53,14 @@ class VirtualAccountCardConnectService(
 
     private fun connectCardsProc(domain: VirtualAccountCardConnect) {
         findConnectableAccounts(domain.bankCode, domain.pars.size)
-            .mapIndexed { index, account -> connectCardToAccount(index, account, domain) }
+            .mapIndexed { i, account -> account.connectedCard(domain.pars[i], domain.serviceId, domain.batchId, CONNECTED) }
             .let { virtualAccountSaveAdapter.saveAll(it) }
     }
 
     private fun findConnectableAccounts(bankCode: String, size: Int): List<VirtualAccount> {
         // 카드 연결 가능한 가상 계좌 목록 전체 조회
         return virtualAccountFindAdapter.findAllConnectableVirtualAccounts(bankCode, size).takeIf { it.size == size }
-        // 조회 결과 size 가 다르다면 예외 처리
+            // 조회 결과 size 가 다르다면 예외 처리
             ?: throw InternalServiceException(ErrorCode.INSUFFICIENT_AVAILABLE_VIRTUAL_ACCOUNTS)
     }
 

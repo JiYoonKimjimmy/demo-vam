@@ -1,5 +1,6 @@
 package com.konai.vam.core.common.restclient
 
+import com.konai.vam.core.common.error
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.RestClientServiceException

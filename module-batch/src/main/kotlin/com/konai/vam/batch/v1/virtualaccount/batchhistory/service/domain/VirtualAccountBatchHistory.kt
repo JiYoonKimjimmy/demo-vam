@@ -15,11 +15,12 @@ data class VirtualAccountBatchHistory(
     val count: Int,
     val result: Result?,
     val reason: String? = null,
-    var filePath: String? = null,
+    val filePath: String? = null,
 ) {
 
     fun checkIsSuccessResult(): VirtualAccountBatchHistory {
         if (this.result == Result.FAILED) throw InternalServiceException(ErrorCode.BATCH_FILE_CREATION_RESULT_IS_NOT_SUCCESSFUL)
+        if (this.filePath.isNullOrEmpty()) throw ResourceNotFoundException(ErrorCode.BATCH_FILE_PATH_NOT_FOUND)
         return this
     }
 

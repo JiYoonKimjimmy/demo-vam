@@ -26,6 +26,7 @@ class VirtualAccountRepository(
         return virtualAccountJpaRepository.save(entity)
     }
 
+    @Transactional
     override fun saveAll(entities: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
         return virtualAccountJpaRepository.saveAll(entities)
     }

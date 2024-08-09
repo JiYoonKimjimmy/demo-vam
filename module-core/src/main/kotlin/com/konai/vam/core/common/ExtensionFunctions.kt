@@ -2,6 +2,7 @@ package com.konai.vam.core.common
 
 import org.slf4j.Logger
 import org.springframework.data.domain.Slice
+import java.lang.Exception
 
 fun <T> Slice<T>.getContentFirstOrNull(): T? {
     return this.content.ifEmpty { listOf(null) }.first()
