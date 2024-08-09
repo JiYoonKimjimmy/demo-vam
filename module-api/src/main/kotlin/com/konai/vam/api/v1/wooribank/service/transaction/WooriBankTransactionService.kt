@@ -174,7 +174,7 @@ class WooriBankTransactionService(
     }
 
     private fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
-        return rechargeTransactionFindAdapter.findSuccessedRechargeTransaction(tranNo, accountNo)
+        return rechargeTransactionFindAdapter.findSuccessRechargeTransaction(tranNo, accountNo)
     }
 
     private fun afterRechargeCancelProc(domain: WooriBankTransaction): WooriBankTransaction {

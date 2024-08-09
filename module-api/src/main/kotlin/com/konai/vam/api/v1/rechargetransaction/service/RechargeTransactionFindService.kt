@@ -15,7 +15,7 @@ class RechargeTransactionFindService(
     private val rechargeTransactionMapper: RechargeTransactionMapper,
 ) : RechargeTransactionFindAdapter {
 
-    override fun findSuccessedRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
+    override fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
         return rechargeTransactionEntityAdapter.findByTranNoAndAccountNoAndTranTypeAndResult(tranNo, accountNo, RECHARGE, Result.SUCCESS)
             .takeIf { it != null }
             ?.let { rechargeTransactionMapper.entityToDomain(it) }

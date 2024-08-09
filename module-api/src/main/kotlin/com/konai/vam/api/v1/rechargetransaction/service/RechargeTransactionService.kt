@@ -52,14 +52,14 @@ class RechargeTransactionService(
     }
 
     private fun cancelOriginTransaction(domain: RechargeTransaction): RechargeTransaction {
-        val origin = findSuccessedRechargeTransaction(domain.tranNo, domain.bankAccount.accountNo)
+        val origin = findSuccessRechargeTransaction(domain.tranNo, domain.bankAccount.accountNo)
             .also { rechargesSystemManualsReversalToCS(it) }
             .canceled()
         return saveRechargeTransaction(origin)
     }
 
-    private fun findSuccessedRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
-        return rechargeTransactionFindAdapter.findSuccessedRechargeTransaction(tranNo, accountNo)
+    private fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
+        return rechargeTransactionFindAdapter.findSuccessRechargeTransaction(tranNo, accountNo)
     }
 
     private fun rechargesSystemManualsReversalToCS(domain: RechargeTransaction): CsPostRechargesSystemManualsReversalResponse {

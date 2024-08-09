@@ -15,7 +15,7 @@ class RechargeTransactionSaveServiceTest : KoTestBehaviorSpec({
             val domain = rechargeTransactionFixture.make(result = SUCCESS)
             val result = rechargeTransactionSaveService.save(domain)
 
-            then("'SUCCESSED' reault 충전 내역 Entity 정보 저장 성공한다") {
+            then("'SUCCESS' result 충전 내역 Entity 정보 저장 성공한다") {
                 result.result shouldBe SUCCESS
             }
         }
@@ -24,7 +24,7 @@ class RechargeTransactionSaveServiceTest : KoTestBehaviorSpec({
             val domain = rechargeTransactionFixture.make(result = FAILED)
             val result = rechargeTransactionSaveService.save(domain)
 
-            then("'FAILED' reault 충전 내역 Entity 정보 저장 성공한다") {
+            then("'FAILED' result 충전 내역 Entity 정보 저장 성공한다") {
                 result.result shouldBe FAILED
             }
         }

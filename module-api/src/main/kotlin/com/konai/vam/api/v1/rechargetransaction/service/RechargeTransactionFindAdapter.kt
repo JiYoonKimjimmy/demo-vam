@@ -4,6 +4,6 @@ import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransacti
 
 interface RechargeTransactionFindAdapter {
 
-    fun findSuccessedRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction
+    fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction
 
 }
