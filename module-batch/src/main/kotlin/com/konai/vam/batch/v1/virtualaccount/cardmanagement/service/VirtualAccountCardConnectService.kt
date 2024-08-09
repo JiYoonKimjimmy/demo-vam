@@ -53,7 +53,7 @@ class VirtualAccountCardConnectService(
 
     private fun connectCardsProc(domain: VirtualAccountCardConnect) {
         findConnectableAccounts(domain.bankCode, domain.pars.size)
-            .mapIndexed { i, account -> account.connectedCard(domain.pars[i], domain.serviceId, domain.batchId, CONNECTED) }
+            .mapIndexed { index, account -> connectCardToAccount(index, account, domain) }
             .let { virtualAccountSaveAdapter.saveAll(it) }
     }
 
