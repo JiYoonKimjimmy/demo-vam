@@ -1,10 +1,10 @@
-package com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.domain
+package com.konai.vam.batch.v1.virtualaccount.batchfile.service.domain
 
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
 import java.nio.file.Paths
 
-data class VirtualAccountCardFile(
+data class VirtualAccountBatchFile(
     val filePath: String
 ) {
 

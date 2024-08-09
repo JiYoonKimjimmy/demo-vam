@@ -1,6 +1,6 @@
 package com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller.model
 
-import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.domain.VirtualAccountCardFile
+import com.konai.vam.batch.v1.virtualaccount.batchfile.service.domain.VirtualAccountBatchFile
 import com.konai.vam.core.common.model.BaseResponse
 import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Length
@@ -23,7 +23,7 @@ data class ConnectBulkCardRequest (
 )
 
 class DownloadBulkCardFileResponse(
-    private val batchFile: VirtualAccountCardFile
+    private val batchFile: VirtualAccountBatchFile
 ): BaseResponse<Resource>() {
 
     override fun success(httpStatus: HttpStatus): ResponseEntity<Resource> {

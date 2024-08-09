@@ -59,6 +59,10 @@ subprojects {
 //        implementation("com.konasl.commonlibs:logger:7.0.1")
 //        implementation("com.cubeone", "CubeOneAPI", "1.0.0")
 
+        implementation(fileTree(rootProject.projectDir.resolve("libs")).matching {
+            include("*.jar")
+        })
+
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "junit")
             exclude(module = "mockito-core")

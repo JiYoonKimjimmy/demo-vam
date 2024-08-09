@@ -3,7 +3,7 @@ package com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller.model.ConnectBulkCardRequest
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller.model.DownloadBulkCardFileResponse
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.VirtualAccountCardManagementAdapter
-import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.VirtualAccountCardFileDownloadAdapter
+import com.konai.vam.batch.v1.virtualaccount.batchfile.service.VirtualAccountBatchFileDownloadAdapter
 import com.konai.vam.core.common.model.VoidResponse
 import com.konai.vam.core.common.model.success
 import jakarta.validation.Valid
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class VirtualAccountCardManagementController(
     private val virtualAccountCardManagementAdapter: VirtualAccountCardManagementAdapter,
-    private val virtualAccountCardFileDownloadAdapter: VirtualAccountCardFileDownloadAdapter,
+    private val virtualAccountBatchFileDownloadAdapter: VirtualAccountBatchFileDownloadAdapter,
 ) {
 
     @PostMapping("/bulk/card/connect")
@@ -27,7 +27,7 @@ class VirtualAccountCardManagementController(
 
     @GetMapping("/bulk/card/download/file/{batchId}")
     fun downloadBulkCardFile(@PathVariable batchId: String): ResponseEntity<Resource> {
-        return DownloadBulkCardFileResponse(batchFile = virtualAccountCardFileDownloadAdapter.downloadBulkCardFile(batchId))
+        return DownloadBulkCardFileResponse(batchFile = virtualAccountBatchFileDownloadAdapter.downloadBulkCardFile(batchId))
             .success(HttpStatus.OK)
     }
 

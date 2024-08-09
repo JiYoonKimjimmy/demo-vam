@@ -1,8 +1,7 @@
 package com.konai.vam.batch.v1.virtualaccount.cardmanagement.service
 
-import com.konai.vam.batch.v1.virtualaccount.batchhistory.service.VirtualAccountBatchHistorySaveAdapter
+import com.konai.vam.batch.v1.virtualaccount.batchfile.service.VirtualAccountBachFileCreateAdapter
 import com.konai.vam.batch.v1.virtualaccount.batchhistory.service.domain.VirtualAccountBatchHistory
-import com.konai.vam.batch.v1.virtualaccount.cardmanagement.batch.service.VirtualAccountBatchExecuteAdapter
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.domain.VirtualAccountCardConnect
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
@@ -15,9 +14,8 @@ import org.springframework.stereotype.Service
 @Service
 class VirtualAccountCardManagementService(
 
+    private val virtualAccountBachFileCreateAdapter: VirtualAccountBachFileCreateAdapter,
     private val virtualAccountCardConnectAdapter: VirtualAccountCardConnectAdapter,
-    private val virtualAccountBatchExecuteAdapter: VirtualAccountBatchExecuteAdapter,
-    private val virtualAccountBatchHistorySaveAdapter: VirtualAccountBatchHistorySaveAdapter,
     private val kodItnRestClient: KodItnRestClient,
     private val cardSeRestClient: CardSeRestClient
 
@@ -25,22 +23,17 @@ class VirtualAccountCardManagementService(
 
     override fun connectBulkCard(batchId: String, serviceId: String) {
         val history = connectBulkCardToVirtualAccount(batchId, serviceId)
-        createBulkCardFile(batchId, history)
-    }
-
-    override fun createBulkCardFile(batchId: String, batchHistory: VirtualAccountBatchHistory): String {
-        return createSemFile(batchId, batchHistory.serviceId, batchHistory.count)
-            .let { batchHistory.update(it) }
-            .let { saveBatchHistory(it) }
+        virtualAccountBachFileCreateAdapter.createBatchFile(batchId, history)
     }
 
     private fun connectBulkCardToVirtualAccount(batchId: String, serviceId: String): VirtualAccountBatchHistory {
-        // 고정 매핑을 지원하는지 판단한다.
-        val bankCode = fetchBankCode(serviceId)
-        // 배치 아이디로 발급된 실물카드를 조회한다.
-        val pars = fetchPars(batchId)
-        // 실물카드를 가상계좌에 매핑하고, 메타 정보들을 저장한다.
-        return connectCardToVirtualAccounts(domain = VirtualAccountCardConnect(batchId, serviceId, bankCode, pars))
+        val domain = VirtualAccountCardConnect(
+            batchId = batchId,
+            serviceId = serviceId,
+            bankCode = fetchBankCode(serviceId),
+            pars = fetchPars(batchId)
+        )
+        return connectCardToVirtualAccounts(domain)
     }
 
     private fun fetchBankCode(serviceId: String): String {
@@ -57,14 +50,6 @@ class VirtualAccountCardManagementService(
 
     private fun connectCardToVirtualAccounts(domain: VirtualAccountCardConnect): VirtualAccountBatchHistory {
         return virtualAccountCardConnectAdapter.connectCardToVirtualAccounts(domain).batchHistory
-    }
-
-    private fun createSemFile(batchId: String, serviceId: String, quantity: Int): String {
-        return virtualAccountBatchExecuteAdapter.executeCreateSemFileBatchJob(batchId, serviceId, quantity)
-    }
-
-    private fun saveBatchHistory(batchHistory: VirtualAccountBatchHistory): String {
-        return virtualAccountBatchHistorySaveAdapter.save(batchHistory).filePath!!
     }
 
 }

@@ -1,6 +1,7 @@
 package com.konai.vam.api.v1.rechargetransaction.service
 
 import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransaction
+import com.konai.vam.core.common.error
 import com.konai.vam.core.restclient.cs.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -75,7 +76,7 @@ class RechargeTransactionService(
     }
 
     private fun errorResponse(domain: RechargeTransaction, exception: Exception): RechargeTransaction {
-        logger.error(exception.stackTraceToString())
+        logger.error(exception)
         return domain.fail(exception)
     }
 

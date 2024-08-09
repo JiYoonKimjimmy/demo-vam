@@ -9,6 +9,7 @@ import com.konai.vam.api.v1.virtualaccountbank.service.VirtualAccountBankFindAda
 import com.konai.vam.api.v1.wooribank.service.aggregation.WooriBankAggregationAdapter
 import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransaction
 import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransactionMapper
+import com.konai.vam.core.common.error
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
@@ -97,7 +98,7 @@ class WooriBankTransactionService(
     }
 
     private fun errorResponse(domain: WooriBankTransaction, exception: Exception): WooriBankTransaction {
-        logger.error(exception.stackTraceToString())
+        logger.error(exception)
         return domain.fail(exception)
     }
 
@@ -156,14 +157,14 @@ class WooriBankTransactionService(
     }
 
     private fun findRechargeTransactionId(domain: WooriBankTransaction): String {
-        return findSuccessedRechargeTransaction(domain.orgTranNo, domain.accountNo)
+        return findSuccessRechargeTransaction(domain.orgTranNo, domain.accountNo)
             .checkIfDepositCanBeCanceled()
             .transactionId!!
     }
 
     private fun depositConfirmProc(domain: WooriBankTransaction): WooriBankTransaction {
         return try {
-            findSuccessedRechargeTransaction(domain.tranNo, domain.accountNo)
+            findSuccessRechargeTransaction(domain.tranNo, domain.accountNo)
                 .checkIfDepositCanBeConfirmed()
                 .takeIf { true }
                 .let { domain.confirmed().success(responseCode = `0000`) }
@@ -172,7 +173,7 @@ class WooriBankTransactionService(
         }
     }
 
-    private fun findSuccessedRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
+    private fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
         return rechargeTransactionFindAdapter.findSuccessedRechargeTransaction(tranNo, accountNo)
     }
 

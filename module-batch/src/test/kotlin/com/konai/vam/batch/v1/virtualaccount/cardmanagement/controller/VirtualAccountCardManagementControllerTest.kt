@@ -3,7 +3,7 @@ package com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.controller.model.ConnectBulkCardRequest
 import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.VirtualAccountCardManagementAdapter
-import com.konai.vam.batch.v1.virtualaccount.cardmanagement.service.VirtualAccountCardFileDownloadAdapter
+import com.konai.vam.batch.v1.virtualaccount.batchfile.service.VirtualAccountBatchFileDownloadAdapter
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.Runs
@@ -25,7 +25,7 @@ class VirtualAccountCardManagementControllerTest(
 
     @Autowired val mockMvc: MockMvc,
     @MockkBean private val virtualAccountCardManagementAdapter: VirtualAccountCardManagementAdapter,
-    @MockkBean private val virtualAccountCardFileDownloadAdapter: VirtualAccountCardFileDownloadAdapter
+    @MockkBean private val virtualAccountBatchFileDownloadAdapter: VirtualAccountBatchFileDownloadAdapter
 
 ) : BehaviorSpec({
 

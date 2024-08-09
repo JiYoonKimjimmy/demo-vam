@@ -1,5 +1,6 @@
 package com.konai.vam.core.util
 
+import com.cubeone.CubeOneAPI
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import java.io.BufferedInputStream
