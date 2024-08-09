@@ -11,7 +11,7 @@ enum class WooriBankMessage(
     WORK_STOP                       (WooriBankMessageCode("0800", "400"), WooriBankMessageCode("0810", "400")),
     WORK_FAILURES                   (WooriBankMessageCode("0800", "999"), WooriBankMessageCode("0810", "999")),
     WORK_FAILURES_RESOLVED          (WooriBankMessageCode("0800", "888"), WooriBankMessageCode("0810", "888")),
-    TRANSACITON_AGGREGATION         (WooriBankMessageCode("0700", "500"), WooriBankMessageCode("0710", "500")),
+    TRANSACTION_AGGREGATION         (WooriBankMessageCode("0700", "500"), WooriBankMessageCode("0710", "500")),
     VIRTUAL_ACCOUNT_INQUIRY         (WooriBankMessageCode("0200", "400"), WooriBankMessageCode("0210", "400")),
     VIRTUAL_ACCOUNT_DEPOSIT         (WooriBankMessageCode("0200", "600"), WooriBankMessageCode("0210", "600")),
     VIRTUAL_ACCOUNT_DEPOSIT_CANCEL  (WooriBankMessageCode("0420", "700"), WooriBankMessageCode("0430", "700")),

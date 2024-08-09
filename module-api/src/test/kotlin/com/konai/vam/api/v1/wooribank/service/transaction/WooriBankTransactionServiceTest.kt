@@ -131,8 +131,8 @@ class WooriBankTransactionServiceTest : KoTestBehaviorSpec({
 
     given("우리은행 가상 계좌 '입금 취소' 전문 요청되어") {
         val messageCode = VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode
-        val trDate = LocalDate.now().convertPatternOf("yyyyMMdd")
-        val trTime = LocalTime.now().convertPatternOf("HHmmss")
+        val trDate = LocalDate.now().convertPatternOf()
+        val trTime = LocalTime.now().convertPatternOf()
         val messageNo = UUID.randomUUID().toString().substring(0, 6)
         val orgMessageNo = UUID.randomUUID().toString().substring(0, 6)
         val accountNo = UUID.randomUUID().toString()
@@ -196,7 +196,7 @@ class WooriBankTransactionServiceTest : KoTestBehaviorSpec({
             }
 
             then("충전 취소 내역 DB 정상 확인한다") {
-                val entityResult = rechargeTransactionEntityAdaptor.findByTranNoAndTranType(domain.orgTranNo, CANCEL)!!
+                val entityResult = rechargeTransactionEntityAdaptor.findByTranNoAndTranType(domain.tranNo, CANCEL)!!
                 entityResult.result shouldBe FAILED
                 entityResult.reason shouldBe "[014] Virtual account recharge cancel failed"
             }
@@ -230,7 +230,7 @@ class WooriBankTransactionServiceTest : KoTestBehaviorSpec({
             }
 
             then("충전 취소 내역 DB 정상 확인한다") {
-                val entityResult = rechargeTransactionEntityAdaptor.findByTranNoAndTranType(domain.orgTranNo, CANCEL)!!
+                val entityResult = rechargeTransactionEntityAdaptor.findByTranNoAndTranType(domain.tranNo, CANCEL)!!
                 entityResult.result shouldBe SUCCESS
                 entityResult.tranType shouldBe CANCEL
             }

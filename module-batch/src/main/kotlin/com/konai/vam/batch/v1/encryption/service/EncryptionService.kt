@@ -1,5 +1,6 @@
 package com.konai.vam.batch.v1.encryption.service
 
+import com.konai.vam.core.common.error
 import com.konai.vam.core.restclient.kms.KmsGetEncryptionKeyRequest
 import com.konai.vam.core.restclient.kms.KmsRestClient
 import jakarta.xml.bind.DatatypeConverter
@@ -41,22 +42,11 @@ class EncryptionService(
     }
 
     override fun encryptFile(key: String, inputFilePath: String, outputFilePath: String) {
-
-        val secretKey = SecretKeySpec(DatatypeConverter.parseHexBinary(key), "AES")
-        val cipher: Cipher
-
         try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-        } catch (e: Exception) {
-            logger.error(e.stackTraceToString())
-            return
-        }
+            val cipher = initCipher(key)
+            val inputFile = getFile(inputFilePath)
+            val outputFile = getFile(outputFilePath)
 
-        val inputFile: File = Paths.get(inputFilePath).toFile()
-        val outputFile = Paths.get(outputFilePath).toFile()
-
-        try {
             FileInputStream(inputFile).use { fileInputStream ->
                 FileOutputStream(outputFile).use { fileOutputStream ->
                     CipherOutputStream(fileOutputStream, cipher).use { cipherOutputStream ->
@@ -69,9 +59,23 @@ class EncryptionService(
                 }
             }
         } catch (e: Exception) {
-            logger.error(e.stackTraceToString())
+            logger.error(e)
         }
+    }
 
+    private fun initCipher(key: String): Cipher {
+        return try {
+            val secretKey = SecretKeySpec(DatatypeConverter.parseHexBinary(key), "AES")
+            val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+            cipher
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    private fun getFile(path: String): File {
+        return Paths.get(path).toFile()
     }
 
 }

@@ -3,6 +3,7 @@ package com.konai.vam.core.util
 import com.konai.vam.core.common.DEFAULT_SORT_BY
 import com.konai.vam.core.common.DEFAULT_SORT_ORDER
 import com.konai.vam.core.common.model.BasePageable
+import com.konai.vam.core.common.model.BasePageable.Pageable
 import com.konai.vam.core.common.model.PageableRequest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -21,7 +22,7 @@ object PageRequestUtil {
 
     fun <T> Page<T>.toBasePageable(): BasePageable<T> {
         return BasePageable(
-            pageable = BasePageable.Pageable(
+            pageable = Pageable(
                 first = this.isFirst,
                 last = this.isLast,
                 number = this.number,

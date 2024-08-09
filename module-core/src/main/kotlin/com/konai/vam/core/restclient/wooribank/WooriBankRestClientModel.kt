@@ -16,7 +16,7 @@ data class PostWooriWorkResponse(
 
 data class PostWooriAggregateTransactionModel(
     @JsonUnwrapped
-    val commonModel: WooriBankCommonModel = WooriBankCommonModel(WooriBankMessage.TRANSACITON_AGGREGATION.requestCode),
+    val commonModel: WooriBankCommonModel = WooriBankCommonModel(WooriBankMessage.TRANSACTION_AGGREGATION.requestCode),
     val aggregationDate: String,
     val konaDepositCount: Int,
     val konaDepositAmount: Long,

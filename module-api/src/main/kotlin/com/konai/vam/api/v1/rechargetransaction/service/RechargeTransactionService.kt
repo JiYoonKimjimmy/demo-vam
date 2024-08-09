@@ -1,6 +1,7 @@
 package com.konai.vam.api.v1.rechargetransaction.service
 
 import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransaction
+import com.konai.vam.core.common.error
 import com.konai.vam.core.restclient.cs.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -43,7 +44,6 @@ class RechargeTransactionService(
 
     private fun cancelProc(domain: RechargeTransaction): RechargeTransaction {
         return try {
-            cancelOriginTransaction(domain)
             domain.successCancel(cancelOriginTransaction(domain))
         } catch (e: Exception) {
             errorResponse(domain, e)
@@ -51,14 +51,14 @@ class RechargeTransactionService(
     }
 
     private fun cancelOriginTransaction(domain: RechargeTransaction): RechargeTransaction {
-        val origin = findSuccessedRechargeTransaction(domain.tranNo, domain.bankAccount.accountNo)
+        val origin = findSuccessRechargeTransaction(domain.orgTranNo, domain.bankAccount.accountNo)
             .also { rechargesSystemManualsReversalToCS(it) }
             .canceled()
         return saveRechargeTransaction(origin)
     }
 
-    private fun findSuccessedRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
-        return rechargeTransactionFindAdapter.findSuccessedRechargeTransaction(tranNo, accountNo)
+    private fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
+        return rechargeTransactionFindAdapter.findSuccessRechargeTransaction(tranNo, accountNo)
     }
 
     private fun rechargesSystemManualsReversalToCS(domain: RechargeTransaction): CsPostRechargesSystemManualsReversalResponse {
@@ -75,7 +75,7 @@ class RechargeTransactionService(
     }
 
     private fun errorResponse(domain: RechargeTransaction, exception: Exception): RechargeTransaction {
-        logger.error(exception.stackTraceToString())
+        logger.error(exception)
         return domain.fail(exception)
     }
 

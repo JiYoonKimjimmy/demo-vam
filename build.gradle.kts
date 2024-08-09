@@ -50,14 +50,20 @@ subprojects {
     }
 
     dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-actuator")
+
         implementation(kotlin("stdlib-jdk8"))
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-        implementation("org.springframework.boot:spring-boot-starter-actuator")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
 
 //        implementation("com.konasl.commonlibs:spring-web:7.0.1")
 //        implementation("com.konasl.commonlibs:logger:7.0.1")
 //        implementation("com.cubeone", "CubeOneAPI", "1.0.0")
+
+        implementation(fileTree(rootProject.projectDir.resolve("libs")).matching {
+            include("*.jar")
+        })
 
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(module = "junit")

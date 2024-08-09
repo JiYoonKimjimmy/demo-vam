@@ -62,8 +62,9 @@ class RechargeTransactionServiceTest : KoTestBehaviorSpec({
     }
 
     given("CS 컴포넌트의 시스템 충전 취소 API 요청하여") {
-        val tranNo = UUID.randomUUID().toString()
-        val domain = rechargeTransactionFixture.make(tranNo = tranNo, tranType = CANCEL)
+        val tranNo = UUID.randomUUID().toString().substring(0, 6)
+        val orgTranNo = UUID.randomUUID().toString().substring(0, 6)
+        val domain = rechargeTransactionFixture.make(tranNo = tranNo, orgTranNo = orgTranNo, tranType = CANCEL)
 
         `when`("완료 거래 정보가 없는 경우") {
 
@@ -77,10 +78,11 @@ class RechargeTransactionServiceTest : KoTestBehaviorSpec({
             }
         }
 
+        // 가상 계좌 충전 거래 entity 저장
+        rechargeTransactionEntityAdaptor.save(tranNo = orgTranNo, accountNo = domain.bankAccount.accountNo, result = SUCCESS)
+
         `when`("완료 거래 기준 취소 API 요청하였지만 실패인 경우") {
-
-            rechargeTransactionEntityAdaptor.save(tranNo = domain.tranNo, accountNo = domain.bankAccount.accountNo, result = SUCCESS)
-
+            // CS 시스템 충전 요청 mocking 처리
             every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } throws RestClientServiceException(ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_CANCEL_FAILED)
 
             val result = rechargeTransactionService.cancel(domain)
@@ -94,9 +96,9 @@ class RechargeTransactionServiceTest : KoTestBehaviorSpec({
         }
 
         `when`("완료 거래 기준 취소 API 요청하여 성공인 경우") {
-
-            rechargeTransactionEntityAdaptor.save(tranNo = domain.tranNo, accountNo = domain.bankAccount.accountNo, result = SUCCESS)
-
+            // 가상 계좌 충전 거래 entity 저장
+//            rechargeTransactionEntityAdaptor.save(tranNo = domain.tranNo, accountNo = domain.bankAccount.accountNo, result = SUCCESS)
+            // CS 시스템 충전 요청 mocking 처리
             every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } returns CsPostRechargesSystemManualsReversalResponse(transactionId = domain.transactionId)
 
             val result = rechargeTransactionService.cancel(domain)

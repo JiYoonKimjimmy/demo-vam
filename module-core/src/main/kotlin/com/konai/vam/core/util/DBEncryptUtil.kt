@@ -1,5 +1,7 @@
 package com.konai.vam.core.util
 
+import com.cubeone.CubeOneAPI
+import com.konai.vam.core.util.DBEncryptUtil.EncryptDataType.*
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import java.io.BufferedInputStream
@@ -11,7 +13,7 @@ object DBEncryptUtil {
     // logger
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val isEnable = isPossibleEncryption()
-    private const val CUBE_ONE = "CUBE_ONE"
+    private const val CUBE_ONE = "NONE"
 
     enum class EncryptDataType {
         CUSTOMER_INFO, CARD_INFO
@@ -54,14 +56,14 @@ object DBEncryptUtil {
         logger.info("APPLIED - CubeOne Db crypto is start to applied")
         CubeOneAPI.jcoinit("API")
         val testText1 = "코나아이"
-        val encData1 = this.encrypt(testText1, EncryptDataType.CUSTOMER_INFO)
+        val encData1 = this.encrypt(testText1, CUSTOMER_INFO)
         logger.info("TEST - CUSTOMER_INFO encryption test [$testText1] -> [$encData1]")
-        val decDate1 = this.decrypt(encData1, EncryptDataType.CUSTOMER_INFO)
+        val decDate1 = this.decrypt(encData1, CUSTOMER_INFO)
         logger.info("TEST - CUSTOMER_INFO decryption test [$encData1] -> [$decDate1]")
         val testText2 = "KONAi"
-        val encData2 = this.encrypt(testText2, EncryptDataType.CARD_INFO)
+        val encData2 = this.encrypt(testText2, CARD_INFO)
         logger.info("TEST - CARD_INFO encryption test [$testText2] -> [$encData2]")
-        val decData2 = this.decrypt(encData2, EncryptDataType.CARD_INFO)
+        val decData2 = this.decrypt(encData2, CARD_INFO)
         logger.info("TEST - CARD_INFO decryption test [$encData2] -> [$decData2]")
     }
 
@@ -71,9 +73,9 @@ object DBEncryptUtil {
     private fun decrypt(encryptedText: String, encryptType: EncryptDataType): String =
         if (!isEnable) encryptedText else cubeOne(encryptedText, encryptType, false) ?: encryptedText
 
-    fun encryptCustomInfo(text: String): String = encrypt(text, EncryptDataType.CUSTOMER_INFO)
-    fun decryptCustomInfo(text: String): String = decrypt(text, EncryptDataType.CUSTOMER_INFO)
-    fun encryptCardInfo(text: String): String = encrypt(text, EncryptDataType.CARD_INFO)
-    fun decryptCardInfo(text: String): String = decrypt(text, EncryptDataType.CARD_INFO)
+    fun encryptCustomInfo(text: String): String = encrypt(text, CUSTOMER_INFO)
+    fun decryptCustomInfo(text: String): String = decrypt(text, CUSTOMER_INFO)
+    fun encryptCardInfo(text: String): String = encrypt(text, CARD_INFO)
+    fun decryptCardInfo(text: String): String = decrypt(text, CARD_INFO)
 
 }

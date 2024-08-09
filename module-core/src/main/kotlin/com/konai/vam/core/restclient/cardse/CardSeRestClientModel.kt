@@ -28,6 +28,7 @@ data class CardSeGetCardsInfoBatchIdResponse(
     fun getPars(): List<String>? {
         return cardSeInfoList?.takeIf { it.isNotEmpty() }?.map { it.par }
     }
+
 }
 
 data class CardSeGetCardsInfoTokenRequest(

@@ -5,6 +5,7 @@ import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.getContentFirstOrNull
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
+import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import com.konai.vam.core.util.PageRequestUtil.toBasePageable
@@ -57,4 +58,9 @@ class VirtualAccountRepository(
     override fun existsByPars(pars: List<String>): Boolean {
         return virtualAccountJpaRepository.existsByParIn(pars)
     }
+
+    override fun existsByConnectStatusAndBatchId(connectStatus: VirtualAccountCardConnectStatus, batchId: String): Boolean {
+        return virtualAccountJpaRepository.existsByCardConnectStatusAndCardSeBatchId(connectStatus, batchId)
+    }
+
 }

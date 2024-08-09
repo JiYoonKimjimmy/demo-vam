@@ -12,6 +12,7 @@ import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransa
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
+import com.konai.vam.core.common.error
 import com.konai.vam.core.enumerate.RechargeTransactionType
 import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
 import com.konai.vam.core.enumerate.WooriBankResponseCode
@@ -97,7 +98,7 @@ class WooriBankTransactionService(
     }
 
     private fun errorResponse(domain: WooriBankTransaction, exception: Exception): WooriBankTransaction {
-        logger.error(exception.stackTraceToString())
+        logger.error(exception)
         return domain.fail(exception)
     }
 
@@ -107,7 +108,7 @@ class WooriBankTransactionService(
             saveWooriBankAggregationCache(domain)
         } catch (e: Exception) {
             // 예외 발생하는 경우, 충전 내역 완료 거래 취소 처리
-            revertRechargeTranstion(domain, e)
+            revertRechargeTransaction(domain, e)
         }
     }
 
@@ -122,7 +123,7 @@ class WooriBankTransactionService(
         return domain
     }
 
-    private fun revertRechargeTranstion(domain: WooriBankTransaction, exception: Exception): Nothing {
+    private fun revertRechargeTransaction(domain: WooriBankTransaction, exception: Exception): Nothing {
         requestRechargeCancelTransaction(domain)
         throw exception
     }
@@ -149,21 +150,21 @@ class WooriBankTransactionService(
     }
 
     private fun requestRechargeCancelTransaction(domain: WooriBankTransaction): WooriBankTransaction {
-        return wooriBankTransactionMapper.domainToRechargeCancleTransaction(domain)
+        return wooriBankTransactionMapper.domainToRechargeCancelTransaction(domain)
             .let { rechargetTransactionAdaptor.cancel(it) }
             .let { checkRechargeTransactionResult(it) }
             .let { domain.success(responseCode = it) }
     }
 
     private fun findRechargeTransactionId(domain: WooriBankTransaction): String {
-        return findSuccessedRechargeTransaction(domain.orgTranNo, domain.accountNo)
+        return findSuccessRechargeTransaction(domain.orgTranNo, domain.accountNo)
             .checkIfDepositCanBeCanceled()
             .transactionId!!
     }
 
     private fun depositConfirmProc(domain: WooriBankTransaction): WooriBankTransaction {
         return try {
-            findSuccessedRechargeTransaction(domain.tranNo, domain.accountNo)
+            findSuccessRechargeTransaction(domain.tranNo, domain.accountNo)
                 .checkIfDepositCanBeConfirmed()
                 .takeIf { true }
                 .let { domain.confirmed().success(responseCode = `0000`) }
@@ -172,8 +173,8 @@ class WooriBankTransactionService(
         }
     }
 
-    private fun findSuccessedRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
-        return rechargeTransactionFindAdapter.findSuccessedRechargeTransaction(tranNo, accountNo)
+    private fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
+        return rechargeTransactionFindAdapter.findSuccessRechargeTransaction(tranNo, accountNo)
     }
 
     private fun afterRechargeCancelProc(domain: WooriBankTransaction): WooriBankTransaction {

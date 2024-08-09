@@ -5,6 +5,8 @@ import com.konai.vam.core.common.WOORI_BANK_COMPANY_NO
 import com.konai.vam.core.common.WOORI_BANK_IDENTIFIER_CODE
 import com.konai.vam.core.common.WOORI_BANK_INSTITUTION_CODE
 import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
+import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
 import java.time.LocalDate
 import java.time.LocalTime
@@ -30,8 +32,8 @@ data class WooriBankCommonModel(
         businessTypeCode = messageCode.businessTypeCode,
         transmissionCount = 0,
         messageNo = EMPTY,
-        transmissionDate = LocalDate.now().convertPatternOf("yyMMdd"),
-        transmissionTime = LocalTime.now().convertPatternOf("HHmmss"),
+        transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN),
+        transmissionTime = LocalTime.now().convertPatternOf(TIME_BASIC_PATTERN),
         responseCode = EMPTY,
         orgMessageNo = EMPTY,
     )

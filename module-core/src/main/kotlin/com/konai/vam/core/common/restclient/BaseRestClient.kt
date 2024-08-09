@@ -3,6 +3,7 @@ package com.konai.vam.core.common.restclient
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.RestClientServiceException
+import com.konai.vam.core.common.error
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.client.HttpClientErrorException
@@ -46,7 +47,7 @@ abstract class BaseRestClient {
     }
 
     private fun throwException(exception: Exception): Nothing {
-        logger.error(exception.stackTraceToString())
+        logger.error(exception)
         throw when(exception) {
             is RestClientServiceException -> exception
             is HttpClientErrorException -> RestClientServiceException(ErrorCode.EXTERNAL_SERVICE_ERROR, exception.message)

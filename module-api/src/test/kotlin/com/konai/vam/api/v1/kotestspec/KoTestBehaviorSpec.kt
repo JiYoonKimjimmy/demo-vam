@@ -18,7 +18,7 @@ import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementFind
 import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementSaveService
 import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementService
 import com.konai.vam.api.v1.wooribank.service.transaction.WooriBankTransactionService
-import com.konai.vam.api.v1.wooribank.service.work.WooriBankWorkSerivce
+import com.konai.vam.api.v1.wooribank.service.work.WooriBankWorkService
 import com.konai.vam.core.cache.redis.RedisTemplateService
 import com.konai.vam.core.restclient.cs.CsRestClient
 import com.konai.vam.core.restclient.vambatch.VamBatchRestClient
@@ -71,7 +71,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val rechargeTransactionEntityFixture = RechargeTransactionEntityFixture()
     private val wooriBankRestClientModelFixture = WooriBankRestClientModelFixture()
 
-    private val wooriBankWorkSerivce = WooriBankWorkSerivce(mockWooriBankRestClient)
+    private val wooriBankWorkService = WooriBankWorkService(mockWooriBankRestClient)
 
     private val wooriBankManagementMapper = WooriBankManagementMapper()
     private val wooriBankManagementEntityAdapter = WooriBankManagementEntityAdapterFixture()
@@ -94,7 +94,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun rechargeTransactionSaveService() = this.rechargeTransactionSaveService
     fun rechargeTransactionFindService() = this.rechargeTransactionFindService
     fun wooriBankAggregationCacheService() = this.wooriBankAggregationCacheService
-    fun wooriBankWorkSerivce() = this.wooriBankWorkSerivce
+    fun wooriBankWorkService() = this.wooriBankWorkService
     fun redisTemplateService() = this.redisTemplateService
 
     // entity adaptor
@@ -113,7 +113,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun mockCsRestClient() = this.mockCsRestClient
     fun mockWooriBankRestClient() = this.mockWooriBankRestClient
     fun mockNumberRedisTemplate() = this.mockNumberRedisTemplate
-    fun mockVamBatchRestclient() = this.mockVamBatchRestClient
+    fun mockVamBatchRestClient() = this.mockVamBatchRestClient
 
     // fixture
     fun wooriBankTransactionFixture() = this.wooriBankTransactionFixture

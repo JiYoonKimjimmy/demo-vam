@@ -5,6 +5,7 @@ import com.konai.vam.api.v1.wooribank.service.management.domain.WooriBankManagem
 import com.konai.vam.api.v1.wooribank.service.management.domain.WooriBankManagementMapper
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
+import com.konai.vam.core.common.error
 import com.konai.vam.core.enumerate.WooriBankMessage
 import com.konai.vam.core.enumerate.WooriBankMessage.*
 import org.slf4j.LoggerFactory
@@ -30,7 +31,7 @@ class WooriBankManagementService(
         return try {
             checkDuplicatedMessage(domain) ?: messageProcess(domain)
         } catch (e: Exception) {
-            logger.error(e.stackTraceToString())
+            logger.error(e)
             domain.fail(e)
         }
     }

@@ -1,7 +1,6 @@
 package com.konai.vam.batch.v1.virtualaccount.cardmanagement.batch.service
 
 import com.konai.vam.batch.v1.encryption.service.EncryptionAdapter
-import com.konai.vam.batch.v1.virtualaccount.batchhistory.service.domain.VirtualAccountBatchHistory
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import org.springframework.batch.core.Job
@@ -14,6 +13,7 @@ import java.time.Instant
 
 @Service
 class VirtualAccountBatchExecuteService(
+
     private val jobLauncher: JobLauncher,
     private val virtualAccountCardConnectBatchJob: Job,
 
@@ -24,8 +24,8 @@ class VirtualAccountBatchExecuteService(
 
 ) : VirtualAccountBatchExecuteAdapter {
 
-    override fun executeCreateSemFileBatchJob(batchId: String, batchHistory: VirtualAccountBatchHistory): String {
-        val jobParameters = generateJobParameter(batchId, batchHistory.serviceId, batchHistory.count, chunkSize, encryptionAdapter.fetchKmsEncryptKey(batchId))
+    override fun executeCreateSemFileBatchJob(batchId: String, serviceId: String, quantity: Int): String {
+        val jobParameters = generateJobParameter(batchId, serviceId, quantity, chunkSize, encryptionAdapter.fetchKmsEncryptKey(batchId))
         val jobExecution = jobLauncher.run(virtualAccountCardConnectBatchJob, jobParameters)
         return if (jobExecution.status.isUnsuccessful) {
             throw InternalServiceException(ErrorCode.BATCH_FILE_CREATION_FAILED)

@@ -14,6 +14,7 @@ class RechargeTransactionFixture {
     fun make(
         id: Long? = null,
         tranNo: String = "tranNo0001",
+        orgTranNo: String = tranNo,
         tranType: RechargeTransactionType = RECHARGE,
         result: Result? = null,
         reason: String? = null,
@@ -32,6 +33,7 @@ class RechargeTransactionFixture {
         return RechargeTransaction(
             id = id,
             tranNo = tranNo,
+            orgTranNo = orgTranNo,
             tranType = tranType,
             result = result,
             reason = reason,

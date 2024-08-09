@@ -6,6 +6,8 @@ import com.konai.vam.core.common.WOORI_BANK_IDENTIFIER_CODE
 import com.konai.vam.core.common.WOORI_BANK_INSTITUTION_CODE
 import com.konai.vam.core.enumerate.WooriBankMessage
 import com.konai.vam.core.enumerate.WooriBankResponseCode
+import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
+import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
 import java.time.LocalDate
 import java.time.LocalTime
@@ -19,8 +21,8 @@ class WooriBankTransactionFixture {
         orgMessageNo: String? = null,
         accountNo: String = "1234567890",
         trAmount: Long = 100000,
-        trDate: String = LocalDate.now().convertPatternOf("yyyyMMdd"),
-        trTime: String = LocalTime.now().convertPatternOf("HHmmss"),
+        trDate: String = LocalDate.now().convertPatternOf(),
+        trTime: String = LocalTime.now().convertPatternOf(),
         responseCode: WooriBankResponseCode? = null
     ): WooriBankTransaction {
         return WooriBankTransaction(
@@ -32,8 +34,8 @@ class WooriBankTransactionFixture {
             businessTypeCode = messageCode.businessTypeCode,
             transmissionCount = 0,
             messageNo = messageNo,
-            transmissionDate = LocalDate.now().convertPatternOf("yyMMdd"),
-            transmissionTime = LocalTime.now().convertPatternOf("HHmmss"),
+            transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN),
+            transmissionTime = LocalTime.now().convertPatternOf(TIME_BASIC_PATTERN),
             responseCode = responseCode,
             orgMessageNo = orgMessageNo,
             parentAccount = "parentAccount",

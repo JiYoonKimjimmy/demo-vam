@@ -33,9 +33,9 @@ class VirtualAccountControllerTest(
     @Autowired private val mockMvc: MockMvc,
 
     @MockkBean private val virtualAccountAdapter: VirtualAccountAdapter,
-    @SpykBean private val virtualAccountModelMapper: VirtualAccountModelMapper,
+    @SpykBean private val virtualAccountModelMapper: VirtualAccountModelMapper
 
-    ) : BehaviorSpec({
+) : BehaviorSpec({
 
     val virtualAccountFixture = VirtualAccountFixture()
 

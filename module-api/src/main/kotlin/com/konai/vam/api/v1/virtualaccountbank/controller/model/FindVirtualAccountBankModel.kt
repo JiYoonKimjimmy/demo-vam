@@ -1,8 +1,5 @@
 package com.konai.vam.api.v1.virtualaccountbank.controller.model
 
-import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountResponse
-import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModel
-import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBank
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.BaseResponse

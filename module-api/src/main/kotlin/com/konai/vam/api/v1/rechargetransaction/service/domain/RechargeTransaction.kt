@@ -11,12 +11,12 @@ import com.konai.vam.core.enumerate.Result
 import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
 import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsResponse
-import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsReversalResponse
 import java.time.LocalDateTime
 
 data class RechargeTransaction(
     val id: Long? = null,
     val tranNo: String,
+    val orgTranNo: String = tranNo,
     val tranType: RechargeTransactionType,
     var result: Result? = null,
     var reason: String? = null,
@@ -59,7 +59,7 @@ data class RechargeTransaction(
 
     private fun exceptionMessage(exception: Exception): String {
         return when (exception) {
-            is BaseException -> "[${exception.errorCode.code}] ${exception.errorCode.message}"
+            is BaseException -> exception.parseDetailMessage() ?: "[${exception.errorCode.code}] ${exception.errorCode.message}"
             else -> "[${ErrorCode.UNKNOWN_ERROR.code}] ${ErrorCode.UNKNOWN_ERROR.message}"
         }
     }

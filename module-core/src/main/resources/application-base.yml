@@ -22,7 +22,7 @@ management:
     web:
       base-path: /
       exposure:
-        include: health,shutdown,metrics,prometheus
+        include: health, shutdown, metrics, prometheus
   endpoint:
     health:
       enabled: true
@@ -61,8 +61,7 @@ spring:
 # logging
 logging:
   level:
-    com.zaxxer.hikari: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari.pool.HikariPool: DEBUG
     org.apache.hc.client5.http: DEBUG
 
 ---

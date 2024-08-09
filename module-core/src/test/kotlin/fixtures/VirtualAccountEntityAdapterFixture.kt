@@ -66,4 +66,10 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
         return virtualAccountEntityFixture.entities.any { it.par in pars }
     }
 
+    override fun existsByConnectStatusAndBatchId(connectStatus: VirtualAccountCardConnectStatus, batchId: String): Boolean {
+        return virtualAccountEntityFixture.entities.any {
+            it.cardConnectStatus == connectStatus && it.cardSeBatchId == batchId
+        }
+    }
+
 }

@@ -95,7 +95,7 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
                 shouldNotThrow<InternalServiceException> {
                     virtualAccountCardConnectService.connectCardToVirtualAccounts(domain)
                 }
-              }
+            }
         }
     }
 

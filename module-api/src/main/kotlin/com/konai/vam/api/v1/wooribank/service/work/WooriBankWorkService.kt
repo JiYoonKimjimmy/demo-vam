@@ -7,7 +7,7 @@ import com.konai.vam.core.restclient.wooribank.WooriBankRestClient
 import org.springframework.stereotype.Service
 
 @Service
-class WooriBankWorkSerivce(
+class WooriBankWorkService(
     private val wooriBankRestClient: WooriBankRestClient,
 ) : WooriBankWorkAdapter {
 

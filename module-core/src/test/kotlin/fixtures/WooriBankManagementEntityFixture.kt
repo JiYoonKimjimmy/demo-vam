@@ -8,12 +8,11 @@ import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.YesOrNo
 import com.konai.vam.core.repository.wooribank.management.entity.WooriBankManagementEntity
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
-import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
+import com.konasl.commonlib.springweb.correlation.core.RequestContext
 import java.security.SecureRandom
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 
 class WooriBankManagementEntityFixture {
 
@@ -80,13 +79,13 @@ class WooriBankManagementEntityFixture {
             transmissionCount = 0,
             messageNo = messageNo,
             transmissionDate = transmissionDate,
-            transmissionTime = LocalTime.now().convertPatternOf(TIME_BASIC_PATTERN),
+            transmissionTime = LocalTime.now().convertPatternOf(),
             responseCode = responseCode,
             orgMessageNo = "orgMessageNo",
             parentAccount = "parentAccount",
-            trDate = LocalDate.now().convertPatternOf("yyyyMMdd"),
-            trTime = LocalTime.now().convertPatternOf("HHmmss"),
-            tid = UUID.randomUUID().toString(),
+            trDate = LocalDate.now().convertPatternOf(),
+            trTime = LocalTime.now().convertPatternOf(),
+            tid = RequestContext.generateId(),
             trMedium = "01",
             trAmount = trAmount,
             otherCashierCheckAmount = 0,

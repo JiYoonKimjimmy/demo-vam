@@ -1,7 +1,3 @@
-plugins {
-    id("java-test-fixtures")
-}
-
 dependencies {
     implementation(project(":module-api"))
     implementation(project(":module-core"))
