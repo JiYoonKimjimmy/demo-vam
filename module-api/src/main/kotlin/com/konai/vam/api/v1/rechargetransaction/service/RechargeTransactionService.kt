@@ -51,7 +51,7 @@ class RechargeTransactionService(
     }
 
     private fun cancelOriginTransaction(domain: RechargeTransaction): RechargeTransaction {
-        val origin = findSuccessRechargeTransaction(domain.orgTranNo, domain.bankAccount.accountNo)
+        val origin = findSuccessRechargeTransaction(domain.cancelOrgTranNo!!, domain.bankAccount.accountNo)
             .also { rechargesSystemManualsReversalToCS(it) }
             .canceled()
         return saveRechargeTransaction(origin)

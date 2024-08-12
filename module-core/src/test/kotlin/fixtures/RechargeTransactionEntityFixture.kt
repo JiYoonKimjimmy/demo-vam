@@ -31,6 +31,7 @@ class RechargeTransactionEntityFixture {
         rechargeDate: LocalDateTime = LocalDateTime.now(),
         rechargeCancelDate: LocalDateTime? = null,
         cancelStatus: RechargeTransactionCancelStatus? = null,
+        cancelOrgTranNo: String? = tranNo
     ): RechargeTransactionEntity {
         return RechargeTransactionEntity(
             id = id,
@@ -48,17 +49,18 @@ class RechargeTransactionEntityFixture {
             rechargerId = rechargerId,
             rechargeDate = rechargeDate,
             cancelStatus = cancelStatus,
+            cancelOrgTranNo = cancelOrgTranNo,
             cancelDate = rechargeCancelDate,
         )
     }
 
     fun save(entity: RechargeTransactionEntity): RechargeTransactionEntity {
-        deleteDuplcated(entity)
+        deleteDuplicated(entity)
         entities += entity
         return entity
     }
 
-    private fun deleteDuplcated(entity: RechargeTransactionEntity) {
+    private fun deleteDuplicated(entity: RechargeTransactionEntity) {
         entities.removeIf { (it.id == entity.id) || (it.tranNo == entity.tranNo && it.tranType == entity.tranType && it.result == entity.result ) }
     }
 

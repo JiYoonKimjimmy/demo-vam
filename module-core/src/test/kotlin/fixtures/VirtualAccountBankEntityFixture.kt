@@ -29,12 +29,12 @@ class VirtualAccountBankEntityFixture {
     }
 
     fun save(entity: VirtualAccountBankEntity): VirtualAccountBankEntity {
-        deleteDuplcated(entity.bankCode)
+        deleteDuplicated(entity.bankCode)
         entities += entity
         return entity
     }
 
-    private fun deleteDuplcated(bankCode: String) {
+    private fun deleteDuplicated(bankCode: String) {
         entities.removeIf { it.bankCode == bankCode }
     }
 

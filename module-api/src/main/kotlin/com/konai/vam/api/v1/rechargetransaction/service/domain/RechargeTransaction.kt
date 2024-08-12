@@ -16,7 +16,6 @@ import java.time.LocalDateTime
 data class RechargeTransaction(
     val id: Long? = null,
     val tranNo: String,
-    val orgTranNo: String = tranNo,
     val tranType: RechargeTransactionType,
     var result: Result? = null,
     var reason: String? = null,
@@ -29,6 +28,7 @@ data class RechargeTransaction(
     val rechargerId: String? = null,
     val rechargeDate: LocalDateTime? = null,
     val cancelStatus: RechargeTransactionCancelStatus? = null,
+    val cancelOrgTranNo: String? = null,
     val cancelDate: LocalDateTime? = null,
 ) {
 

@@ -61,6 +61,9 @@ class RechargeTransactionEntity(
     @Column(name = "CHRG_TR_CNCL_ST_DV_CD")
     val cancelStatus: RechargeTransactionCancelStatus?,
 
+    @Column(name = "CHRG_TR_CNCL_ORG_GMNO")
+    val cancelOrgTranNo: String?,
+
     @Column(name = "CHRG_CNCL_DTTM")
     val cancelDate: LocalDateTime?,
 

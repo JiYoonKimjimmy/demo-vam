@@ -24,7 +24,7 @@ class WooriBankTransactionMapper {
     fun domainToRechargeCancelTransaction(domain: WooriBankTransaction) : RechargeTransaction {
         return RechargeTransaction(
             tranNo = domain.tranNo,
-            orgTranNo = domain.orgTranNo,
+            cancelOrgTranNo = domain.orgTranNo,
             tranType = CANCEL,
             amount = domain.trAmount,
             bankAccount = BankAccount(domain.accountNo, domain.bankCode),

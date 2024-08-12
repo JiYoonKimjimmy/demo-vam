@@ -24,6 +24,7 @@ class RechargeTransactionMapper {
             rechargerId = domain.rechargerId,
             rechargeDate = domain.rechargeDate,
             cancelStatus = domain.cancelStatus,
+            cancelOrgTranNo = domain.cancelOrgTranNo,
             cancelDate = domain.cancelDate,
             reason = domain.reason,
         )
@@ -44,6 +45,7 @@ class RechargeTransactionMapper {
             rechargerId = entity.rechargerId,
             rechargeDate = entity.rechargeDate,
             cancelStatus = entity.cancelStatus,
+            cancelOrgTranNo = entity.cancelOrgTranNo,
             cancelDate = entity.cancelDate,
             reason = entity.reason,
         )
