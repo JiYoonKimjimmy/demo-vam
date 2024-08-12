@@ -41,7 +41,7 @@ masking:
 
 # encrypt cubeone
 database:
-  encrypt-provider: CUBE_ONE
+  encrypt-provider: NONE
 
 # spring
 spring:

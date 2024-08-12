@@ -13,10 +13,23 @@ object DBEncryptUtil {
     // logger
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val isEnable = isPossibleEncryption()
-    private const val CUBE_ONE = "NONE"
+    private const val CUBE_ONE = "CUBE_ONE"
 
     enum class EncryptDataType {
         CUSTOMER_INFO, CARD_INFO
+    }
+
+    init {
+        if (isEnable) encryptionTest() else logger.info("NOT APPLIED - CubeOne Db crypto is not start to applied")
+    }
+
+    private fun isPossibleEncryption(): Boolean {
+        return try {
+            isCheckEnabledByProperties()
+                .also { logger.info("Encrypt DB enable : $it") }
+        } catch (ioe: IOException) {
+            throw ioe
+        }
     }
 
     private fun checkError(errBytes: ByteArray): Boolean {
@@ -33,16 +46,6 @@ object DBEncryptUtil {
         }
 
         return if (checkError(errBytes)) text else result
-    }
-
-    private fun isPossibleEncryption(): Boolean {
-        return try {
-            isCheckEnabledByProperties()
-                .also { logger.info("Encrypt DB enable : $it") }
-                .also { if (it) encryptionTest() else logger.info("NOT APPLIED - CubeOne Db crypto is not start to applied") }
-        } catch (ioe: IOException) {
-            throw ioe
-        }
     }
 
     private fun isCheckEnabledByProperties(): Boolean {
@@ -75,7 +78,5 @@ object DBEncryptUtil {
 
     fun encryptCustomInfo(text: String): String = encrypt(text, CUSTOMER_INFO)
     fun decryptCustomInfo(text: String): String = decrypt(text, CUSTOMER_INFO)
-    fun encryptCardInfo(text: String): String = encrypt(text, CARD_INFO)
-    fun decryptCardInfo(text: String): String = decrypt(text, CARD_INFO)
 
 }

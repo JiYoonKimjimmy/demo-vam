@@ -1,0 +1,8 @@
+# external url
+fep.url    : 118.33.122.34:30005
+koditn.url : 118.33.122.28:10200
+cs.url     : 118.33.122.28:15820/cs
+cardse.url : 118.33.122.28:10300/cardse-service/api/cardse
+cp.url     : 118.33.122.28:10000/cloud-platform-1.0
+kms.url    : 118.33.122.28:10070/kms-core-1.0
+vam-batch.url : localhost:11021/vam
