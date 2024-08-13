@@ -32,5 +32,4 @@ class RechargeTransactionRepositoryTest {
         assertThat(result.tranNo).isEqualTo(tranNo)
     }
 
-
 }

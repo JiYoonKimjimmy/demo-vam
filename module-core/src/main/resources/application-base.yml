@@ -76,12 +76,13 @@ spring:
     username: vam
     password: StgVAM1104#
   jpa:
-    generate-ddl: true
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
-        ddl-auto: update
         format_sql: true
-        show_sql: true
   data:
     redis:
       timeout: 10s
