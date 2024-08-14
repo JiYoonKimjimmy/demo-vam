@@ -16,10 +16,10 @@ class SequenceGeneratorRepositoryTest @Autowired constructor(
 
     given("'20240813' 일자 기준 새로운 Sequence 요청하여") {
         val date = "20240813"
-        val type = SequenceGeneratorType.WOORI_BANK
+        val type = SequenceGeneratorType.WR_BANK
 
         `when`("요청 일자의 Sequence 없는 경우") {
-            val result = sequenceGeneratorRepository.getNextSequence(date, type)
+            val result = sequenceGeneratorRepository.getNextSequence(type, date)
 
             then("새로운 Entity 생성하고, 증가한 값 정상 확인한다") {
                 result shouldNotBe null
@@ -27,7 +27,7 @@ class SequenceGeneratorRepositoryTest @Autowired constructor(
             }
 
             then("DB 저장 정보 조회 정상 확인한다") {
-                val entity = sequenceGeneratorJpaRepository.findByDateAndType(date, type).get()
+                val entity = sequenceGeneratorJpaRepository.findByTypeAndDate(type, date).get()
                 entity shouldNotBe null
                 entity.value shouldBe 1
             }

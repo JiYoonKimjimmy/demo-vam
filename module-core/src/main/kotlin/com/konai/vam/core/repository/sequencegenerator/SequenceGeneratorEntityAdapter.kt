@@ -5,6 +5,6 @@ import com.konai.vam.core.repository.sequencegenerator.entity.SequenceGeneratorE
 
 interface SequenceGeneratorEntityAdapter {
 
-    fun getNextSequence(date: String, type: SequenceGeneratorType): SequenceGeneratorEntity
+    fun getNextSequence(type: SequenceGeneratorType, date: String): SequenceGeneratorEntity
 
 }

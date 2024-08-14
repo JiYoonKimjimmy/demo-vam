@@ -9,6 +9,6 @@ import java.util.*
 interface SequenceGeneratorJpaRepository : JpaRepository<SequenceGeneratorEntity, Long> {
 
     @Query("SELECT s FROM SequenceGenerator s WHERE s.date = :date AND s.type = :type")
-    fun findByDateAndType(date: String, type: SequenceGeneratorType): Optional<SequenceGeneratorEntity>
+    fun findByTypeAndDate(type: SequenceGeneratorType, date: String): Optional<SequenceGeneratorEntity>
 
 }

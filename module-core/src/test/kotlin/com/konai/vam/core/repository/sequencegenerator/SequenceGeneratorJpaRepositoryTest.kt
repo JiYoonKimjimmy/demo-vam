@@ -16,10 +16,10 @@ class SequenceGeneratorJpaRepositoryTest @Autowired constructor(
 
     given("'20240813' 일자 'WOORI_BANK' 구분의 Sequence 채번 요청하여") {
         val date = "20240813"
-        val type = SequenceGeneratorType.WOORI_BANK
+        val type = SequenceGeneratorType.WR_BANK
 
         `when`("DB 정보 없는 경우") {
-            val result = sequenceGeneratorJpaRepository.findByDateAndType(date, type)
+            val result = sequenceGeneratorJpaRepository.findByTypeAndDate(type, date)
             
             then("'null' 반환 정상 확인한다") {
                 result.isPresent shouldBe false
@@ -27,10 +27,10 @@ class SequenceGeneratorJpaRepositoryTest @Autowired constructor(
         }
 
         // Sequence 생성
-        sequenceGeneratorJpaRepository.save(sequenceGeneratorEntityFixture.make(date = date, type = type))
+        sequenceGeneratorJpaRepository.save(sequenceGeneratorEntityFixture.make(type = type, date = date))
 
         `when`("DB 정보 있는 경우") {
-            val result = sequenceGeneratorJpaRepository.findByDateAndType(date, type)
+            val result = sequenceGeneratorJpaRepository.findByTypeAndDate(type, date)
 
             then("조회 결과 정상 확인한다") {
                 result.isPresent shouldBe true

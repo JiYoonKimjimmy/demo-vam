@@ -12,8 +12,8 @@ class SequenceGeneratorEntityFixture {
 
     fun make(
         id: Long? = SecureRandom().nextLong(),
+        type: SequenceGeneratorType = SequenceGeneratorType.WR_BANK,
         date: String = LocalDate.now().convertPatternOf(),
-        type: SequenceGeneratorType = SequenceGeneratorType.WOORI_BANK,
         value: Long = 0
     ): SequenceGeneratorEntity {
         return SequenceGeneratorEntity(

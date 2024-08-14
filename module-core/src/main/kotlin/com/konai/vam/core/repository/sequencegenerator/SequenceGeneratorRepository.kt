@@ -11,16 +11,16 @@ class SequenceGeneratorRepository(
 ) : SequenceGeneratorEntityAdapter {
 
     @Transactional
-    override fun getNextSequence(date: String, type: SequenceGeneratorType): SequenceGeneratorEntity {
-        return findSequence(date, type)
+    override fun getNextSequence(type: SequenceGeneratorType, date: String): SequenceGeneratorEntity {
+        return findSequence(type, date)
             .increment()
             .let(this::save)
     }
 
-    private fun findSequence(date: String, type: SequenceGeneratorType): SequenceGeneratorEntity {
+    private fun findSequence(type: SequenceGeneratorType, date: String): SequenceGeneratorEntity {
         return sequenceGeneratorJpaRepository
-            .findByDateAndType(date, type)
-            .orElse(SequenceGeneratorEntity(date = date, type = type, value = 0))
+            .findByTypeAndDate(type, date)
+            .orElse(SequenceGeneratorEntity(type = type, date = date, value = 0))
     }
 
     private fun save(entity: SequenceGeneratorEntity): SequenceGeneratorEntity {
