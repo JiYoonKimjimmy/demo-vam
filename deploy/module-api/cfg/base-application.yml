@@ -22,7 +22,7 @@ management:
     web:
       base-path: /
       exposure:
-        include: health,shutdown,metrics,prometheus
+        include: health, shutdown, metrics, prometheus
   endpoint:
     health:
       enabled: true
@@ -73,8 +73,7 @@ spring:
 # logging
 logging:
   level:
-    com.zaxxer.hikari: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari.pool.HikariPool: DEBUG
     org.apache.hc.client5.http: DEBUG
 
 ---
@@ -85,21 +84,70 @@ spring:
       on-profile: dev
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@118.33.122.24:15322:KMDBP19
+    url: jdbc:oracle:thin:@10.40.10.24:15322:KMDBP19
     username: vam
-    password: StgVAM1104#
+    password: xBA0tTwL9zl+MqCkvfkGQw==
   jpa:
-    generate-ddl: true
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
-        ddl-auto: update
         format_sql: true
-        show_sql: true
   data:
     redis:
-      host: 118.33.122.28
+      host: 10.30.210.121
       port: 6379
       password: 123456
       sentinel:
         master: mymaster
-        nodes: 118.33.122.28:26379
+        nodes: 10.30.210.121:26379
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@10.30.200.114:15321:KMDBP
+    username: vam
+    password: xBA0tTwL9zl+MqCkvfkGQw==
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+  data:
+    redis:
+      host: 10.30.210.153
+      port: 6379
+      password: 123456
+      sentinel:
+        master: mymaster
+        nodes: 10.30.210.153:26379
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@db.konadc.com:15321/kmdbp
+    username: vam
+    password: IrYdRa16loALOEikHzrRXA==
+  jpa:
+    show-sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+  data:
+    redis:
+      password: 123456
+      sentinel:
+        master: mymaster
+        nodes: redis1.konadc.com:26379, redis2.konadc.com:26379, redis3.konadc.com:26379
