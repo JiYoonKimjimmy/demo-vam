@@ -34,6 +34,7 @@ enum class ErrorCode(
     EXTERNAL_URL_PROPERTY_NOT_DEFINED(HttpStatus.INTERNAL_SERVER_ERROR, "902", "External url property is not defined"),
     EXTERNAL_SERVICE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "903", "External API service error"),
     EXTERNAL_SERVICE_RESPONSE_IS_NULL(HttpStatus.INTERNAL_SERVER_ERROR, "904", "External API response is null"),
+    UNKNOWN_ENVIRONMENT(HttpStatus.INTERNAL_SERVER_ERROR, "905", "Unknown environment of project"),
 
     UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "999", "Unknown error"),
 

@@ -4,6 +4,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
+    implementation("org.redisson:redisson-spring-boot-starter:3.34.1")
+
     val jdslVersion = "3.4.1"
     implementation("com.linecorp.kotlin-jdsl:jpql-dsl:$jdslVersion")
     implementation("com.linecorp.kotlin-jdsl:jpql-render:$jdslVersion")

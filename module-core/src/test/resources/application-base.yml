@@ -22,7 +22,7 @@ management:
     web:
       base-path: /
       exposure:
-        include: health,shutdown,metrics,prometheus
+        include: health, shutdown, metrics, prometheus
   endpoint:
     health:
       enabled: true
@@ -57,12 +57,23 @@ spring:
       connection-test-query: SELECT 1 FROM DUAL
   jpa:
     database: oracle
+  data:
+    redis:
+      timeout: 10s
+      connect-timeout: 10s
+      lettuce:
+        pool:
+          enabled: true
+          min-idle: 0
+          max-idle: 8
+          max-active: 30
+          max-wait: 20s
+          time-between-eviction-runs: 20s
 
 # logging
 logging:
   level:
-    com.zaxxer.hikari: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari.pool.HikariPool: DEBUG
     org.apache.hc.client5.http: DEBUG
 
 ---
@@ -77,23 +88,18 @@ spring:
     username: vam
     password: StgVAM1104#
   jpa:
-    generate-ddl: true
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
-        ddl-auto: update
         format_sql: true
-        show_sql: true
   data:
     redis:
-      timeout: 10s
-      connect-timeout: 20s
+      host: 118.33.122.28
+      port: 6379
       password: 123456
       sentinel:
         master: mymaster
-        nodes:
-          - 118.33.122.28:26379
-      lettuce:
-        pool:
-          min-idle: 1
-          max-idle: 8
-          max-active: 30
+        nodes: 118.33.122.28:26379
