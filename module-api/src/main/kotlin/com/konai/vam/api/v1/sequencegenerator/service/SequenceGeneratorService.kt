@@ -29,5 +29,5 @@ class SequenceGeneratorService(
     override fun findSequence(type: SequenceGeneratorType, date: String): String {
         return sequenceGeneratorEntityAdapter.findSequence(type, date).value.toString().padStart(6, ZERO_CHAR)
     }
-    
+
 }
