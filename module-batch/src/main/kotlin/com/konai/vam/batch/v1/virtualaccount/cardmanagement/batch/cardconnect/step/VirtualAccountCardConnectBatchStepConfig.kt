@@ -23,7 +23,7 @@ class VirtualAccountCardConnectBatchStepConfig(
 
     @Value("\${batch.virtualAccountCardConnect.file.localPath}") private val localPath: String,
     @Value("\${batch.virtualAccountCardConnect.file.rawPrefix}") private val rawPrefix: String,
-    @Value("\${batch.virtualAccountCardConnect.file.rawSuffix}") private val rawSuffix: String,
+    @Value("\${batch.virtualAccountCardConnect.file.rawSuffix}") private val rawSuffix: String
 
 ) {
 
