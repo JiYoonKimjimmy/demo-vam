@@ -22,6 +22,10 @@ class EncryptionService(
     // logger
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    companion object {
+        const val MAX_BATCH_ID_LENGTH = 32
+    }
+
     override fun fetchKmsEncryptKey(batchId: String): String {
         val convertBatchIdToEncrypt = convertBatchIdToEncrypt(batchId)
         val request = KmsGetEncryptionKeyRequest(requestData = convertBatchIdToEncrypt)
@@ -30,14 +34,11 @@ class EncryptionService(
     }
 
     private fun convertBatchIdToEncrypt(batchId: String): String {
-        val keyDerivationData = if (batchId.length > 32) {
-            batchId.substring(0, 32)
-        } else if (batchId.length == 32) {
-            batchId
-        } else {
-            batchId + Collections.nCopies((32 - batchId.length), "0")
+        val keyDerivationData = when {
+            batchId.length > MAX_BATCH_ID_LENGTH -> batchId.take(MAX_BATCH_ID_LENGTH)
+            batchId.length < MAX_BATCH_ID_LENGTH -> batchId.padEnd(MAX_BATCH_ID_LENGTH, '0')
+            else -> batchId
         }
-
         return HexFormat.of().formatHex(keyDerivationData.toByteArray())
     }
 
@@ -66,7 +67,7 @@ class EncryptionService(
     private fun initCipher(key: String): Cipher {
         return try {
             val secretKey = SecretKeySpec(DatatypeConverter.parseHexBinary(key), "AES")
-            val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+            val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
             cipher
         } catch (e: Exception) {
