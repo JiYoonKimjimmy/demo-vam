@@ -1,12 +1,12 @@
 package com.konai.vam.api.v1.virtualaccountbank.service
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.repository.virtualaccountbank.VirtualAccountBankConst
 import com.konai.vam.core.repository.virtualaccountbank.jdsl.VirtualAccountBankPredicate
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
-class VirtualAccountBankFindServiceTest : KoTestBehaviorSpec({
+class VirtualAccountBankFindServiceTest : CustomBehaviorSpec({
 
     val virtualAccountBankEntityAdaptor = virtualAccountBankEntityAdaptor()
     val virtualAccountBankFindService = virtualAccountBankFindService()

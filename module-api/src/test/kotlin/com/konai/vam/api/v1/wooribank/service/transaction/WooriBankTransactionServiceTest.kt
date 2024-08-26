@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.transaction
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
@@ -27,7 +27,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
 
-class WooriBankTransactionServiceTest : KoTestBehaviorSpec({
+class WooriBankTransactionServiceTest : CustomBehaviorSpec({
 
     val wooriBankTransactionService = wooriBankTransactionService()
     val wooriBankAggregationCacheService = wooriBankAggregationCacheService()

@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.rechargetransaction.service
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.RestClientServiceException
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
@@ -13,7 +13,7 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import java.util.*
 
-class RechargeTransactionServiceTest : KoTestBehaviorSpec({
+class RechargeTransactionServiceTest : CustomBehaviorSpec({
 
     val rechargeTransactionFixture = rechargeTransactionFixture()
     val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()

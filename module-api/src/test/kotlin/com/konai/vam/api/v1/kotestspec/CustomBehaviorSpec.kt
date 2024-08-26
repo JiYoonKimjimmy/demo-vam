@@ -28,7 +28,7 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.mockk
 import org.springframework.data.redis.core.RedisTemplate
 
-abstract class KoTestBehaviorSpec(body: BaseBehaviorSpec.() -> Unit = {}) : BaseBehaviorSpec() {
+abstract class CustomBehaviorSpec(body: BaseBehaviorSpec.() -> Unit = {}) : BaseBehaviorSpec() {
     init {
         body()
     }

@@ -1,11 +1,11 @@
 package com.konai.vam.api.v1.rechargetransaction.service
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
 import io.kotest.matchers.shouldBe
 
-class RechargeTransactionSaveServiceTest : KoTestBehaviorSpec({
+class RechargeTransactionSaveServiceTest : CustomBehaviorSpec({
 
     val rechargeTransactionFixture = rechargeTransactionFixture()
     val rechargeTransactionSaveService = rechargeTransactionSaveService()

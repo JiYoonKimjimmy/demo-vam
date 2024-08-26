@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.aggregation
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
@@ -10,7 +10,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 
-class WooriBankAggregationServiceTest : KoTestBehaviorSpec({
+class WooriBankAggregationServiceTest : CustomBehaviorSpec({
 
     val wooriBankAggregationService = wooriBankAggregationService()
 
