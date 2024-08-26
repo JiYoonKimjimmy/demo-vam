@@ -15,7 +15,7 @@ import kotlin.system.measureTimeMillis
 import kotlin.time.measureTime
 
 @SpringBootTest
-class SequenceGeneratorServiceTest @Autowired constructor(
+class SequenceGeneratorServiceLockTest @Autowired constructor(
     val sequenceGeneratorService: SequenceGeneratorService
 ) : StringSpec({
 
