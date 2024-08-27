@@ -36,7 +36,7 @@ class CustomFormatterLineAggregator : FormatterLineAggregator<VirtualAccountCard
     init {
         val fieldExtractor = BeanWrapperFieldExtractor<VirtualAccountCardConnectItem>()
         fieldExtractor.setNames(arrayOf("id", "serviceId", "par", "accountNo"))
-        setFormat("%06dSVCID=%-15s;par=%-27s;VIRTUALACC=%-16s;")
+        setFormat("%06dSVCID=%-15s;PAR=%-27s;VIRTUALACC=%-20s;")
         setFieldExtractor(fieldExtractor)
     }
 

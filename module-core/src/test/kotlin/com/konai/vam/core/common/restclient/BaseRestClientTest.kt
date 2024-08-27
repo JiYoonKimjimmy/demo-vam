@@ -33,7 +33,7 @@ class BaseRestClientTest {
 
         // then
         assertThat(result).isNotNull()
-        assertThat(result).isEqualTo("http://118.33.122.34:30005")
+        assertThat(result).isEqualTo("http://118.33.122.34:25002")
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionFindS
 import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionSaveService
 import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionService
 import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransactionMapper
+import com.konai.vam.api.v1.sequencegenerator.service.SequenceGeneratorService
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindService
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.api.v1.virtualaccountbank.service.VirtualAccountBankFindService
@@ -12,6 +13,7 @@ import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBank
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCacheService
 import com.konai.vam.api.v1.wooribank.service.aggregation.WooriBankAggregationService
 import com.konai.vam.api.v1.wooribank.service.aggregation.domain.WooriBankAggregationMapper
+import com.konai.vam.api.v1.wooribank.service.common.WooriBankCommonMessageService
 import com.konai.vam.api.v1.wooribank.service.management.domain.WooriBankManagementMapper
 import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransactionMapper
 import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementFindService
@@ -20,6 +22,7 @@ import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementServ
 import com.konai.vam.api.v1.wooribank.service.transaction.WooriBankTransactionService
 import com.konai.vam.api.v1.wooribank.service.work.WooriBankWorkService
 import com.konai.vam.core.cache.redis.RedisTemplateService
+import fixtures.WooriBankCommonMessageFixture
 import com.konai.vam.core.restclient.cs.CsRestClient
 import com.konai.vam.core.restclient.vambatch.VamBatchRestClient
 import com.konai.vam.core.restclient.wooribank.WooriBankRestClient
@@ -59,7 +62,11 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val wooriBankAggregationMapper = WooriBankAggregationMapper()
     private val mockWooriBankRestClient = mockk<WooriBankRestClient>()
 
-    private val wooriBankAggregationService = WooriBankAggregationService(wooriBankAggregationCacheService, wooriBankAggregationEntityAdapter, wooriBankAggregationMapper, mockWooriBankRestClient)
+    private val sequenceGeneratorEntityAdapter = SequenceGeneratorEntityAdapterFixture()
+    private val sequenceGeneratorService = SequenceGeneratorService(sequenceGeneratorEntityAdapter)
+    private val wooriBankCommonMessageService = WooriBankCommonMessageService(sequenceGeneratorService)
+
+    private val wooriBankAggregationService = WooriBankAggregationService(wooriBankAggregationCacheService, wooriBankAggregationEntityAdapter, wooriBankCommonMessageService, wooriBankAggregationMapper, mockWooriBankRestClient)
 
     private val mockCsRestClient = mockk<CsRestClient>()
 
@@ -71,7 +78,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val rechargeTransactionEntityFixture = RechargeTransactionEntityFixture()
     private val wooriBankRestClientModelFixture = WooriBankRestClientModelFixture()
 
-    private val wooriBankWorkService = WooriBankWorkService(mockWooriBankRestClient)
+    private val wooriBankWorkService = WooriBankWorkService(wooriBankCommonMessageService, mockWooriBankRestClient)
 
     private val wooriBankManagementMapper = WooriBankManagementMapper()
     private val wooriBankManagementEntityAdapter = WooriBankManagementEntityAdapterFixture()
@@ -82,6 +89,8 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val mockVamBatchRestClient = mockk<VamBatchRestClient>()
     private val virtualAccountCardBatchService = VirtualAccountCardBatchService(mockVamBatchRestClient)
+
+    private val wooriBankCommonMessageFixture = WooriBankCommonMessageFixture()
 
     // service
     fun virtualAccountFindService() = this.virtualAccountFindService
@@ -94,6 +103,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun rechargeTransactionSaveService() = this.rechargeTransactionSaveService
     fun rechargeTransactionFindService() = this.rechargeTransactionFindService
     fun wooriBankAggregationCacheService() = this.wooriBankAggregationCacheService
+    fun wooriBankCommonMessageService() = this.wooriBankCommonMessageService
     fun wooriBankWorkService() = this.wooriBankWorkService
     fun redisTemplateService() = this.redisTemplateService
 
@@ -121,5 +131,6 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun rechargeTransactionEntityFixture() = this.rechargeTransactionEntityFixture
     fun wooriBankRestClientModelFixture() = this.wooriBankRestClientModelFixture
     fun wooriBankManagementFixture() = this.wooriBankManagementFixture
+    fun wooriBankCommonMessageFixture() = this.wooriBankCommonMessageFixture
 
 }

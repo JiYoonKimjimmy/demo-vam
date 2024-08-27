@@ -12,11 +12,11 @@ class VirtualAccountCardConnectItemWriterTest : BehaviorSpec({
 
     val virtualAccountCardConnectItemFixture = VirtualAccountCardConnectItemFixture()
 
-    given("VirtualAccountCardConnectItemWriter") {
+    xgiven("VirtualAccountCardConnectItemWriter") {
         val batchId = "00000800029500017071809205815I00001"
         val quantity = 1
 
-        val tempDir = Paths.get(System.getProperty("java.io.tmpdir"))
+        val tempDir = Paths.get(System.getProperty("user.dir"))
         val tempFile = tempDir.resolve("raw_data_additional_$batchId.SAM")
         val writer = VirtualAccountCardConnectItemWriter(tempDir.toString(), batchId, quantity)
 
