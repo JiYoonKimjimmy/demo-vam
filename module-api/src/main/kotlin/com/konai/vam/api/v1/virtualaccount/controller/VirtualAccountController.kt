@@ -27,7 +27,7 @@ class VirtualAccountController(
     }
 
     @PostMapping("/all")
-    fun findPage(@RequestBody @Valid request: FindAllVirtualAccountRequest): ResponseEntity<FindAllVirtualAccountResponse> {
+    fun findPage(@RequestBody @Valid request: FindAllVirtualAccountRequest = FindAllVirtualAccountRequest()): ResponseEntity<FindAllVirtualAccountResponse> {
         return virtualAccountModelMapper.requestToPredicate(request)
             .let { virtualAccountAdapter.findPage(it, request.pageable) }
             .let { FindAllVirtualAccountResponse(it, virtualAccountModelMapper::domainToModel) }

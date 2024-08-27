@@ -19,7 +19,7 @@ data class FindAllVirtualAccountRequest(
     val connectType: VirtualAccountConnectType? = null,
     val isConnected: Boolean? = null,
     @field:NotNull(message = "Pageable request cannot be empty")
-    val pageable: PageableRequest
+    val pageable: PageableRequest = PageableRequest()
 )
 
 data class FindAllVirtualAccountResponse(
@@ -35,4 +35,5 @@ data class FindAllVirtualAccountResponse(
     override fun success(httpStatus: HttpStatus): ResponseEntity<FindAllVirtualAccountResponse> {
         return ResponseEntity(this, httpStatus)
     }
+
 }
