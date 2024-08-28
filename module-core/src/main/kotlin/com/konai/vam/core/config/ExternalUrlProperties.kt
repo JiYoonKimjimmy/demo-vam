@@ -3,7 +3,7 @@ package com.konai.vam.core.config
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.konai.vam.core.common.EMPTY
 import com.konai.vam.core.common.error.ErrorCode
@@ -18,7 +18,7 @@ class ExternalUrlProperties {
     private val properties: Map<String, ExternalUrlProperty> = getExternalUrlProperties()
 
     private fun getExternalUrlProperties(): Map<String, ExternalUrlProperty> {
-        val objectMapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule.Builder().build())
+        val objectMapper = ObjectMapper(YAMLFactory()).registerModule(kotlinModule())
         val resource = ClassPathResource("application-external-url.yml")
         val externalUrlMap: Map<String, Map<String, ExternalUrlProperty>> = objectMapper.readValue(resource.inputStream)
         return externalUrlMap["external-url"] ?: emptyMap()
