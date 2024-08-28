@@ -16,13 +16,4 @@ import java.util.*
 @EnableTransactionManagement
 @EnableConfigurationProperties(MaskingProperties::class)
 @Configuration
-class VamCoreApplicationConfig {
-
-    @Bean
-    fun externalUrlProperties(): Properties {
-        return YamlPropertiesFactoryBean()
-            .also { it.setResources(ClassPathResource("application-external-url.yml")) }
-            .`object`!!
-    }
-
-}
+class VamCoreApplicationConfig

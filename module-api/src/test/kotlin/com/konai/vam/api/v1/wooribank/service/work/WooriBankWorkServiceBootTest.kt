@@ -18,7 +18,7 @@ class WooriBankWorkServiceBootTest @Autowired constructor(
             val result = wooriBankWorkService.work(message)
 
             then("'000001' 전문번호 요청 정상 확인한다") {
-                result.message.messageNo shouldBe "000001"
+                result.messageNo shouldBe "000001"
             }
         }
     }

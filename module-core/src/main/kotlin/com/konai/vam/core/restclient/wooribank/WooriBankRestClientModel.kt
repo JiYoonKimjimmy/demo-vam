@@ -9,11 +9,6 @@ data class PostWooriWorkRequest(
     val message: WooriBankCommonMessage
 )
 
-data class PostWooriWorkResponse(
-    @JsonUnwrapped
-    val message: WooriBankCommonMessage
-)
-
 data class PostWooriAggregateTransactionModel(
     @JsonUnwrapped
     val message: WooriBankCommonMessage,
