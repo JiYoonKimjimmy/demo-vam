@@ -24,11 +24,16 @@ class WooriBankAggregationService(
 ) : WooriBankAggregationAdapter {
 
     override fun aggregateTransaction(aggregateDate: String): WooriBankAggregation {
+        // 우리은행 집계 Cache 정보 조회
         return with(findWooriBankAggregation(aggregateDate)) {
+            // 우리은행 집계 DB 정보 'WAITING' 상태 저장
             changeResultToWaiting(this)
-            applyBankAggregationResult(this)
+            // 우리은행 집계 결과 조회
+            inquiryBankAggregationResult(this)
+            // 우리은행 집계 결과 DB 정보 저장
             changeResultToMatchedOrMismatched(this)
-            delteWooriBankAggregation(this)
+            // 우리은행 집계 Cache 정보 삭제
+            deleteWooriBankAggregation(this)
         }
     }
 
@@ -40,7 +45,7 @@ class WooriBankAggregationService(
         return save(domain.changeResultToWaiting())
     }
 
-    private fun applyBankAggregationResult(domain: WooriBankAggregation): WooriBankAggregation {
+    private fun inquiryBankAggregationResult(domain: WooriBankAggregation): WooriBankAggregation {
         return wooriBankCommonMessageAdapter.generateCommonMessage(WooriBankMessage.TRANSACTION_AGGREGATION.requestCode)
             .let { wooriBankAggregationMapper.domainToClientRequest(domain, it) }
             .let { wooriBankRestClient.postWooriAggregateTransaction(it) }
@@ -57,7 +62,7 @@ class WooriBankAggregationService(
             .let { wooriBankAggregationMapper.entityToDomain(it) }
     }
 
-    private fun delteWooriBankAggregation(domain: WooriBankAggregation): WooriBankAggregation {
+    private fun deleteWooriBankAggregation(domain: WooriBankAggregation): WooriBankAggregation {
         if (domain.aggregateResult == MATCHED) {
             wooriBankAggregationCacheAdapter.deleteAggregationCache(domain.aggregateDate)
         }
