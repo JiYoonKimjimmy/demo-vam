@@ -1,7 +1,5 @@
 package com.konai.vam.core.common.model.wooribank
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.konai.vam.core.common.*
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.TIME_BASIC_PATTERN
@@ -9,11 +7,6 @@ import com.konai.vam.core.util.convertPatternOf
 import java.time.LocalDate
 import java.time.LocalTime
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes(
-    JsonSubTypes.Type(value = WooriBankMessage::class, name = "basic"),
-    JsonSubTypes.Type(value = WooriBankAggregationMessage::class, name = "aggregation")
-)
 sealed class WooriBankCommonMessage(
     open val identifierCode: String = WOORI_BANK_IDENTIFIER_CODE,
     open val companyNo : String = WOORI_BANK_COMPANY_NO,

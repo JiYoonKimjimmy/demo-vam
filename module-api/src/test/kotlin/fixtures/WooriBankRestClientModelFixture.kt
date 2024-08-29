@@ -1,13 +1,12 @@
 package fixtures
 
-import com.konai.vam.core.common.model.wooribank.WooriBankCommonMessage
-import com.konai.vam.core.restclient.wooribank.PostWooriAggregateTransactionModel
-import com.konai.vam.core.restclient.wooribank.PostWooriAggregateTransactionResponse
+import com.konai.vam.core.common.model.wooribank.WooriBankAggregationMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 
 class WooriBankRestClientModelFixture {
 
     fun makePostWooriAggregateTransactionResponse(
-        message: WooriBankCommonMessage,
+        messageNo: String,
         aggregationDate: String,
         konaDepositCount: Int = 0,
         konaDepositAmount: Long = 0,
@@ -19,9 +18,11 @@ class WooriBankRestClientModelFixture {
         bankDepositCancelCount: Int = 0,
         bankDepositCancelAmount: Long = 0,
         bankDepositTrAmount: Long = 0,
-    ): PostWooriAggregateTransactionResponse {
-        val model = PostWooriAggregateTransactionModel(
-            message = message,
+    ): WooriBankAggregationMessage {
+        return WooriBankAggregationMessage(
+            messageTypeCode = WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode.messageTypeCode,
+            businessTypeCode = WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode.businessTypeCode,
+            messageNo = messageNo,
             aggregationDate = aggregationDate,
             konaDepositCount = konaDepositCount,
             konaDepositAmount = konaDepositAmount,
@@ -34,7 +35,6 @@ class WooriBankRestClientModelFixture {
             bankDepositCancelAmount = bankDepositCancelAmount,
             bankDepositTrAmount = bankDepositTrAmount,
         )
-        return PostWooriAggregateTransactionResponse(model)
     }
 
 }

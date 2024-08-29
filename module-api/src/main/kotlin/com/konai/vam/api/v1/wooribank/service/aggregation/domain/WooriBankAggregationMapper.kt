@@ -1,9 +1,8 @@
 package com.konai.vam.api.v1.wooribank.service.aggregation.domain
 
+import com.konai.vam.core.common.model.wooribank.WooriBankAggregationMessage
 import com.konai.vam.core.common.model.wooribank.WooriBankCommonMessage
 import com.konai.vam.core.repository.wooribank.aggregation.entity.WooriBankAggregationEntity
-import com.konai.vam.core.restclient.wooribank.PostWooriAggregateTransactionModel
-import com.konai.vam.core.restclient.wooribank.PostWooriAggregateTransactionRequest
 import org.springframework.stereotype.Component
 
 @Component
@@ -43,17 +42,17 @@ class WooriBankAggregationMapper {
         )
     }
 
-    fun domainToClientRequest(domain: WooriBankAggregation, message: WooriBankCommonMessage): PostWooriAggregateTransactionRequest {
-        return PostWooriAggregateTransactionRequest(
-            PostWooriAggregateTransactionModel(
-                message = message,
-                aggregationDate = domain.aggregateDate,
-                konaDepositCount = domain.konaDepositCount,
-                konaDepositAmount = domain.konaDepositAmount,
-                konaDepositCancelCount = domain.konaDepositCancelCount,
-                konaDepositCancelAmount = domain.konaDepositCancelAmount,
-                konaDepositTrAmount = domain.konaDepositTrAmount
-            )
+    fun domainToMessage(domain: WooriBankAggregation, message: WooriBankCommonMessage): WooriBankAggregationMessage {
+        return WooriBankAggregationMessage(
+            messageTypeCode = message.messageTypeCode,
+            businessTypeCode = message.businessTypeCode,
+            messageNo = message.messageNo,
+            aggregationDate = domain.aggregateDate,
+            konaDepositCount = domain.konaDepositCount,
+            konaDepositAmount = domain.konaDepositAmount,
+            konaDepositCancelCount = domain.konaDepositCancelCount,
+            konaDepositCancelAmount = domain.konaDepositCancelAmount,
+            konaDepositTrAmount = domain.konaDepositTrAmount
         )
     }
 

@@ -19,7 +19,7 @@ class WooriBankMessageTest : BehaviorSpec({
 
         `when`("직렬화 & 역직렬화 변환 테스트 성공인 경우") {
             val json = objectMapper.writeValueAsString(message)
-            val result = objectMapper.readValue(json, WooriBankCommonMessage::class.java)
+            val result = objectMapper.readValue(json, WooriBankMessage::class.java)
 
             then("원본 데이터와 일치 여부 정상 확인한다") {
                 result.shouldBeInstanceOf<WooriBankMessage>()
@@ -43,7 +43,7 @@ class WooriBankMessageTest : BehaviorSpec({
 
         `when`("직렬화 & 역직렬화 변환 테스트 성공인 경우") {
             val json = objectMapper.writeValueAsString(message)
-            val result = objectMapper.readValue(json, WooriBankCommonMessage::class.java)
+            val result = objectMapper.readValue(json, WooriBankAggregationMessage::class.java)
 
             then("원본 데이터와 일치 여부 정상 확인한다") {
                 result.shouldBeInstanceOf<WooriBankAggregationMessage>()

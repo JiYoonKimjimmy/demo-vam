@@ -47,7 +47,7 @@ class WooriBankAggregationService(
 
     private fun inquiryBankAggregationResult(domain: WooriBankAggregation): WooriBankAggregation {
         return wooriBankMessageGenerateAdapter.generateMessage(WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode)
-            .let { wooriBankAggregationMapper.domainToClientRequest(domain, it) }
+            .let { wooriBankAggregationMapper.domainToMessage(domain, it) }
             .let { wooriBankRestClient.postWooriAggregateTransaction(it) }
             .let { domain.applyBankResult(it) }
     }
