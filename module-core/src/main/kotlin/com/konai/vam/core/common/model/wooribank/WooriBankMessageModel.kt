@@ -11,10 +11,10 @@ import java.time.LocalTime
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
-    JsonSubTypes.Type(value = WooriBankBasicMessage::class, name = "basic"),
+    JsonSubTypes.Type(value = WooriBankMessage::class, name = "basic"),
     JsonSubTypes.Type(value = WooriBankAggregationMessage::class, name = "aggregation")
 )
-sealed class WooriBankBaseMessage(
+sealed class WooriBankCommonMessage(
     open val identifierCode: String = WOORI_BANK_IDENTIFIER_CODE,
     open val companyNo : String = WOORI_BANK_COMPANY_NO,
     open val institutionCode : String = WOORI_BANK_INSTITUTION_CODE,
@@ -28,11 +28,11 @@ sealed class WooriBankBaseMessage(
     open val orgMessageNo: String = EMPTY,
 )
 
-data class WooriBankBasicMessage(
+data class WooriBankMessage(
     override val messageTypeCode: String,
     override val businessTypeCode: String,
     override val messageNo: String,
-) : WooriBankBaseMessage(
+) : WooriBankCommonMessage(
     messageTypeCode = messageTypeCode,
     businessTypeCode = businessTypeCode,
     messageNo = messageNo
@@ -53,7 +53,7 @@ data class WooriBankAggregationMessage(
     val bankDepositCancelCount: Int = 0,
     val bankDepositCancelAmount: Long = 0,
     val bankDepositTrAmount: Long = 0
-) : WooriBankBaseMessage(
+) : WooriBankCommonMessage(
     messageTypeCode = messageTypeCode,
     businessTypeCode = businessTypeCode,
     messageNo = messageNo

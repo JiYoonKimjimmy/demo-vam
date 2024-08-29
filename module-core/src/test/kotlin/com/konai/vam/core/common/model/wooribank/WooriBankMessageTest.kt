@@ -7,11 +7,11 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 
-class WooriBankBaseMessageTest : BehaviorSpec({
+class WooriBankMessageTest : BehaviorSpec({
     val objectMapper = ObjectMapper().registerModule(kotlinModule())
 
     given("'WooriBankBasicMessage' 전문 데이터를") {
-        val message = WooriBankBasicMessage(
+        val message = WooriBankMessage(
             messageTypeCode = WooriBankMessageType.WORK_START.requestCode.messageTypeCode,
             businessTypeCode = WooriBankMessageType.WORK_START.requestCode.businessTypeCode,
             messageNo = "123456",
@@ -19,10 +19,10 @@ class WooriBankBaseMessageTest : BehaviorSpec({
 
         `when`("직렬화 & 역직렬화 변환 테스트 성공인 경우") {
             val json = objectMapper.writeValueAsString(message)
-            val result = objectMapper.readValue(json, WooriBankBaseMessage::class.java)
+            val result = objectMapper.readValue(json, WooriBankCommonMessage::class.java)
 
             then("원본 데이터와 일치 여부 정상 확인한다") {
-                result.shouldBeInstanceOf<WooriBankBasicMessage>()
+                result.shouldBeInstanceOf<WooriBankMessage>()
                 result shouldBe message
             }
         }
@@ -43,7 +43,7 @@ class WooriBankBaseMessageTest : BehaviorSpec({
 
         `when`("직렬화 & 역직렬화 변환 테스트 성공인 경우") {
             val json = objectMapper.writeValueAsString(message)
-            val result = objectMapper.readValue(json, WooriBankBaseMessage::class.java)
+            val result = objectMapper.readValue(json, WooriBankCommonMessage::class.java)
 
             then("원본 데이터와 일치 여부 정상 확인한다") {
                 result.shouldBeInstanceOf<WooriBankAggregationMessage>()

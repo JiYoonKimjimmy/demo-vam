@@ -61,10 +61,10 @@ data class WooriBankManagementRequest(
     @field:Min(0) @field:Max(9_999_999_999_999)
     val etcOtherCashierCheckAmount: Int,
     @field:NotBlank(message = "trBranch must not be empty")
-    @field:Length(min = 6, max = 6, message = "trBranch length are allowed from 6 to 6 characters.")
+    @field:Length(min = 1, max = 6, message = "trBranch length are allowed from 6 to 6 characters.")
     val trBranch: String,
     @field:NotBlank(message = "depositorName must not be empty")
-    @field:Length(min = 6, max = 6, message = "depositorName length are allowed from 6 to 6 characters.")
+    @field:Length(min = 1, max = 20, message = "depositorName length are allowed from 1 to 20 characters.")
     val depositorName: String,
     @field:NotBlank(message = "accountNo must not be empty")
     @field:Length(min = 1, max = 16, message = "accountNo length are allowed from 1 to 16 characters.")

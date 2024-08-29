@@ -3,7 +3,7 @@ package com.konai.vam.api.v1.wooribank.service.aggregation
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCacheAdapter
 import com.konai.vam.api.v1.wooribank.service.aggregation.domain.WooriBankAggregation
 import com.konai.vam.api.v1.wooribank.service.aggregation.domain.WooriBankAggregationMapper
-import com.konai.vam.api.v1.wooribank.service.common.WooriBankCommonMessageAdapter
+import com.konai.vam.api.v1.wooribank.service.message.WooriBankMessageGenerateAdapter
 import com.konai.vam.core.enumerate.RechargeTransactionType
 import com.konai.vam.core.enumerate.WooriBankAggregateResult.MATCHED
 import com.konai.vam.core.enumerate.WooriBankMessageType
@@ -16,7 +16,7 @@ class WooriBankAggregationService(
 
     private val wooriBankAggregationCacheAdapter: WooriBankAggregationCacheAdapter,
     private val wooriBankAggregationEntityAdapter: WooriBankAggregationEntityAdapter,
-    private val wooriBankCommonMessageAdapter: WooriBankCommonMessageAdapter,
+    private val wooriBankMessageGenerateAdapter: WooriBankMessageGenerateAdapter,
 
     private val wooriBankAggregationMapper: WooriBankAggregationMapper,
     private val wooriBankRestClient: WooriBankRestClient
@@ -46,7 +46,7 @@ class WooriBankAggregationService(
     }
 
     private fun inquiryBankAggregationResult(domain: WooriBankAggregation): WooriBankAggregation {
-        return wooriBankCommonMessageAdapter.generateCommonMessage(WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode)
+        return wooriBankMessageGenerateAdapter.generateMessage(WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode)
             .let { wooriBankAggregationMapper.domainToClientRequest(domain, it) }
             .let { wooriBankRestClient.postWooriAggregateTransaction(it) }
             .let { domain.applyBankResult(it) }

@@ -3,7 +3,7 @@ package com.konai.vam.core.enumerate
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 
-class WooriBankMessageTest : BehaviorSpec({
+class WooriBankMessageTypeTest : BehaviorSpec({
 
     given("가상 계좌 '조회' 전문 연동 요청에 대한") {
         val messageTypeCode = "0200"
