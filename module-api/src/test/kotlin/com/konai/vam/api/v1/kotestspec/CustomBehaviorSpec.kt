@@ -13,7 +13,7 @@ import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBank
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCacheService
 import com.konai.vam.api.v1.wooribank.service.aggregation.WooriBankAggregationService
 import com.konai.vam.api.v1.wooribank.service.aggregation.domain.WooriBankAggregationMapper
-import com.konai.vam.api.v1.wooribank.service.common.WooriBankCommonMessageService
+import com.konai.vam.api.v1.wooribank.service.message.WooriBankMessageGenerateService
 import com.konai.vam.api.v1.wooribank.service.management.domain.WooriBankManagementMapper
 import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransactionMapper
 import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementFindService
@@ -22,7 +22,7 @@ import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementServ
 import com.konai.vam.api.v1.wooribank.service.transaction.WooriBankTransactionService
 import com.konai.vam.api.v1.wooribank.service.work.WooriBankWorkService
 import com.konai.vam.core.cache.redis.RedisTemplateService
-import fixtures.WooriBankCommonMessageFixture
+import fixtures.WooriBankMessageFixture
 import com.konai.vam.core.restclient.cs.CsRestClient
 import com.konai.vam.core.restclient.vambatch.VamBatchRestClient
 import com.konai.vam.core.restclient.wooribank.WooriBankRestClient
@@ -64,7 +64,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val sequenceGeneratorEntityAdapter = SequenceGeneratorEntityAdapterFixture()
     private val sequenceGeneratorService = SequenceGeneratorService(sequenceGeneratorEntityAdapter)
-    private val wooriBankCommonMessageService = WooriBankCommonMessageService(sequenceGeneratorService)
+    private val wooriBankCommonMessageService = WooriBankMessageGenerateService(sequenceGeneratorService)
 
     private val wooriBankAggregationService = WooriBankAggregationService(wooriBankAggregationCacheService, wooriBankAggregationEntityAdapter, wooriBankCommonMessageService, wooriBankAggregationMapper, mockWooriBankRestClient)
 
@@ -90,7 +90,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val mockVamBatchRestClient = mockk<VamBatchRestClient>()
     private val virtualAccountCardBatchService = VirtualAccountCardBatchService(mockVamBatchRestClient)
 
-    private val wooriBankCommonMessageFixture = WooriBankCommonMessageFixture()
+    private val wooriBankMessageFixture = WooriBankMessageFixture()
 
     // service
     fun virtualAccountFindService() = this.virtualAccountFindService
@@ -131,6 +131,6 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun rechargeTransactionEntityFixture() = this.rechargeTransactionEntityFixture
     fun wooriBankRestClientModelFixture() = this.wooriBankRestClientModelFixture
     fun wooriBankManagementFixture() = this.wooriBankManagementFixture
-    fun wooriBankCommonMessageFixture() = this.wooriBankCommonMessageFixture
+    fun wooriBankCommonMessageFixture() = this.wooriBankMessageFixture
 
 }

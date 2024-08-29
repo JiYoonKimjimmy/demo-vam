@@ -5,8 +5,8 @@ import com.konai.vam.core.common.WOORI_BANK_ACCOUNT_BALANCE
 import com.konai.vam.core.common.WOORI_BANK_ACCOUNT_NAME
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
-import com.konai.vam.core.enumerate.WooriBankMessage
-import com.konai.vam.core.enumerate.WooriBankMessage.*
+import com.konai.vam.core.enumerate.WooriBankMessageType
+import com.konai.vam.core.enumerate.WooriBankMessageType.*
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.YesOrNo
 
@@ -43,7 +43,7 @@ data class WooriBankManagement(
 ) {
 
     fun checkMessageTypeCode(): WooriBankManagement {
-        return when (WooriBankMessage.find(this.messageTypeCode, this.businessTypeCode)) {
+        return when (WooriBankMessageType.find(this.messageTypeCode, this.businessTypeCode)) {
             VIRTUAL_ACCOUNT_INQUIRY -> this
             VIRTUAL_ACCOUNT_DEPOSIT -> this
             VIRTUAL_ACCOUNT_DEPOSIT_CANCEL -> this

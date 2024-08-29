@@ -1,9 +1,9 @@
 package com.konai.vam.api.v1.wooribank.service.aggregation.domain
 
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
+import com.konai.vam.core.common.model.wooribank.WooriBankAggregationMessage
 import com.konai.vam.core.enumerate.WooriBankAggregateResult
 import com.konai.vam.core.enumerate.WooriBankAggregateResult.*
-import com.konai.vam.core.restclient.wooribank.PostWooriAggregateTransactionResponse
 
 data class WooriBankAggregation(
     val aggregateDate: String,
@@ -35,13 +35,13 @@ data class WooriBankAggregation(
         }
     }
 
-    fun applyBankResult(response: PostWooriAggregateTransactionResponse): WooriBankAggregation {
+    fun applyBankResult(message: WooriBankAggregationMessage): WooriBankAggregation {
         return apply {
-            this.bankDepositCount        = response.model.bankDepositCount
-            this.bankDepositAmount       = response.model.bankDepositAmount
-            this.bankDepositCancelCount  = response.model.bankDepositCancelCount
-            this.bankDepositCancelAmount = response.model.bankDepositCancelAmount
-            this.bankDepositTrAmount     = response.model.bankDepositTrAmount
+            this.bankDepositCount        = message.bankDepositCount
+            this.bankDepositAmount       = message.bankDepositAmount
+            this.bankDepositCancelCount  = message.bankDepositCancelCount
+            this.bankDepositCancelAmount = message.bankDepositCancelAmount
+            this.bankDepositTrAmount     = message.bankDepositTrAmount
         }
     }
 

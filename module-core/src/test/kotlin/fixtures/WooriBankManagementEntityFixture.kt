@@ -3,7 +3,7 @@ package fixtures
 import com.konai.vam.core.common.WOORI_BANK_COMPANY_NO
 import com.konai.vam.core.common.WOORI_BANK_IDENTIFIER_CODE
 import com.konai.vam.core.common.WOORI_BANK_INSTITUTION_CODE
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.YesOrNo
 import com.konai.vam.core.repository.wooribank.management.entity.WooriBankManagementEntity
@@ -19,7 +19,7 @@ class WooriBankManagementEntityFixture {
     val entities = mutableListOf<WooriBankManagementEntity>()
 
     fun make(
-        messageCode: WooriBankMessage.WooriBankMessageCode,
+        messageCode: WooriBankMessageType.Code,
         messageNo: String,
         transmissionDate: String = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN),
         responseCode: WooriBankResponseCode? = null,
@@ -30,7 +30,7 @@ class WooriBankManagementEntityFixture {
     }
 
     fun save(
-        messageCode: WooriBankMessage.WooriBankMessageCode,
+        messageCode: WooriBankMessageType.Code,
         messageNo: String,
         transmissionDate: String,
         responseCode: WooriBankResponseCode?
@@ -53,7 +53,7 @@ class WooriBankManagementEntityFixture {
         }
     }
 
-    private fun findDuplicated(messageCode: WooriBankMessage.WooriBankMessageCode, messageNo: String): WooriBankManagementEntity? {
+    private fun findDuplicated(messageCode: WooriBankMessageType.Code, messageNo: String): WooriBankManagementEntity? {
         return entities.find {
             it.messageTypeCode == messageCode.messageTypeCode
             && it.businessTypeCode == messageCode.businessTypeCode
@@ -62,7 +62,7 @@ class WooriBankManagementEntityFixture {
     }
 
     private fun generateEntity(
-        messageCode: WooriBankMessage.WooriBankMessageCode,
+        messageCode: WooriBankMessageType.Code,
         messageNo: String,
         transmissionDate: String,
         responseCode: WooriBankResponseCode?,

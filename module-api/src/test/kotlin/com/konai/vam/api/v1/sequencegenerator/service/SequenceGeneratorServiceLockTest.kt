@@ -32,7 +32,7 @@ class SequenceGeneratorServiceLockTest @Autowired constructor(
         val result = sequenceGeneratorService.getNextSequence(type, date)
 
         // then
-        assertThat(result).isEqualTo("000001")
+        assertThat(result).isEqualTo(1)
     }
 
     "'100건' Sequence 조회 동시성 요청 (without Lock) 결과 정상 확인한다" {
@@ -61,7 +61,7 @@ class SequenceGeneratorServiceLockTest @Autowired constructor(
             println("================== END ==================")
 
             val result = sequenceGeneratorService.findSequence(type, date)
-            assertThat(result).isNotEqualTo("000100")
+            assertThat(result).isNotEqualTo(100)
         }
 
         println("========== measureTimeMillis : $measureTimeMillis ==========")
@@ -88,7 +88,7 @@ class SequenceGeneratorServiceLockTest @Autowired constructor(
                 println("================== END ==================")
 
                 val result = sequenceGeneratorService.findSequence(type, date)
-                assertThat(result).isEqualTo("000100")
+                assertThat(result).isEqualTo(100)
             }
         }
 

@@ -4,7 +4,7 @@ import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.CONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
 import com.konai.vam.core.enumerate.WooriBankResponseCode.K401
 import com.konai.vam.core.enumerate.YesOrNo.Y
@@ -62,7 +62,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             // 우리은행 전문 연동 내역 저장
             val messageTypeCode = "0200"
             val businessTypeCode = "400"
-            val messageCode = WooriBankMessage.find(messageTypeCode, businessTypeCode).requestCode
+            val messageCode = WooriBankMessageType.find(messageTypeCode, businessTypeCode).requestCode
             wooriBankManagementEntityAdapter.save(messageCode = messageCode, messageNo = messageNo, transmissionDate = transmissionDate, responseCode = `0000`)
 
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
@@ -95,8 +95,8 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
 
         `when`("가상 계좌 '입금(0200-600)' 전문 요청인 경우") {
             val accountNo = UUID.randomUUID().toString()
-            val messageTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.messageTypeCode
-            val businessTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.businessTypeCode
+            val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.messageTypeCode
+            val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.businessTypeCode
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, accountNo = accountNo)
 
             // 가상 계좌 정보 저장 처리
@@ -137,8 +137,8 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '입금 취소(0420-700)' 전문 요청인 경우") {
-            val messageTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.messageTypeCode
-            val businessTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.businessTypeCode
+            val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.messageTypeCode
+            val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.businessTypeCode
             val orgMessageNo = UUID.randomUUID().toString().substring(0, 6)
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = orgMessageNo)
 
@@ -175,8 +175,8 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '입금 확인 통보(0200-800)' 전문 요청인 경우") {
-            val messageTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.messageTypeCode
-            val businessTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.businessTypeCode
+            val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.messageTypeCode
+            val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.businessTypeCode
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
 
             // 충전 내역 원거래 '충전 실패' 정보 저장

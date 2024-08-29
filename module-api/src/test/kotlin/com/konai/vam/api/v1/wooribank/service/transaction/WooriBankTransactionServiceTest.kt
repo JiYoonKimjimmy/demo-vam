@@ -12,8 +12,8 @@ import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.CONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
-import com.konai.vam.core.enumerate.WooriBankMessage
-import com.konai.vam.core.enumerate.WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
+import com.konai.vam.core.enumerate.WooriBankMessageType
+import com.konai.vam.core.enumerate.WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
 import com.konai.vam.core.enumerate.WooriBankResponseCode.*
 import com.konai.vam.core.enumerate.YesOrNo.Y
 import com.konai.vam.core.repository.virtualaccountbank.VirtualAccountBankConst
@@ -244,7 +244,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
     }
 
     given("우리은행 가상 계좌 '입금 확인 통보' 전문 요청되어") {
-        val messageCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode
+        val messageCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode
         val messageNo = UUID.randomUUID().toString().substring(0, 6)
         val domain = wooriBankTransactionFixture.make(messageCode = messageCode, messageNo = messageNo)
 

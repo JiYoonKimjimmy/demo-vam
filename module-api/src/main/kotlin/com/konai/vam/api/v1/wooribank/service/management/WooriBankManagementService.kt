@@ -6,8 +6,8 @@ import com.konai.vam.api.v1.wooribank.service.management.domain.WooriBankManagem
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error
-import com.konai.vam.core.enumerate.WooriBankMessage
-import com.konai.vam.core.enumerate.WooriBankMessage.*
+import com.konai.vam.core.enumerate.WooriBankMessageType
+import com.konai.vam.core.enumerate.WooriBankMessageType.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -37,7 +37,7 @@ class WooriBankManagementService(
     }
 
     private fun messageProcess(domain: WooriBankManagement): WooriBankManagement {
-        return when (WooriBankMessage.find(domain.messageTypeCode, domain.businessTypeCode)) {
+        return when (WooriBankMessageType.find(domain.messageTypeCode, domain.businessTypeCode)) {
             VIRTUAL_ACCOUNT_INQUIRY -> inquiryProc(domain)
             VIRTUAL_ACCOUNT_DEPOSIT -> depositProc(domain)
             VIRTUAL_ACCOUNT_DEPOSIT_CANCEL -> depositCancelProc(domain)
@@ -86,7 +86,7 @@ class WooriBankManagementService(
     }
 
     private fun completed(domain: WooriBankManagement): WooriBankManagement {
-        val messageCode = runCatching { WooriBankMessage.find(domain.messageTypeCode, domain.businessTypeCode) }.getOrNull()
+        val messageCode = runCatching { WooriBankMessageType.find(domain.messageTypeCode, domain.businessTypeCode) }.getOrNull()
         return domain.copy(
             messageTypeCode = messageCode?.responseCode?.messageTypeCode ?: domain.messageTypeCode,
             businessTypeCode = messageCode?.responseCode?.businessTypeCode ?: domain.businessTypeCode

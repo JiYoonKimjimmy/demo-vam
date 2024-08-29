@@ -6,7 +6,7 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.error.exception.RestClientServiceException
 import com.konai.vam.core.enumerate.WooriBankAggregateResult.*
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -60,10 +60,10 @@ class WooriBankAggregationServiceTest : CustomBehaviorSpec({
             }
         }
 
-        val message = wooriBankCommonMessageService.generateCommonMessage(WooriBankMessage.TRANSACTION_AGGREGATION.requestCode)
+        val message = wooriBankCommonMessageService.generateMessage(WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode)
 
         `when`("요청 일자의 집계 Cache 정보 기준 우리은행 집계 조회 요청 결과 집계 데이터가 일치하지 않은 경우") {
-            val response = wooriBankRestClientModelFixture.makePostWooriAggregateTransactionResponse(message, aggregationDate)
+            val response = wooriBankRestClientModelFixture.makePostWooriAggregateTransactionResponse(message.messageNo, aggregationDate)
 
             every { mockWooriBankRestClient.postWooriAggregateTransaction(any()) } returns response
 
@@ -83,7 +83,7 @@ class WooriBankAggregationServiceTest : CustomBehaviorSpec({
 
         // 우리은행 집계 조회 요청 mocking 처리
         val response = wooriBankRestClientModelFixture.makePostWooriAggregateTransactionResponse(
-            message = message,
+            messageNo = message.messageNo,
             aggregationDate = aggregationDate,
             bankDepositCount = depositCount,
             bankDepositAmount = depositAmount.toLong(),
