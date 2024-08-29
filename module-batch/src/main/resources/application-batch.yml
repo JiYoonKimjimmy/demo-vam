@@ -11,6 +11,5 @@ batch:
       localPath: /home/vam/batch/raw_data/
       nasPath: /home/vam/batch/raw_data/
       rawPrefix: raw_data_additional_
-      rawSuffix: .SEM
+      rawSuffix: .SAM
       encPrefix: enc_
-

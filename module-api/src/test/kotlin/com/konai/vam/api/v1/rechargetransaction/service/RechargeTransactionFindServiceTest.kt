@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.rechargetransaction.service
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.enumerate.Result
@@ -10,7 +10,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
-class RechargeTransactionFindServiceTest : KoTestBehaviorSpec({
+class RechargeTransactionFindServiceTest : CustomBehaviorSpec({
 
     val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()
     val rechargeTransactionFindService = rechargeTransactionFindService()

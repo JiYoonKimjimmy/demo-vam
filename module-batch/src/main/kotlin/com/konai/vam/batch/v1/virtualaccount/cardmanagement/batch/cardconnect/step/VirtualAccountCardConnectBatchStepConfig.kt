@@ -21,8 +21,9 @@ class VirtualAccountCardConnectBatchStepConfig(
     private val entityManagerFactory: EntityManagerFactory,
     private val virtualAccountCardConnectItemMapper: VirtualAccountCardConnectItemMapper,
 
-    @Value("\${batch.virtualAccountCardConnect.file.localPath}")
-    private val filePath: String
+    @Value("\${batch.virtualAccountCardConnect.file.localPath}") private val localPath: String,
+    @Value("\${batch.virtualAccountCardConnect.file.rawPrefix}") private val rawPrefix: String,
+    @Value("\${batch.virtualAccountCardConnect.file.rawSuffix}") private val rawSuffix: String
 
 ) {
 
@@ -30,17 +31,30 @@ class VirtualAccountCardConnectBatchStepConfig(
     @Bean
     fun virtualAccountCardConnectBatchStep(
         @Value("#{jobParameters[batchId]}") batchId: String,
+        @Value("#{jobParameters[chunkSize]}") chunkSize: Int,
         @Value("#{jobParameters[serviceId]}") serviceId: String,
         @Value("#{jobParameters[quantity]}") quantity: Int,
-        @Value("#{jobParameters[chunkSize]}") chunkSize: Int,
     ): Step {
         return StepBuilder("virtualAccountCardConnectBatchStep", jobRepository)
             .chunk<VirtualAccountEntity, VirtualAccountCardConnectItem>(chunkSize, transactionManager)
-            .reader(VirtualAccountCardConnectItemReader(entityManagerFactory, batchId, chunkSize))
-            .processor(VirtualAccountCardConnectItemProcessor(virtualAccountCardConnectItemMapper, serviceId))
-            .writer(VirtualAccountCardConnectItemWriter(filePath, batchId, quantity))
+            .reader(reader(batchId, chunkSize))
+            .processor(processor(serviceId))
+            .writer(writer(batchId, quantity))
             .allowStartIfComplete(true)
             .build()
+    }
+
+    private fun reader(batchId: String, chunkSize: Int): VirtualAccountCardConnectItemReader {
+        return VirtualAccountCardConnectItemReader(entityManagerFactory, batchId, chunkSize)
+    }
+
+    private fun processor(serviceId: String): VirtualAccountCardConnectItemProcessor {
+        return VirtualAccountCardConnectItemProcessor(virtualAccountCardConnectItemMapper, serviceId)
+    }
+
+    private fun writer(batchId: String, quantity: Int): VirtualAccountCardConnectItemWriter {
+        val filePath = "$localPath$rawPrefix$batchId$rawSuffix"
+        return VirtualAccountCardConnectItemWriter(filePath, batchId, quantity)
     }
 
 }

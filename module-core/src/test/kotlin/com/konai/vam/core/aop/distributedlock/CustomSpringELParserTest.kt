@@ -8,19 +8,19 @@ class CustomSpringELParserTest {
 
     @Test
     fun `SpEL 문자 변환 테스트 성공 확인한다`() {
-    	// given
+        // given
         val parameterNames: Array<String> = arrayOf("type", "date")
         val args: Array<Any> = arrayOf(SequenceGeneratorType.WR_BANK, "20240814")
         val key = "#type + ':' + #date"
 
-    	// when
+        // when
         val result = CustomSpringELParser.getDynamicValue(
             parameterNames,
             args,
             key
         )
 
-    	// then
+        // then
         assertThat(result).isEqualTo("WR_BANK:20240814")
     }
 

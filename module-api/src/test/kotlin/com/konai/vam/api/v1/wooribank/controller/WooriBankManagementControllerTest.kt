@@ -1,7 +1,7 @@
 package com.konai.vam.api.v1.wooribank.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.enumerate.RechargeTransactionCancelStatus
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
 import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
@@ -29,7 +29,7 @@ import java.util.*
 class WooriBankManagementControllerTest @Autowired constructor(
     private val mockMvc: MockMvc,
     private val rechargeTransactionRepository: RechargeTransactionRepository
-) : KoTestBehaviorSpec({
+) : CustomBehaviorSpec({
 
     val wooriBankManagementFixture = WooriBankManagementFixture()
     val objectMapper = jacksonObjectMapper()

@@ -15,7 +15,7 @@ class VirtualAccountCardConnectItemWriter(
 
     init {
         // File 생성 경로 지정
-        setFileResource(filePath, batchId)
+        setFileResource(filePath)
         // FormatterLineAggregator 설정
         setLineAggregator(CustomFormatterLineAggregator())
         // Callback 처리
@@ -25,9 +25,8 @@ class VirtualAccountCardConnectItemWriter(
         }
     }
 
-    private fun setFileResource(outputPath: String, batchId: String) {
-        val fileName = "raw_data_additional_$batchId.SEM"
-        setResource(FileSystemResource(Paths.get(outputPath, fileName).toString()))
+    private fun setFileResource(filePath: String) {
+        setResource(FileSystemResource(Paths.get(filePath).toString()))
     }
 
 }
@@ -37,7 +36,7 @@ class CustomFormatterLineAggregator : FormatterLineAggregator<VirtualAccountCard
     init {
         val fieldExtractor = BeanWrapperFieldExtractor<VirtualAccountCardConnectItem>()
         fieldExtractor.setNames(arrayOf("id", "serviceId", "par", "accountNo"))
-        setFormat("%06dSVCID=%-15s;par=%-27s;VIRTUALACC=%-16s;")
+        setFormat("%06dSVCID=%-15s;PAR=%-27s;VIRTUALACC=%-20s;")
         setFieldExtractor(fieldExtractor)
     }
 

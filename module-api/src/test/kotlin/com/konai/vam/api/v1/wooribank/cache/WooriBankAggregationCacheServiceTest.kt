@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.cache
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
 import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
 import com.konai.vam.core.util.DATE_BASIC_PATTERN
@@ -11,7 +11,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import java.time.LocalDate
 
-class WooriBankAggregationCacheServiceTest : KoTestBehaviorSpec({
+class WooriBankAggregationCacheServiceTest : CustomBehaviorSpec({
 
     val mockNumberRedisTemplate = mockNumberRedisTemplate()
     val redisTemplateService = redisTemplateService()

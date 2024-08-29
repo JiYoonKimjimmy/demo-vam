@@ -1,5 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.aggregation.domain
 
+import com.konai.vam.core.common.model.wooribank.WooriBankCommonMessage
 import com.konai.vam.core.repository.wooribank.aggregation.entity.WooriBankAggregationEntity
 import com.konai.vam.core.restclient.wooribank.PostWooriAggregateTransactionModel
 import com.konai.vam.core.restclient.wooribank.PostWooriAggregateTransactionRequest
@@ -42,9 +43,10 @@ class WooriBankAggregationMapper {
         )
     }
 
-    fun domainToClientRequest(domain: WooriBankAggregation): PostWooriAggregateTransactionRequest {
+    fun domainToClientRequest(domain: WooriBankAggregation, message: WooriBankCommonMessage): PostWooriAggregateTransactionRequest {
         return PostWooriAggregateTransactionRequest(
             PostWooriAggregateTransactionModel(
+                message = message,
                 aggregationDate = domain.aggregateDate,
                 konaDepositCount = domain.konaDepositCount,
                 konaDepositAmount = domain.konaDepositAmount,

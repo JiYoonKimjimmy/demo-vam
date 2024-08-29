@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.management
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.CONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
@@ -21,7 +21,7 @@ import io.mockk.every
 import java.time.LocalDate
 import java.util.*
 
-class WooriBankManagementServiceTest : KoTestBehaviorSpec({
+class WooriBankManagementServiceTest : CustomBehaviorSpec({
 
     val wooriBankManagementService = wooriBankManagementService()
 

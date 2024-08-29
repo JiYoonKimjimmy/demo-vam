@@ -1,11 +1,11 @@
 package com.konai.vam.api.v1.batch.service
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.common.model.VoidResponse
 import io.mockk.every
 import io.mockk.verify
 
-class VirtualAccountCardBatchServiceTest : KoTestBehaviorSpec({
+class VirtualAccountCardBatchServiceTest : CustomBehaviorSpec({
 
     val virtualAccountCardBatchService = virtualAccountCardBatchService()
     val mockVamBatchRestClient = mockVamBatchRestClient()

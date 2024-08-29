@@ -1,50 +1,37 @@
 package com.konai.vam.batch.v1.encryption.service
 
-import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldNotBe
-import io.mockk.every
-import io.mockk.mockk
+import com.konai.vam.batch.v1.encryption.service.EncryptionService.Companion.MAX_BATCH_ID_LENGTH
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
+import java.util.*
 
-class EncryptionServiceTest : BehaviorSpec({
+class EncryptionServiceTest : StringSpec() {
+    init {
+        /**
+         * batchID : 95336500525500024080912182701I00010
+         * convert to HexString :3935333336353030353235353030303234303830393132313832373031493030303130
+         * susbstring & upperCase : 3935333336353030353235353030303234303830393132313832373031493030
+         * geyKeyResult : 6F1F070F689C04DA0C2ACC682F209C9A23336DE487CD91450ED82E8E484A0A6F
+         */
+        "Batch 파일 KMS 암호화 Key 생성하여 정상 확인한다" {
+            // given
+            val batchId = "95336500525500024080912182701I00010"
 
-    val encryptionService = mockk<EncryptionService>()
+            // when
+            val result = convertBatchIdToEncrypt(batchId)
 
-    given("batchId가 주어질 때") {
-        val batchId = "3935333336353030323532393030303233303230363232353130393136493030"
-
-        `when`("비밀키 요청을 보내 요청이 유효할 때") {
-            every { encryptionService.fetchKmsEncryptKey(batchId) } returns "secretKey"
-
-            val key = encryptionService.fetchKmsEncryptKey(batchId)
-
-            then("키 값이 존재한다.") {
-                key shouldNotBe null
-            }
-        }
-
-        `when`("비밀키 요청이 유효하지 않을 때") {
-            every { encryptionService.fetchKmsEncryptKey(batchId) } throws Exception()
-
-            then("예외를 발생시킨다.") {
-                shouldThrow<Exception> {
-                    encryptionService.fetchKmsEncryptKey(batchId)
-                }
-            }
+            // then
+            result shouldBe "3935333336353030353235353030303234303830393132313832373031493030"
         }
     }
 
-    given("암호키를 취득해온 상태에서") {
-
-        `when`("파일의 암호화에 실패한다면") {
-
-            then("파일 암호화 실패 예외를 반환한다")
+    private fun convertBatchIdToEncrypt(batchId: String): String {
+        val keyDerivationData = when {
+            batchId.length > MAX_BATCH_ID_LENGTH -> batchId.take(MAX_BATCH_ID_LENGTH)
+            batchId.length < MAX_BATCH_ID_LENGTH -> batchId.padEnd(MAX_BATCH_ID_LENGTH, '0')
+            else -> batchId
         }
-
-        `when`("파일 암호화에 성공한다면") {
-
-            then("파일을 암호화한다.")
-        }
+        return HexFormat.of().formatHex(keyDerivationData.toByteArray())
     }
 
-})
+}

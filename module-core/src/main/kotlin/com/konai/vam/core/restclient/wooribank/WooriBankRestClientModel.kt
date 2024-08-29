@@ -1,22 +1,17 @@
 package com.konai.vam.core.restclient.wooribank
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
-import com.konai.vam.core.common.model.wooribank.WooriBankCommonModel
+import com.konai.vam.core.common.model.wooribank.WooriBankCommonMessage
 import com.konai.vam.core.enumerate.WooriBankMessage
 
 data class PostWooriWorkRequest(
     @JsonUnwrapped
-    val model: WooriBankCommonModel
-)
-
-data class PostWooriWorkResponse(
-    @JsonUnwrapped
-    val model: WooriBankCommonModel
+    val message: WooriBankCommonMessage
 )
 
 data class PostWooriAggregateTransactionModel(
     @JsonUnwrapped
-    val commonModel: WooriBankCommonModel = WooriBankCommonModel(WooriBankMessage.TRANSACTION_AGGREGATION.requestCode),
+    val message: WooriBankCommonMessage,
     val aggregationDate: String,
     val konaDepositCount: Int,
     val konaDepositAmount: Long,

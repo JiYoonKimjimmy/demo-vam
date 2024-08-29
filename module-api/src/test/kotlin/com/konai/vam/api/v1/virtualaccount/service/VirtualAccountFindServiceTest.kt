@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.virtualaccount.service
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
@@ -10,7 +10,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 
-class VirtualAccountFindServiceTest : KoTestBehaviorSpec({
+class VirtualAccountFindServiceTest : CustomBehaviorSpec({
 
     val virtualAccountEntityAdaptor = virtualAccountEntityAdaptor()
     val virtualAccountMapper = virtualAccountMapper()

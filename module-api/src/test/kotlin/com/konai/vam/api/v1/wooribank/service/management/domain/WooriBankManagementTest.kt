@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.management.domain
 
-import com.konai.vam.api.v1.kotestspec.KoTestBehaviorSpec
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.enumerate.WooriBankMessage.*
@@ -9,7 +9,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import java.util.*
 
-class WooriBankManagementTest : KoTestBehaviorSpec({
+class WooriBankManagementTest : CustomBehaviorSpec({
 
     val wooriBankManagementFixture = wooriBankManagementFixture()
 

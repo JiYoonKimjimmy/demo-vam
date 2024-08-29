@@ -1,5 +1,6 @@
 package com.konai.vam.core.restclient.wooribank
 
+import com.konai.vam.core.common.model.wooribank.WooriBankCommonMessage
 import com.konai.vam.core.common.restclient.BaseRestClient
 import com.konai.vam.core.common.restclient.ComponentName
 import org.springframework.stereotype.Component
@@ -9,11 +10,11 @@ class WooriBankRestClient : BaseRestClient() {
 
     override val baseUrl: String by lazy { generateBaseUrl(ComponentName.FEP) }
 
-    fun postWooriBankWork(request: PostWooriWorkRequest): PostWooriWorkResponse {
+    fun postWooriBankWork(request: PostWooriWorkRequest): WooriBankCommonMessage {
         return post(
             url = baseUrl,
             body = request,
-            response = PostWooriWorkResponse::class.java
+            response = WooriBankCommonMessage::class.java
         )
     }
 
@@ -24,4 +25,5 @@ class WooriBankRestClient : BaseRestClient() {
             response = PostWooriAggregateTransactionResponse::class.java
         )
     }
+
 }

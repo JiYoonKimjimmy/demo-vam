@@ -103,3 +103,31 @@ spring:
       sentinel:
         master: mymaster
         nodes: 118.33.122.28:26379
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@118.33.122.30:15321:kmdbp
+    username: vam
+    password: StgVAM1104#
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: 118.33.122.28
+      port: 6379
+      password: 123456
+      sentinel:
+        master: mymaster
+        nodes: 118.33.122.28:26379

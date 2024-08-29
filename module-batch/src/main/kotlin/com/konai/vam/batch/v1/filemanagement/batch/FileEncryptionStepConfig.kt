@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
 
 @Configuration
-class FileEncryptionStepConfig (
+class FileEncryptionStepConfig(
     private val fileEncryptionTasklet: FileEncryptionTasklet
 ) {
 
@@ -22,7 +22,6 @@ class FileEncryptionStepConfig (
         @Value("#{jobParameters[batchId]}") batchId: String,
         @Value("#{jobParameters[fileEncryptKey]}") fileEncryptKey: String
     ): Step {
-
         return StepBuilder("fileEncryptionStep", jobRepository)
             .tasklet(fileEncryptionTasklet, transactionManager)
             .allowStartIfComplete(true)

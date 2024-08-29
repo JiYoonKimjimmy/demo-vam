@@ -20,7 +20,7 @@ class VirtualAccountBankController(
 ) {
 
     @PostMapping("/all")
-    fun findAllVirtualAccountBank(@RequestBody @Valid request: FindAllVirtualAccountBankRequest): ResponseEntity<FindAllVirtualAccountBankResponse> {
+    fun findAllVirtualAccountBank(@RequestBody @Valid request: FindAllVirtualAccountBankRequest = FindAllVirtualAccountBankRequest()): ResponseEntity<FindAllVirtualAccountBankResponse> {
         return virtualAccountBankModelMapper.requestToPredicate(request)
             .let { virtualAccountBankFindAdapter.findAllByPredicate(it) }
             .let { FindAllVirtualAccountBankResponse(it, virtualAccountBankModelMapper::domainToModel) }
