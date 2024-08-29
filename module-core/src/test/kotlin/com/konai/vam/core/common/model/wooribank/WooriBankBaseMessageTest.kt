@@ -2,7 +2,7 @@ package com.konai.vam.core.common.model.wooribank
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -12,8 +12,8 @@ class WooriBankBaseMessageTest : BehaviorSpec({
 
     given("'WooriBankBasicMessage' 전문 데이터를") {
         val message = WooriBankBasicMessage(
-            messageTypeCode = WooriBankMessage.WORK_START.requestCode.messageTypeCode,
-            businessTypeCode = WooriBankMessage.WORK_START.requestCode.businessTypeCode,
+            messageTypeCode = WooriBankMessageType.WORK_START.requestCode.messageTypeCode,
+            businessTypeCode = WooriBankMessageType.WORK_START.requestCode.businessTypeCode,
             messageNo = "123456",
         )
 
@@ -30,8 +30,8 @@ class WooriBankBaseMessageTest : BehaviorSpec({
 
     given("'WooriBankAggregationMessage' 전문 데이터를") {
         val message = WooriBankAggregationMessage(
-            messageTypeCode = WooriBankMessage.TRANSACTION_AGGREGATION.requestCode.messageTypeCode,
-            businessTypeCode = WooriBankMessage.TRANSACTION_AGGREGATION.requestCode.businessTypeCode,
+            messageTypeCode = WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode.messageTypeCode,
+            businessTypeCode = WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode.businessTypeCode,
             messageNo = "123456",
             aggregationDate = "20240829",
             konaDepositCount = 10,

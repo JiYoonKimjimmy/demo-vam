@@ -1,7 +1,7 @@
 package fixtures
 
 import com.konai.vam.core.common.ifNotNullEquals
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.repository.wooribank.management.WooriBankManagementEntityAdapter
 import com.konai.vam.core.repository.wooribank.management.entity.WooriBankManagementEntity
@@ -16,7 +16,7 @@ class WooriBankManagementEntityAdapterFixture : WooriBankManagementEntityAdapter
     private val wooriBankManagementEntityFixture = WooriBankManagementEntityFixture()
 
     fun save(
-        messageCode: WooriBankMessage.WooriBankMessageCode,
+        messageCode: WooriBankMessageType.Code,
         messageNo: String,
         transmissionDate: String = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN),
         responseCode: WooriBankResponseCode? = null

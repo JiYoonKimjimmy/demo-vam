@@ -1,7 +1,7 @@
 package com.konai.vam.core.common.model.wooribank
 
 import com.konai.vam.core.common.*
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
@@ -21,7 +21,7 @@ data class WooriBankCommonMessage(
     val responseCode: String,
     val orgMessageNo: String,
 ) {
-    constructor(messageCode: WooriBankMessage.WooriBankMessageCode, messageNo: String): this(
+    constructor(messageCode: WooriBankMessageType.Code, messageNo: String): this(
         identifierCode = WOORI_BANK_IDENTIFIER_CODE,
         companyNo = WOORI_BANK_COMPANY_NO,
         institutionCode = WOORI_BANK_INSTITUTION_CODE,

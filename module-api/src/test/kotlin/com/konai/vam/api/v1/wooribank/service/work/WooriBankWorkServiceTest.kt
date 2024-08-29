@@ -1,7 +1,7 @@
 package com.konai.vam.api.v1.wooribank.service.work
 
 import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 
@@ -12,7 +12,7 @@ class WooriBankWorkServiceTest : CustomBehaviorSpec({
     val wooriBankCommonMessageFixture = wooriBankCommonMessageFixture()
 
     given("우리은행 '업무 개시' 전문 연동 요청하여") {
-        val message = WooriBankMessage.WORK_START
+        val message = WooriBankMessageType.WORK_START
 
         val wooriBankCommonMessage = wooriBankCommonMessageFixture.make(message.requestCode, "000001")
         every { mockWooriBankRestClient.postWooriBankWork(any()) } returns wooriBankCommonMessage

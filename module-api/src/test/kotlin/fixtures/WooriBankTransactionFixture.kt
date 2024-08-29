@@ -4,7 +4,7 @@ import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransa
 import com.konai.vam.core.common.WOORI_BANK_COMPANY_NO
 import com.konai.vam.core.common.WOORI_BANK_IDENTIFIER_CODE
 import com.konai.vam.core.common.WOORI_BANK_INSTITUTION_CODE
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.TIME_BASIC_PATTERN
@@ -16,7 +16,7 @@ class WooriBankTransactionFixture {
 
     fun make(
         id: Long? = null,
-        messageCode: WooriBankMessage.WooriBankMessageCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT.requestCode,
+        messageCode: WooriBankMessageType.Code = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode,
         messageNo: String,
         orgMessageNo: String? = null,
         accountNo: String = "1234567890",

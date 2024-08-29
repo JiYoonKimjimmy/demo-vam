@@ -10,7 +10,7 @@ class WooriBankMessageTest : BehaviorSpec({
         val businessTypeCode = "400"
 
         `when`("'0200', '400' 전문 요청 코드와 일치한 Enum 클래스 생성하여") {
-            val result = WooriBankMessage.find(messageTypeCode, businessTypeCode)
+            val result = WooriBankMessageType.find(messageTypeCode, businessTypeCode)
 
             then("정상 확인한다") {
                 result.requestCode.messageTypeCode shouldBe "0200"
@@ -24,7 +24,7 @@ class WooriBankMessageTest : BehaviorSpec({
         val businessTypeCode = "600"
 
         `when`("'0200', '600' 전문 요청 코드와 일치한 Enum 클래스 생성하여") {
-            val result = WooriBankMessage.find(messageTypeCode, businessTypeCode)
+            val result = WooriBankMessageType.find(messageTypeCode, businessTypeCode)
 
             then("정상 확인한다") {
                 result.requestCode.messageTypeCode shouldBe "0200"
@@ -38,7 +38,7 @@ class WooriBankMessageTest : BehaviorSpec({
         val businessTypeCode = "700"
 
         `when`("'0200', '600' 전문 요청 코드와 일치한 Enum 클래스 생성하여") {
-            val result = WooriBankMessage.find(messageTypeCode, businessTypeCode)
+            val result = WooriBankMessageType.find(messageTypeCode, businessTypeCode)
 
             then("정상 확인한다") {
                 result.requestCode.messageTypeCode shouldBe "0420"
@@ -52,7 +52,7 @@ class WooriBankMessageTest : BehaviorSpec({
         val businessTypeCode = "800"
 
         `when`("'0200', '800' 전문 요청 코드와 일치한 Enum 클래스 생성하여") {
-            val result = WooriBankMessage.find(messageTypeCode, businessTypeCode)
+            val result = WooriBankMessageType.find(messageTypeCode, businessTypeCode)
 
             then("정상 확인한다") {
                 result.requestCode.messageTypeCode shouldBe "0200"

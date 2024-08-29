@@ -6,7 +6,7 @@ import com.konai.vam.core.enumerate.RechargeTransactionCancelStatus
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
 import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
 import com.konai.vam.core.enumerate.Result.SUCCESS
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.repository.rechargetransaction.RechargeTransactionRepository
 import com.konai.vam.core.util.convertPatternOf
 import fixtures.WooriBankManagementFixture
@@ -43,8 +43,8 @@ class WooriBankManagementControllerTest @Autowired constructor(
 
         `when`("정상 신규 '입금' 전문인 경우") {
             val request = wooriBankManagementFixture.make(
-                messageTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.messageTypeCode,
-                businessTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.businessTypeCode,
+                messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.messageTypeCode,
+                businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.businessTypeCode,
                 messageNo = messageNo,
                 trDate = trDate,
                 trTime = trTime,
@@ -75,8 +75,8 @@ class WooriBankManagementControllerTest @Autowired constructor(
 
         `when`("정상 '입금 취소' 전문인 경우") {
             val request = wooriBankManagementFixture.make(
-                messageTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.messageTypeCode,
-                businessTypeCode = WooriBankMessage.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.businessTypeCode,
+                messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.messageTypeCode,
+                businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.businessTypeCode,
                 messageNo = UUID.randomUUID().toString().substring(0, 6),
                 trDate = trDate,
                 trTime = trTime,

@@ -3,7 +3,7 @@ package com.konai.vam.api.v1.wooribank.controller
 import com.konai.vam.api.v1.wooribank.service.work.WooriBankWorkAdapter
 import com.konai.vam.core.common.model.VoidResponse
 import com.konai.vam.core.common.model.success
-import com.konai.vam.core.enumerate.WooriBankMessage.*
+import com.konai.vam.core.enumerate.WooriBankMessageType.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

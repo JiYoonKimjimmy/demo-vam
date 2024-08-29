@@ -2,7 +2,7 @@ package fixtures
 
 import com.konai.vam.core.common.*
 import com.konai.vam.core.common.model.wooribank.WooriBankCommonMessage
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
@@ -12,7 +12,7 @@ import java.time.LocalTime
 class WooriBankCommonMessageFixture {
 
     fun make(
-        messageCode: WooriBankMessage.WooriBankMessageCode,
+        messageCode: WooriBankMessageType.Code,
         messageNo: String,
     ): WooriBankCommonMessage {
         return WooriBankCommonMessage(

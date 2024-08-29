@@ -2,7 +2,6 @@ package com.konai.vam.core.restclient.wooribank
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.konai.vam.core.common.model.wooribank.WooriBankCommonMessage
-import com.konai.vam.core.enumerate.WooriBankMessage
 
 data class PostWooriWorkRequest(
     @JsonUnwrapped

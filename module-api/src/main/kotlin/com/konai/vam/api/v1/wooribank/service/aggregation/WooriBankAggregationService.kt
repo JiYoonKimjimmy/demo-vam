@@ -6,7 +6,7 @@ import com.konai.vam.api.v1.wooribank.service.aggregation.domain.WooriBankAggreg
 import com.konai.vam.api.v1.wooribank.service.common.WooriBankCommonMessageAdapter
 import com.konai.vam.core.enumerate.RechargeTransactionType
 import com.konai.vam.core.enumerate.WooriBankAggregateResult.MATCHED
-import com.konai.vam.core.enumerate.WooriBankMessage
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.repository.wooribank.aggregation.WooriBankAggregationEntityAdapter
 import com.konai.vam.core.restclient.wooribank.WooriBankRestClient
 import org.springframework.stereotype.Service
@@ -46,7 +46,7 @@ class WooriBankAggregationService(
     }
 
     private fun inquiryBankAggregationResult(domain: WooriBankAggregation): WooriBankAggregation {
-        return wooriBankCommonMessageAdapter.generateCommonMessage(WooriBankMessage.TRANSACTION_AGGREGATION.requestCode)
+        return wooriBankCommonMessageAdapter.generateCommonMessage(WooriBankMessageType.TRANSACTION_AGGREGATION.requestCode)
             .let { wooriBankAggregationMapper.domainToClientRequest(domain, it) }
             .let { wooriBankRestClient.postWooriAggregateTransaction(it) }
             .let { domain.applyBankResult(it) }
