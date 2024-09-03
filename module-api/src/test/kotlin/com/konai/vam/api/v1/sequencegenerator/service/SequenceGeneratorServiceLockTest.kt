@@ -3,10 +3,10 @@ package com.konai.vam.api.v1.sequencegenerator.service
 import com.konai.vam.core.enumerate.SequenceGeneratorType
 import io.kotest.core.spec.style.StringSpec
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.concurrent.CountDownLatch
@@ -18,6 +18,8 @@ import kotlin.time.measureTime
 class SequenceGeneratorServiceLockTest @Autowired constructor(
     val sequenceGeneratorService: SequenceGeneratorService
 ) : StringSpec({
+    // logger
+    val logger = LoggerFactory.getLogger(this::class.java)
 
     afterTest {
         sequenceGeneratorService.deleteSequence(SequenceGeneratorType.WR_BANK, "20240814")
@@ -44,12 +46,13 @@ class SequenceGeneratorServiceLockTest @Autowired constructor(
             val executorService = Executors.newFixedThreadPool(number)
             val countDownLatch = CountDownLatch(number)
 
-            println("================= START =================")
+            logger.info("================= START =================")
+
             for (i in 1..number) {
                 executorService.submit {
                     try {
                         val result = sequenceGeneratorService.getNextSequenceWithoutLock(type, date)
-                        println("test=-thread-$i : $result")
+                        logger.info("test=-thread-$i : $result")
                     } finally {
                         countDownLatch.countDown()
                     }
@@ -58,41 +61,39 @@ class SequenceGeneratorServiceLockTest @Autowired constructor(
 
             countDownLatch.await()
 
-            println("================== END ==================")
+            logger.info("================== END ==================")
 
             val result = sequenceGeneratorService.findSequence(type, date)
             assertThat(result).isNotEqualTo(100)
         }
 
-        println("========== measureTimeMillis : $measureTimeMillis ==========")
+        logger.info("========== measureTimeMillis : $measureTimeMillis ==========")
     }
 
     "'100건' Sequence 조회 동시성 요청 결과 정상 확인한다" {
         val measureTimeMillis = measureTime {
+            val type = SequenceGeneratorType.WR_BANK
+            val date = "20240814"
+            val number = 100
+
             runBlocking {
-                val type = SequenceGeneratorType.WR_BANK
-                val date = "20240814"
-                val number = 100
+                logger.info("================= START [with LOCK] =================")
 
-                println("================= START =================")
-
-                val jobs = List(number) {
-                    launch(Dispatchers.Default) {
+                repeat(number) {
+                    launch(Dispatchers.IO) {
                         val result = sequenceGeneratorService.getNextSequence(type, date)
-                        println("test-coroutine-${it + 1} : $result")
+                        logger.info("test-coroutine-${it + 1} : $result")
                     }
                 }
 
-                jobs.joinAll()
-
-                println("================== END ==================")
-
-                val result = sequenceGeneratorService.findSequence(type, date)
-                assertThat(result).isEqualTo(100)
+                logger.info("================== END [with LOCK] ==================")
             }
+
+            val result = sequenceGeneratorService.findSequence(type, date)
+            assertThat(result).isEqualTo(100)
         }
 
-        println("========== measureTimeMillis : $measureTimeMillis ==========")
+        logger.info("========== measureTimeMillis [with LOCK] : $measureTimeMillis ==========")
     }
 
 })

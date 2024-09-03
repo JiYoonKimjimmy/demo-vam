@@ -54,7 +54,7 @@ class WooriBankAggregationServiceTest : CustomBehaviorSpec({
                 cache.konaDepositAmount shouldBe depositAmount
             }
 
-            then("우리은행 집계 'WATTING' 상태 정보 저장 성공한다") {
+            then("우리은행 집계 'WAITING' 상태 정보 저장 성공한다") {
                 val entity = wooriBankAggregationEntityAdapter.findByAggregateDate(aggregationDate)
                 entity.aggregateResult shouldBe WAITING
             }
