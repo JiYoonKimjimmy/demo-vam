@@ -46,10 +46,12 @@ enum class WooriBankResponseCode(val message: String) {
                 VIRTUAL_ACCOUNT_RECHARGE_FAILED -> K116
                 WOORI_BANK_MESSAGE_CODE_INVALID -> K401
                 VIRTUAL_ACCOUNT_NOT_FOUND -> K402
+                RECHARGE_CARD_STATUS_IS_NOT_ACTIVE -> K402
                 RECHARGE_TRANSACTION_ALREADY_CANCELED -> K408
                 VIRTUAL_ACCOUNT_HAS_NOT_CONNECTED_CARD -> K419
                 RECHARGE_TRANSACTION_NOT_FOUND -> K701
                 VIRTUAL_ACCOUNT_RECHARGE_CANCEL_FAILED -> K777
+                RECHARGE_AMOUNT_EXCEEDED -> K412
                 else -> K999
             }
         }

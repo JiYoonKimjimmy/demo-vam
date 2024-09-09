@@ -28,6 +28,8 @@ enum class ErrorCode(
     WOORI_BANK_MESSAGE_CODE_INVALID(HttpStatus.BAD_REQUEST, "018", "Woori bank message code is invalid"),
     RECHARGE_TRANSACTION_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "019", "This recharge transaction has already been canceled"),
     RECHARGE_TRANSACTION_IS_INVALID(HttpStatus.BAD_REQUEST, "020", "This recharge transaction is invalid"),
+    RECHARGE_AMOUNT_EXCEEDED(HttpStatus.BAD_REQUEST, "021", "The recharge amount limit has been exceeded"),
+    RECHARGE_CARD_STATUS_IS_NOT_ACTIVE(HttpStatus.BAD_REQUEST, "022", "The recharge card status is not active"),
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "900", "Internal server error"),
     ARGUMENT_NOT_VALID_ERROR(HttpStatus.BAD_REQUEST, "901", "Argument not valid"),

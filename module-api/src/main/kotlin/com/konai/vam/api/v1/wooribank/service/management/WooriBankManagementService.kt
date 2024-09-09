@@ -24,7 +24,7 @@ class WooriBankManagementService(
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun management(domain: WooriBankManagement): WooriBankManagement {
-        return process(domain).let(this::afterProcess)
+        return process(domain).let { this.afterProcess(it) }
     }
 
     private fun process(domain: WooriBankManagement): WooriBankManagement {
@@ -70,15 +70,16 @@ class WooriBankManagementService(
 
     private fun checkDuplicatedMessage(domain: WooriBankManagement): WooriBankManagement? {
         // 우리은행 전문 연동 중복 내역 있는 경우, 완료 처리
-        return findDuplicatedMessage(domain)?.let { completed(it) }
+        return findDuplicatedMessage(domain)?.let { this.completed(it) }
     }
 
     private fun findDuplicatedMessage(domain: WooriBankManagement): WooriBankManagement? {
-        return wooriBankManagementFindAdapter.findByPredicate(predicate = wooriBankManagementMapper.domainToPredicate(domain))
+        return wooriBankManagementMapper.domainToPredicate(domain)
+            .let { wooriBankManagementFindAdapter.findByPredicate(it) }
     }
 
     private fun afterProcess(domain: WooriBankManagement): WooriBankManagement {
-        return completed(saveWooriBankManagement(domain))
+        return saveWooriBankManagement(domain).let { this.completed(it) }
     }
 
     private fun saveWooriBankManagement(domain: WooriBankManagement): WooriBankManagement {

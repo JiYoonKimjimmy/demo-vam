@@ -13,9 +13,7 @@ import com.konai.vam.core.common.error
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
-import com.konai.vam.core.common.error
 import com.konai.vam.core.enumerate.RechargeTransactionType
-import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
 import com.konai.vam.core.util.DATE_BASIC_PATTERN
@@ -29,7 +27,7 @@ class WooriBankTransactionService(
 
     private val wooriBankTransactionMapper: WooriBankTransactionMapper,
 
-    private val rechargetTransactionAdaptor: RechargeTransactionAdapter,
+    private val rechargeTransactionAdaptor: RechargeTransactionAdapter,
     private val rechargeTransactionFindAdapter: RechargeTransactionFindAdapter,
     private val wooriBankAggregationAdapter: WooriBankAggregationAdapter,
     private val virtualAccountFindAdapter: VirtualAccountFindAdapter,
@@ -40,11 +38,11 @@ class WooriBankTransactionService(
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun deposit(domain: WooriBankTransaction): WooriBankTransaction {
-        return afterRechargeProc(depositProc(domain))
+        return depositProc(domain).let { this.afterRechargeProc(it) }
     }
 
     override fun depositCancel(domain: WooriBankTransaction): WooriBankTransaction {
-        return afterRechargeCancelProc(depositCancelProc(domain))
+        return depositCancelProc(domain).let { this.afterRechargeCancelProc(it) }
     }
 
     override fun depositConfirm(domain: WooriBankTransaction): WooriBankTransaction {
@@ -84,7 +82,7 @@ class WooriBankTransactionService(
 
     private fun requestRechargeTransaction(domain: WooriBankTransaction): WooriBankTransaction {
         return wooriBankTransactionMapper.domainToRechargeTransaction(domain)
-            .let { rechargetTransactionAdaptor.recharge(it) }
+            .let { rechargeTransactionAdaptor.recharge(it) }
             .let { checkRechargeTransactionResult(it) }
             .let { domain.success(responseCode = it) }
     }
@@ -93,8 +91,7 @@ class WooriBankTransactionService(
         return if (rechargeTransaction.result?.flag == true) {
             `0000`
         } else {
-            val errorCode = if (rechargeTransaction.tranType == RECHARGE) ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_FAILED else ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_CANCEL_FAILED
-            throw InternalServiceException(errorCode)
+            throw InternalServiceException(rechargeTransaction.errorCode ?: ErrorCode.RECHARGE_TRANSACTION_IS_INVALID)
         }
     }
 
@@ -152,7 +149,7 @@ class WooriBankTransactionService(
 
     private fun requestRechargeCancelTransaction(domain: WooriBankTransaction): WooriBankTransaction {
         return wooriBankTransactionMapper.domainToRechargeCancelTransaction(domain)
-            .let { rechargetTransactionAdaptor.cancel(it) }
+            .let { rechargeTransactionAdaptor.cancel(it) }
             .let { checkRechargeTransactionResult(it) }
             .let { domain.success(responseCode = it) }
     }

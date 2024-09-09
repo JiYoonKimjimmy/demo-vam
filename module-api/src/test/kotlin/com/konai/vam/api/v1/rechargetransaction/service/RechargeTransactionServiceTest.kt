@@ -24,6 +24,38 @@ class RechargeTransactionServiceTest : CustomBehaviorSpec({
     given("CS 컴포넌트의 시스템 충전 API 요청하여") {
         val tranNo = UUID.randomUUID().toString()
 
+        `when`("충전 카드 상태 'ACTIVE' 아닌 경우") {
+            val domain = rechargeTransactionFixture.make(tranNo = tranNo)
+
+            val detailMessage = "400 Bad Request: \"{\"reason\":\"24_4000_154\",\"message\":\"AUTHORIZATION - FAILED - V87_OVER_CREDIT_LIMIT\"}\""
+            every { mockCsRestClient.postRechargesSystemManuals(any()) } throws RestClientServiceException(ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_FAILED).apply { this.detailMessage = detailMessage }
+
+            val result = rechargeTransactionService.recharge(domain)
+
+            then("시스템 충전 '실패' 거래 Entity 정보 생성하여 저장한다") {
+                result shouldNotBe null
+                result.result shouldBe FAILED
+                result.reason shouldBe "[24_4000_154] AUTHORIZATION - FAILED - V87_OVER_CREDIT_LIMIT"
+                result.errorCode shouldBe ErrorCode.RECHARGE_CARD_STATUS_IS_NOT_ACTIVE
+            }
+        }
+
+        `when`("충전 대기금 초과된 경우") {
+            val domain = rechargeTransactionFixture.make(tranNo = tranNo)
+
+            val detailMessage = "400 Bad Request: \"{\"reason\":\"24_3000_334\",\"message\":\"AUTHORIZATION - FAILED - V87_OVER_CREDIT_LIMIT\"}\""
+            every { mockCsRestClient.postRechargesSystemManuals(any()) } throws RestClientServiceException(ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_FAILED).apply { this.detailMessage = detailMessage }
+
+            val result = rechargeTransactionService.recharge(domain)
+
+            then("시스템 충전 '실패' 거래 Entity 정보 생성하여 저장한다") {
+                result shouldNotBe null
+                result.result shouldBe FAILED
+                result.reason shouldBe "[24_3000_334] AUTHORIZATION - FAILED - V87_OVER_CREDIT_LIMIT"
+                result.errorCode shouldBe ErrorCode.RECHARGE_AMOUNT_EXCEEDED
+            }
+        }
+
         `when`("실패인 경우") {
             val domain = rechargeTransactionFixture.make(tranNo = tranNo)
 

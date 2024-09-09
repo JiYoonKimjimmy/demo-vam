@@ -13,16 +13,15 @@ import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBank
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCacheService
 import com.konai.vam.api.v1.wooribank.service.aggregation.WooriBankAggregationService
 import com.konai.vam.api.v1.wooribank.service.aggregation.domain.WooriBankAggregationMapper
-import com.konai.vam.api.v1.wooribank.service.message.WooriBankMessageGenerateService
-import com.konai.vam.api.v1.wooribank.service.management.domain.WooriBankManagementMapper
-import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransactionMapper
 import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementFindService
 import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementSaveService
 import com.konai.vam.api.v1.wooribank.service.management.WooriBankManagementService
+import com.konai.vam.api.v1.wooribank.service.management.domain.WooriBankManagementMapper
+import com.konai.vam.api.v1.wooribank.service.message.WooriBankMessageGenerateService
 import com.konai.vam.api.v1.wooribank.service.transaction.WooriBankTransactionService
+import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransactionMapper
 import com.konai.vam.api.v1.wooribank.service.work.WooriBankWorkService
 import com.konai.vam.core.cache.redis.RedisTemplateService
-import fixtures.WooriBankMessageFixture
 import com.konai.vam.core.restclient.cs.CsRestClient
 import com.konai.vam.core.restclient.vambatch.VamBatchRestClient
 import com.konai.vam.core.restclient.wooribank.WooriBankRestClient
@@ -70,7 +69,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val mockCsRestClient = mockk<CsRestClient>()
 
-    private val rechargeTransactionService = RechargeTransactionService(rechargeTransactionSaveService, rechargeTransactionFindService, mockCsRestClient)
+    private val rechargeTransactionService = RechargeTransactionService(rechargeTransactionMapper, rechargeTransactionSaveService, rechargeTransactionFindService, mockCsRestClient)
     private val wooriBankTransactionService = WooriBankTransactionService(wooriBankTransactionMapper, rechargeTransactionService, rechargeTransactionFindService, wooriBankAggregationService, virtualAccountFindService, virtualAccountBankFindService)
 
     private val wooriBankTransactionFixture = WooriBankTransactionFixture()

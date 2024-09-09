@@ -16,6 +16,8 @@ data class CsPostRechargesSystemManualsRequest(
     val checkWaitingAmtYn: YesOrNo = YesOrNo.Y,
     @field:JsonProperty("isDepositUse")
     val isDepositUse: Boolean = false,
+    @field:JsonProperty("isOverRcgAmtLimit")
+    val isOverRcgAmtLimit: Boolean = true
 ) {
     val url by lazy { "/api/payments/recharges/system/manuals" }
 

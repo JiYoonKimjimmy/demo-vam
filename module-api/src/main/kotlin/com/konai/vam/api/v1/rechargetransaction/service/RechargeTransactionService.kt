@@ -1,6 +1,7 @@
 package com.konai.vam.api.v1.rechargetransaction.service
 
 import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransaction
+import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransactionMapper
 import com.konai.vam.core.common.error
 import com.konai.vam.core.restclient.cs.*
 import org.slf4j.LoggerFactory
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class RechargeTransactionService(
+    private val rechargeTransactionMapper: RechargeTransactionMapper,
     private val rechargeTransactionSaveAdapter: RechargeTransactionSaveAdapter,
     private val rechargeTransactionFindAdapter: RechargeTransactionFindAdapter,
     private val csRestClient: CsRestClient,
@@ -16,25 +18,19 @@ class RechargeTransactionService(
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun recharge(domain: RechargeTransaction): RechargeTransaction {
-        return saveRechargeTransaction(rechargeProc(domain))
+        return rechargeProc(domain).let { this.saveRechargeTransaction(it) }
     }
 
     private fun rechargeProc(domain: RechargeTransaction): RechargeTransaction {
         return try {
-            domain.successRecharge(rechargesSystemManualsToCS(domain))
+            rechargesSystemManualsToCS(domain).let { domain.successRecharge(it) }
         } catch (e: Exception) {
             errorResponse(domain, e)
         }
     }
 
     private fun rechargesSystemManualsToCS(domain: RechargeTransaction): CsPostRechargesSystemManualsResponse {
-        return CsPostRechargesSystemManualsRequest(
-                par = domain.par,
-                amount = domain.amount.toString(),
-                serviceId = domain.serviceId,
-                rechargerId = domain.rechargerId!!,
-                isPushRequired = true
-            )
+        return rechargeTransactionMapper.domainToCsPostRechargesSystemManualsRequest(domain)
             .let { csRestClient.postRechargesSystemManuals(it) }
     }
 
@@ -71,7 +67,7 @@ class RechargeTransactionService(
     }
 
     private fun saveRechargeTransaction(domain: RechargeTransaction): RechargeTransaction {
-        return rechargeTransactionSaveAdapter.save(domain)
+        return rechargeTransactionSaveAdapter.save(domain).copy(errorCode = domain.errorCode)
     }
 
     private fun errorResponse(domain: RechargeTransaction, exception: Exception): RechargeTransaction {

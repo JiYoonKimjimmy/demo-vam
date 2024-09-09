@@ -7,6 +7,7 @@ import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.enumerate.RechargeTransactionCancelStatus
 import com.konai.vam.core.enumerate.RechargeTransactionType
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
+import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
 import com.konai.vam.core.enumerate.Result
 import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
@@ -30,6 +31,7 @@ data class RechargeTransaction(
     val cancelStatus: RechargeTransactionCancelStatus? = null,
     val cancelOrgTranNo: String? = null,
     val cancelDate: LocalDateTime? = null,
+    val errorCode: ErrorCode? = null,
 ) {
 
     fun successRecharge(response: CsPostRechargesSystemManualsResponse): RechargeTransaction {
@@ -51,16 +53,38 @@ data class RechargeTransaction(
     }
 
     fun fail(exception: Exception): RechargeTransaction {
+        val errorReason = exceptionToErrorReason(exception)
+        val convertReason: (Pair<String, String>) -> String = { "[${it.first}] ${it.second}" }
+        val convertErrorCode: (Pair<String, String>) -> ErrorCode? = {
+            if (this.tranType == RECHARGE) {
+                convertRechargeFailedErrorCode(it.first)
+            } else {
+                ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_CANCEL_FAILED
+            }
+        }
+
         return copy(
             result = FAILED,
-            reason = exceptionMessage(exception),
+            reason = convertReason(errorReason),
+            errorCode = convertErrorCode(errorReason)
         )
     }
 
-    private fun exceptionMessage(exception: Exception): String {
+    private fun exceptionToErrorReason(exception: Exception): Pair<String, String> {
         return when (exception) {
-            is BaseException -> exception.parseDetailMessage() ?: "[${exception.errorCode.code}] ${exception.errorCode.message}"
-            else -> "[${ErrorCode.UNKNOWN_ERROR.code}] ${ErrorCode.UNKNOWN_ERROR.message}"
+            is BaseException -> exception.parseDetailMessage() ?: Pair(exception.errorCode.code, exception.errorCode.message)
+            else -> Pair(ErrorCode.UNKNOWN_ERROR.code, ErrorCode.UNKNOWN_ERROR.message)
+        }
+    }
+
+    private fun convertRechargeFailedErrorCode(errorCode: String): ErrorCode {
+        return when (errorCode) {
+            // 충전 카드 상태가 ACTIVE 가 아닌 경우
+            "24_4000_154", "24_7000_154" -> ErrorCode.RECHARGE_CARD_STATUS_IS_NOT_ACTIVE
+            // 충전 대기금 한도 초과인 경우
+            "24_3000_334", "24_4000_510" -> ErrorCode.RECHARGE_AMOUNT_EXCEEDED
+            // 그외 경우
+            else -> ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_FAILED
         }
     }
 

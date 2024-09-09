@@ -3,6 +3,7 @@ package com.konai.vam.api.v1.rechargetransaction.service.domain
 import com.konai.vam.api.v1.virtualaccount.service.domain.BankAccount
 import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.repository.rechargetransaction.entity.RechargeTransactionEntity
+import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsRequest
 import org.springframework.stereotype.Component
 
 @Component
@@ -48,6 +49,17 @@ class RechargeTransactionMapper {
             cancelOrgTranNo = entity.cancelOrgTranNo,
             cancelDate = entity.cancelDate,
             reason = entity.reason,
+        )
+    }
+
+    fun domainToCsPostRechargesSystemManualsRequest(domain: RechargeTransaction): CsPostRechargesSystemManualsRequest {
+        return CsPostRechargesSystemManualsRequest(
+            par = domain.par,
+            amount = domain.amount.toString(),
+            serviceId = domain.serviceId,
+            rechargerId = domain.rechargerId!!,
+            isPushRequired = true,
+            isOverRcgAmtLimit = true
         )
     }
 
