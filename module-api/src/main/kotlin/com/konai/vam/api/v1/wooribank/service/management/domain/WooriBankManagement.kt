@@ -65,12 +65,22 @@ data class WooriBankManagement(
         )
     }
 
-    fun convertToResponseCode(): WooriBankManagement {
-        val responseCode = runCatching { WooriBankMessageType.find(this.messageTypeCode, this.businessTypeCode) }.getOrNull()?.responseCode
+    fun convertToResponse(): WooriBankManagement {
+        val messageType = runCatching { WooriBankMessageType.find(this.messageTypeCode, this.businessTypeCode) }.getOrNull()
         return this.copy(
-            messageTypeCode = responseCode?.messageTypeCode ?: this.messageTypeCode,
-            businessTypeCode = responseCode?.businessTypeCode ?: this.businessTypeCode
+            messageTypeCode = messageType?.responseCode?.messageTypeCode ?: this.messageTypeCode,
+            businessTypeCode = messageType?.responseCode?.businessTypeCode ?: this.businessTypeCode,
+            responseCode = messageType?.let(this::convertResponseCode) ?: this.responseCode
         )
+    }
+
+    private fun convertResponseCode(messageType: WooriBankMessageType): WooriBankResponseCode? {
+        return if (messageType == VIRTUAL_ACCOUNT_DEPOSIT_CANCEL && this.messageNo == this.orgMessageNo) {
+            // 우리은행 '자동 취소' 전문 요청인 경우, 응답코드 `0000` 변환하여 응답 처리
+            WooriBankResponseCode.`0000`
+        } else {
+            this.responseCode
+        }
     }
 
 }

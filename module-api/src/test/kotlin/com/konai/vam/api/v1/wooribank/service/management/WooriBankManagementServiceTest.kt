@@ -2,11 +2,12 @@ package com.konai.vam.api.v1.wooribank.service.management
 
 import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
+import com.konai.vam.core.common.error.ErrorCode
+import com.konai.vam.core.common.error.exception.RestClientServiceException
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.CONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
 import com.konai.vam.core.enumerate.WooriBankMessageType
-import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
-import com.konai.vam.core.enumerate.WooriBankResponseCode.K401
+import com.konai.vam.core.enumerate.WooriBankResponseCode.*
 import com.konai.vam.core.enumerate.YesOrNo.Y
 import com.konai.vam.core.repository.virtualaccountbank.VirtualAccountBankConst
 import com.konai.vam.core.repository.wooribank.management.jdsl.WooriBankManagementPredicate
@@ -36,7 +37,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
     val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()
 
     given("우리은행 가상 계좌 관리 전문 연동 요청되어") {
-        `when`("전문 번호가 미정의된 요청인 경우") {
+        `when`("전문 번호가 미정의된 요청으로 실패인 경우") {
             val messageNo = UUID.randomUUID().toString().substring(0, 6)
             val messageTypeCode = "9999"
             val businessTypeCode = "999"
@@ -59,7 +60,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             }
         }
 
-        `when`("동일한 '전문코드' & '전문번호' & '전송일자' 중복 연동 내역 정보 있는 경우") {
+        `when`("동일한 '전문코드' & '전문번호' & '전송일자' 중복 연동 내역 정보 존재하는 경우") {
             val messageNo = UUID.randomUUID().toString().substring(0, 6)
             val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_INQUIRY
             val messageTypeCode = messageType.requestCode.messageTypeCode
@@ -72,22 +73,23 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
 
             val result = wooriBankManagementService.management(domain)
 
-            then("'0000' responseCode 처리하여 응답 성공한다") {
+            then("기존 전문 응답코드 '0000' 반환 처리하여 응답 성공한다") {
                 result.messageTypeCode shouldBe messageType.responseCode.messageTypeCode
                 result.businessTypeCode shouldBe messageType.responseCode.businessTypeCode
                 result.responseCode shouldBe `0000`
             }
 
             then("우리은행 전문 연동 요청 내역 DB 조회하여 정상 확인한다") {
-                val predicate = WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate, `0000`)
+                val predicate = WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, responseCode = `0000`)
                 val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
                 entity.messageTypeCode shouldBe "0200"
                 entity.businessTypeCode shouldBe "400"
                 entity.responseCode shouldBe `0000`
+                entity.transmissionDate shouldBe transmissionDate
             }
         }
 
-        `when`("가상 계좌 '조회(0200-400)' 전문 요청인 경우") {
+        `when`("가상 계좌 '조회(0200-400)' 전문 요청 성공인 경우") {
             val messageNo = UUID.randomUUID().toString().substring(0, 6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
 
@@ -109,7 +111,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             }
         }
 
-        `when`("가상 계좌 '입금(0200-600)' 전문 요청인 경우") {
+        `when`("가상 계좌 '입금(0200-600)' 전문 요청 성공인 경우") {
             val messageNo = UUID.randomUUID().toString().substring(0, 6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val accountNo = UUID.randomUUID().toString()
@@ -155,7 +157,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             }
         }
 
-        `when`("가상 계좌 '입금 취소(0420-700)' 전문 요청인 경우") {
+        `when`("가상 계좌 '입금 취소(0420-700)' 전문 요청 성공인 경우") {
             val messageNo = UUID.randomUUID().toString().substring(0, 6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
@@ -199,7 +201,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             }
         }
 
-        `when`("가상 계좌 '입금 자동 취소(0420-700)/(전문번호 = 원전문번호)' 전문 요청인 경우") {
+        `when`("가상 계좌 '입금 자동 취소(0420-700)/(전문번호 = 원전문번호)' 전문 요청 성공인 경우") {
             val messageNo = UUID.randomUUID().toString().substring(0, 6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
@@ -266,6 +268,43 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
                 entity.messageTypeCode shouldBe "0200"
                 entity.businessTypeCode shouldBe "800"
                 entity.responseCode shouldBe `0000`
+            }
+        }
+    }
+    
+    given("우리은행 가상 계좌 '자동 취소' 전문 연동 요청되어") {
+        val messageNo = UUID.randomUUID().toString().substring(0, 6)
+        val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
+        val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
+        val messageTypeCode = messageType.requestCode.messageTypeCode
+        val businessTypeCode = messageType.requestCode.businessTypeCode
+        val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = messageNo)
+
+        // 충전 내역 원거래 정보 저장
+        rechargeTransactionEntityAdaptor.save(tranNo = "${domain.trDate}${domain.trTime}$messageNo", accountNo = domain.accountNo)
+        // 가상 계좌 정보 저장 처리
+        val accountNo = domain.accountNo
+        val par = "par$accountNo"
+        val serviceId = "serviceId"
+        virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+        // CS 시스템 충전 요청 성공 mocking 처리
+        every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } throws RestClientServiceException(ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_CANCEL_FAILED)
+
+        `when`("가상 계좌 '입금 취소(0420-700)' 전문 요청 실패인 경우") {
+            val result = wooriBankManagementService.management(domain)
+
+            then("가상 계좌 '자동 취소' (반드시) 응답코드 '0000' 확인한다") {
+                result.responseCode shouldBe `0000`
+            }
+
+            then("우리은행 연동 내역 확인하여 에러 사유 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate("0420", "700", messageNo, transmissionDate, K777)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
+                entity.messageTypeCode shouldBe "0420"
+                entity.businessTypeCode shouldBe "700"
+                entity.messageNo shouldBe messageNo
+                entity.orgMessageNo shouldBe messageNo
+                entity.responseCode shouldNotBe `0000`
             }
         }
     }
