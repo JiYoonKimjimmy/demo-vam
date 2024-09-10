@@ -14,13 +14,11 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.enumerate.RechargeTransactionType
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
-import com.konai.vam.core.util.DATE_BASIC_PATTERN
-import com.konai.vam.core.util.convertPatternOf
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 
 @Service
 class WooriBankTransactionService(
@@ -37,16 +35,25 @@ class WooriBankTransactionService(
     // logger
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    /**
+     * 우리은행 가상계좌 '입금' 처리
+     */
     override fun deposit(domain: WooriBankTransaction): WooriBankTransaction {
-        return depositProc(domain).let { this.afterRechargeProc(it) }
+        return depositProc(domain).let { this.afterProc(it) }
     }
 
+    /**
+     * 우리은행 가상계좌 '입금 취소' 처리
+     */
     override fun depositCancel(domain: WooriBankTransaction): WooriBankTransaction {
-        return depositCancelProc(domain).let { this.afterRechargeCancelProc(it) }
+        return depositCancelProc(domain).let { this.afterProc(it) }
     }
 
+    /**
+     * 우리은행 가상계좌 '입금 확인 통보' 처리
+     */
     override fun depositConfirm(domain: WooriBankTransaction): WooriBankTransaction {
-        return depositConfirmProc(domain)
+        return depositConfirmProc(domain).let { this.afterProc(it) }
     }
 
     private fun depositProc(domain: WooriBankTransaction): WooriBankTransaction {
@@ -54,11 +61,44 @@ class WooriBankTransactionService(
             // 가상 계좌 충전 요청 준비
             readyRechargeTransaction(domain)
             // 가상 계좌 충전 요청 처리
-            requestRechargeTransaction(domain)
+            executeRechargeTransaction(domain)
         } catch (e: Exception) {
             // 예외 발생한 경우, 에러 응답 처리
             errorResponse(domain, e)
         }
+    }
+
+    private fun depositCancelProc(domain: WooriBankTransaction): WooriBankTransaction {
+        return try {
+            // 가상 계좌 충전 취소 요청 준비
+            readyRechargeCancelTransaction(domain)
+            // 가상 계좌 충전 취소 요청 처리
+            executeRechargeCancelTransaction(domain)
+        } catch (e: Exception) {
+            // 예외 발생한 경우, 에러 응답 처리
+            errorResponse(domain, e)
+        }
+    }
+
+    private fun depositConfirmProc(domain: WooriBankTransaction): WooriBankTransaction {
+        return try {
+            findSuccessRechargeTransaction(domain.tranNo, domain.accountNo)
+                .checkIfDepositCanBeConfirmed()
+                .let { domain.depositConfirmed().success(responseCode = `0000`) }
+        } catch (e: Exception) {
+            errorResponse(domain, e)
+        }
+    }
+
+    private fun saveWooriBankAggregationCache(domain: WooriBankTransaction): WooriBankTransaction {
+        if (domain.responseCode == `0000`) {
+            wooriBankAggregationAdapter.incrementAggregation(
+                aggregateDate = domain.trDate,
+                tranType = RechargeTransactionType.of(domain.messageType),
+                amount = domain.trAmount,
+            )
+        }
+        return domain
     }
 
     private fun readyRechargeTransaction(domain: WooriBankTransaction): WooriBankTransaction {
@@ -67,74 +107,6 @@ class WooriBankTransactionService(
             this.setParAndServiceId(findVirtualAccountCard(domain))
             // 가상 계좌 은행 'rechargerId' 정보 조회
             this.setRechargerId(findVirtualAccountBankRechargerId(domain))
-        }
-    }
-
-    private fun findVirtualAccountCard(domain: WooriBankTransaction): VirtualAccount {
-        return virtualAccountFindAdapter.findCardConnectedVirtualAccount(domain.accountNo)
-            .takeIf { it.par != null && it.serviceId != null }
-            ?: throw ResourceNotFoundException(ErrorCode.VIRTUAL_ACCOUNT_HAS_NOT_CONNECTED_CARD)
-    }
-
-    private fun findVirtualAccountBankRechargerId(domain: WooriBankTransaction): String {
-        return virtualAccountBankFindAdapter.findByBankCode(domain.bankCode).rechargerId
-    }
-
-    private fun requestRechargeTransaction(domain: WooriBankTransaction): WooriBankTransaction {
-        return wooriBankTransactionMapper.domainToRechargeTransaction(domain)
-            .let { rechargeTransactionAdaptor.recharge(it) }
-            .let { checkRechargeTransactionResult(it) }
-            .let { domain.success(responseCode = it) }
-    }
-
-    private fun checkRechargeTransactionResult(rechargeTransaction: RechargeTransaction): WooriBankResponseCode {
-        return if (rechargeTransaction.result?.flag == true) {
-            `0000`
-        } else {
-            throw InternalServiceException(rechargeTransaction.errorCode ?: ErrorCode.RECHARGE_TRANSACTION_IS_INVALID)
-        }
-    }
-
-    private fun errorResponse(domain: WooriBankTransaction, exception: Exception): WooriBankTransaction {
-        logger.error(exception)
-        return domain.fail(exception)
-    }
-
-    private fun afterRechargeProc(domain: WooriBankTransaction): WooriBankTransaction {
-        return try {
-            // 입금 내역 집계 Cache 업데이트 저장
-            saveWooriBankAggregationCache(domain)
-        } catch (e: Exception) {
-            // 예외 발생하는 경우, 충전 내역 완료 거래 취소 처리
-            revertRechargeTransaction(domain, e)
-        }
-    }
-
-    private fun saveWooriBankAggregationCache(domain: WooriBankTransaction): WooriBankTransaction {
-        if (domain.responseCode == `0000`) {
-            wooriBankAggregationAdapter.incrementAggregation(
-                aggregateDate = LocalDate.now().convertPatternOf(DATE_BASIC_PATTERN),
-                tranType = RechargeTransactionType.of(domain.messageTypeCode),
-                amount = domain.trAmount,
-            )
-        }
-        return domain
-    }
-
-    private fun revertRechargeTransaction(domain: WooriBankTransaction, exception: Exception): Nothing {
-        requestRechargeCancelTransaction(domain)
-        throw exception
-    }
-
-    private fun depositCancelProc(domain: WooriBankTransaction): WooriBankTransaction {
-        return try {
-            // 가상 계좌 충전 취소 요청 준비
-            readyRechargeCancelTransaction(domain)
-            // 가상 계좌 충전 취소 요청 처리
-            requestRechargeCancelTransaction(domain)
-        } catch (e: Exception) {
-            // 예외 발생한 경우, 에러 응답 처리
-            errorResponse(domain, e)
         }
     }
 
@@ -147,11 +119,37 @@ class WooriBankTransactionService(
         }
     }
 
-    private fun requestRechargeCancelTransaction(domain: WooriBankTransaction): WooriBankTransaction {
+    private fun executeRechargeTransaction(domain: WooriBankTransaction): WooriBankTransaction {
+        return wooriBankTransactionMapper.domainToRechargeTransaction(domain)
+            .let { rechargeTransactionAdaptor.recharge(it) }
+            .let { checkRechargeTransactionResult(it) }
+            .let { domain.success(responseCode = it) }
+    }
+
+    private fun executeRechargeCancelTransaction(domain: WooriBankTransaction): WooriBankTransaction {
         return wooriBankTransactionMapper.domainToRechargeCancelTransaction(domain)
             .let { rechargeTransactionAdaptor.cancel(it) }
             .let { checkRechargeTransactionResult(it) }
             .let { domain.success(responseCode = it) }
+    }
+
+    private fun checkRechargeTransactionResult(rechargeTransaction: RechargeTransaction): WooriBankResponseCode {
+        return if (rechargeTransaction.result?.flag == true) {
+            `0000`
+        } else {
+            throw InternalServiceException(rechargeTransaction.errorCode ?: ErrorCode.RECHARGE_TRANSACTION_IS_INVALID)
+        }
+    }
+
+    private fun findVirtualAccountCard(domain: WooriBankTransaction): VirtualAccount {
+        return virtualAccountFindAdapter.findCardConnectedVirtualAccount(domain.accountNo)
+            .takeIf { it.isExistsParAndServiceId() }
+            // `par` & `serviceId` 가 없는 경우, 예외 발생
+            ?: throw ResourceNotFoundException(ErrorCode.VIRTUAL_ACCOUNT_HAS_NOT_CONNECTED_CARD)
+    }
+
+    private fun findVirtualAccountBankRechargerId(domain: WooriBankTransaction): String {
+        return virtualAccountBankFindAdapter.findByBankCode(domain.bankCode).rechargerId
     }
 
     private fun findRechargeTransactionId(domain: WooriBankTransaction): String {
@@ -160,28 +158,26 @@ class WooriBankTransactionService(
             .transactionId!!
     }
 
-    private fun depositConfirmProc(domain: WooriBankTransaction): WooriBankTransaction {
-        return try {
-            findSuccessRechargeTransaction(domain.tranNo, domain.accountNo)
-                .checkIfDepositCanBeConfirmed()
-                .takeIf { true }
-                .let { domain.confirmed().success(responseCode = `0000`) }
-        } catch (e: Exception) {
-            errorResponse(domain, e)
-        }
-    }
-
     private fun findSuccessRechargeTransaction(tranNo: String, accountNo: String): RechargeTransaction {
         return rechargeTransactionFindAdapter.findSuccessRechargeTransaction(tranNo, accountNo)
     }
 
-    private fun afterRechargeCancelProc(domain: WooriBankTransaction): WooriBankTransaction {
+    private fun afterProc(domain: WooriBankTransaction): WooriBankTransaction {
         return try {
             // 입금 내역 집계 Cache 업데이트 저장
             saveWooriBankAggregationCache(domain)
         } catch (e: Exception) {
+            if (domain.messageType == WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT) {
+                // '입금' 요청 예외 발생하는 경우, 충전 내역 완료 거래 취소 처리
+                depositCancelProc(domain)
+            }
             throw e
         }
+    }
+
+    private fun errorResponse(domain: WooriBankTransaction, exception: Exception): WooriBankTransaction {
+        logger.error(exception)
+        return domain.fail(exception)
     }
 
 }

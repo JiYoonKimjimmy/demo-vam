@@ -80,7 +80,7 @@ class WooriBankManagementEntity(
 
     @Convert(converter = EncryptionCustomerInfoConverter::class)
     @Column(name = "ENC_DEPSP_NM")
-    val depositorName: String,
+    val depositorName: String?,
 
     @Convert(converter = EncryptionCustomerInfoConverter::class)
     @Column(name = "ENC_VT_ACNO")
@@ -93,13 +93,13 @@ class WooriBankManagementEntity(
     val accountBalance: Long,
 
     @Column(name = "CSH_DEPS_YN")
-    val cashDepositYn: String,
+    val cashDepositYn: String?,
 
     @Column(name = "WR_BANK_CSCK_AMT")
     val cashierCheckAmount: Long,
 
     @Column(name = "WR_BANK_BRCH_TYPE_CD")
-    val branchCode: String,
+    val branchCode: String?,
 
     @Column(name = "DEPS_CFM_NOTI_YN")
     @Enumerated(EnumType.STRING)

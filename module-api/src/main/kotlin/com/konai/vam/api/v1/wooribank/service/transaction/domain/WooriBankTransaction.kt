@@ -2,6 +2,7 @@ package com.konai.vam.api.v1.wooribank.service.transaction.domain
 
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.api.v1.wooribank.service.common.WooriBankErrorResponse
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.YesOrNo
 import com.konai.vam.core.repository.virtualaccountbank.VirtualAccountBankConst
@@ -11,8 +12,7 @@ data class WooriBankTransaction(
     val identifierCode: String,
     val companyNo : String,
     val institutionCode : String,
-    val messageTypeCode: String,
-    val businessTypeCode: String,
+    val messageType: WooriBankMessageType,
     val transmissionCount: Int,
     val messageNo: String,
     val transmissionDate: String,
@@ -28,11 +28,11 @@ data class WooriBankTransaction(
     val otherCashierCheckAmount: Long,
     val etcOtherCashierCheckAmount: Long,
     val trBranch: String,
-    val depositorName: String,
+    val depositorName: String?,
     val accountNo: String,
-    val cashDepositYn: String,
+    val cashDepositYn: String?,
     val cashierCheckAmount: Long,
-    val branchCode: String,
+    val branchCode: String?,
     val responseMessage: String? = null,
     val depositConfirm: YesOrNo = YesOrNo.N
 ) {
@@ -61,7 +61,7 @@ data class WooriBankTransaction(
         )
     }
 
-    fun confirmed(): WooriBankTransaction {
+    fun depositConfirmed(): WooriBankTransaction {
         return this.copy(depositConfirm = YesOrNo.Y)
     }
 

@@ -36,12 +36,12 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
     val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()
 
     given("우리은행 가상 계좌 관리 전문 연동 요청되어") {
-        val messageNo = UUID.randomUUID().toString().substring(0, 6)
-        val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
-
         `when`("전문 번호가 미정의된 요청인 경우") {
+            val messageNo = UUID.randomUUID().toString().substring(0, 6)
             val messageTypeCode = "9999"
             val businessTypeCode = "999"
+            val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
+
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
             val result = wooriBankManagementService.management(domain)
 
@@ -51,7 +51,8 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             }
 
             then("우리은행 전문 연동 내역 DB 조회하여 정상 확인한다") {
-                val entity = wooriBankManagementEntityAdapter.findByPredicate(WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate)).orElse(null)
+                val predicate = WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
                 entity shouldNotBe null
                 entity.responseCode shouldBe K401
                 entity.responseMessage shouldBe "Woori bank message code is invalid"
@@ -59,23 +60,27 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("동일한 '전문코드' & '전문번호' & '전송일자' 중복 연동 내역 정보 있는 경우") {
-            // 우리은행 전문 연동 내역 저장
-            val messageTypeCode = "0200"
-            val businessTypeCode = "400"
-            val messageCode = WooriBankMessageType.find(messageTypeCode, businessTypeCode).requestCode
-            wooriBankManagementEntityAdapter.save(messageCode = messageCode, messageNo = messageNo, transmissionDate = transmissionDate, responseCode = `0000`)
-
+            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_INQUIRY
+            val messageTypeCode = messageType.requestCode.messageTypeCode
+            val businessTypeCode = messageType.requestCode.businessTypeCode
+            val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
+
+            // 우리은행 전문 연동 내역 저장
+            wooriBankManagementEntityAdapter.save(messageType.requestCode, messageNo, transmissionDate, `0000`)
+
             val result = wooriBankManagementService.management(domain)
 
             then("'0000' responseCode 처리하여 응답 성공한다") {
-                result.messageTypeCode shouldBe "0210"
-                result.businessTypeCode shouldBe "400"
+                result.messageTypeCode shouldBe messageType.responseCode.messageTypeCode
+                result.businessTypeCode shouldBe messageType.responseCode.businessTypeCode
                 result.responseCode shouldBe `0000`
             }
 
-            then("우리은행 전문 연동 내역 DB 조회하여 정상 확인한다") {
-                val entity = wooriBankManagementEntityAdapter.findByPredicate(WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate)).orElse(null)
+            then("우리은행 전문 연동 요청 내역 DB 조회하여 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate, `0000`)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
                 entity.messageTypeCode shouldBe "0200"
                 entity.businessTypeCode shouldBe "400"
                 entity.responseCode shouldBe `0000`
@@ -83,6 +88,9 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '조회(0200-400)' 전문 요청인 경우") {
+            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
+
             val domain = wooriBankManagementFixture.make("0200", "400", messageNo)
             val result = wooriBankManagementService.management(domain)
 
@@ -91,9 +99,19 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
                 result.messageTypeCode shouldBe "0210"
                 result.businessTypeCode shouldBe "400"
             }
+
+            then("우리은행 '조회(0200-400)' 전문 연동 요청 내역 DB 조회하여 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate("0200", "400", messageNo, transmissionDate, `0000`)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
+                entity.messageTypeCode shouldBe "0200"
+                entity.businessTypeCode shouldBe "400"
+                entity.responseCode shouldBe `0000`
+            }
         }
 
         `when`("가상 계좌 '입금(0200-600)' 전문 요청인 경우") {
+            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val accountNo = UUID.randomUUID().toString()
             val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.messageTypeCode
             val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.businessTypeCode
@@ -114,7 +132,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val nrNumber = "nrNumber"
             every { mockCsRestClient.postRechargesSystemManuals(any()) } returns CsPostRechargesSystemManualsResponse(transactionId = transactionId, nrNumber = nrNumber)
             // 우리은행 집계 cache 정보 mocking 처리
-            val aggregateDate = LocalDate.now().convertPatternOf(DATE_BASIC_PATTERN)
+            val aggregateDate = LocalDate.now().convertPatternOf()
             val count = 1L
             val amount = domain.trAmount.toLong()
             val cache = WooriBankAggregationCache(aggregateDate)
@@ -128,8 +146,9 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
                 result.responseCode shouldBe `0000`
             }
 
-            then("우리은행 전문 연동 내역 DB 조회하여 정상 확인한다") {
-                val entity = wooriBankManagementEntityAdapter.findByPredicate(WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate)).orElse(null)
+            then("우리은행 '입금(0200-600)' 전문 연동 요청 내역 DB 조회하여 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate("0200", "600", messageNo, transmissionDate, `0000`)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
                 entity.messageTypeCode shouldBe "0200"
                 entity.businessTypeCode shouldBe "600"
                 entity.responseCode shouldBe `0000`
@@ -137,8 +156,11 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '입금 취소(0420-700)' 전문 요청인 경우") {
-            val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.messageTypeCode
-            val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.businessTypeCode
+            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
+            val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
+            val messageTypeCode = messageType.requestCode.messageTypeCode
+            val businessTypeCode = messageType.requestCode.businessTypeCode
             val orgMessageNo = UUID.randomUUID().toString().substring(0, 6)
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = orgMessageNo)
 
@@ -166,15 +188,63 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
                 result.responseCode shouldBe `0000`
             }
 
-            then("우리은행 전문 연동 내역 DB 조회하여 정상 확인한다") {
-                val entity = wooriBankManagementEntityAdapter.findByPredicate(WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate)).orElse(null)
+            then("우리은행 '입금 취소(0420-700)' 전문 연동 요청 내역 DB 조회하여 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate("0420", "700", messageNo, transmissionDate, `0000`)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
                 entity.messageTypeCode shouldBe "0420"
                 entity.businessTypeCode shouldBe "700"
                 entity.responseCode shouldBe `0000`
+                entity.messageNo shouldBe messageNo
+                entity.orgMessageNo shouldBe orgMessageNo
+            }
+        }
+
+        `when`("가상 계좌 '입금 자동 취소(0420-700)/(전문번호 = 원전문번호)' 전문 요청인 경우") {
+            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
+            val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
+            val messageTypeCode = messageType.requestCode.messageTypeCode
+            val businessTypeCode = messageType.requestCode.businessTypeCode
+            val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = messageNo)
+
+            // 충전 내역 원거래 정보 저장
+            rechargeTransactionEntityAdaptor.save(tranNo = "${domain.trDate}${domain.trTime}$messageNo", accountNo = domain.accountNo)
+            // 가상 계좌 정보 저장 처리
+            val accountNo = domain.accountNo
+            val par = "par$accountNo"
+            val serviceId = "serviceId"
+            virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+            // CS 시스템 충전 요청 성공 mocking 처리
+            every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } returns CsPostRechargesSystemManualsReversalResponse(transactionId = "transactionId")
+            // 우리은행 집계 cache 정보 mocking 처리
+            val aggregateDate = LocalDate.now().convertPatternOf(DATE_BASIC_PATTERN)
+            val count = 1L
+            val amount = domain.trAmount.toLong()
+            val cache = WooriBankAggregationCache(aggregateDate)
+            every { mockNumberRedisTemplate.opsForValue().increment(cache.depositCancelCountCacheKey, count) } returns count
+            every { mockNumberRedisTemplate.opsForValue().increment(cache.depositCancelAmountCacheKey, amount) } returns amount
+            every { mockNumberRedisTemplate.opsForValue().multiGet(cache.keys) } returns listOf(0, 0, count, amount)
+
+            val result = wooriBankManagementService.management(domain)
+
+            then("가상 계좌 입금 자동 취소(충전 취소) 처리하여 응답 성공한다") {
+                result.responseCode shouldBe `0000`
+            }
+
+            then("우리은행 '입금 자동 취소(0420-700)' 전문 연동 요청 내역 DB 조회하여 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate("0420", "700", messageNo, transmissionDate, `0000`)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
+                entity.messageTypeCode shouldBe "0420"
+                entity.businessTypeCode shouldBe "700"
+                entity.responseCode shouldBe `0000`
+                entity.messageNo shouldBe messageNo
+                entity.orgMessageNo shouldBe messageNo
             }
         }
 
         `when`("가상 계좌 '입금 확인 통보(0200-800)' 전문 요청인 경우") {
+            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.messageTypeCode
             val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.businessTypeCode
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
@@ -190,12 +260,12 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
                 result.depositConfirm shouldBe Y
             }
 
-            then("우리은행 전문 연동 내역 DB 조회하여 정상 확인한다") {
-                val entity = wooriBankManagementEntityAdapter.findByPredicate(WooriBankManagementPredicate(messageTypeCode, businessTypeCode, messageNo, transmissionDate)).orElse(null)
+            then("우리은행 '입금 확인 통보(0200-800)' 전문 연동 요청 내역 DB 조회하여 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate("0200", "800", messageNo, transmissionDate, `0000`)
+                val entity = wooriBankManagementEntityAdapter.findByPredicate(predicate).orElse(null)
                 entity.messageTypeCode shouldBe "0200"
                 entity.businessTypeCode shouldBe "800"
                 entity.responseCode shouldBe `0000`
-                entity.depositConfirm shouldBe Y
             }
         }
     }

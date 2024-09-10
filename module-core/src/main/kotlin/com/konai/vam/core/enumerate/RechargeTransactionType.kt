@@ -5,10 +5,10 @@ enum class RechargeTransactionType {
     CANCEL;
 
     companion object {
-        fun of(messageTypeCode: String): RechargeTransactionType {
-            return when (messageTypeCode) {
-                "0200" -> RECHARGE
-                "0420" -> CANCEL
+        fun of(messageType: WooriBankMessageType): RechargeTransactionType {
+            return when (messageType) {
+                WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT -> RECHARGE
+                WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL -> CANCEL
                 else -> RECHARGE
             }
         }

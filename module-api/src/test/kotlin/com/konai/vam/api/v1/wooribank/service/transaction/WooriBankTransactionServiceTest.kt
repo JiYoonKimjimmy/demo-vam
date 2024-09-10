@@ -130,14 +130,14 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
     }
 
     given("우리은행 가상 계좌 '입금 취소' 전문 요청되어") {
-        val messageCode = VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode
+        val messageType = VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
         val trDate = LocalDate.now().convertPatternOf()
         val trTime = LocalTime.now().convertPatternOf()
         val messageNo = UUID.randomUUID().toString().substring(0, 6)
         val orgMessageNo = UUID.randomUUID().toString().substring(0, 6)
         val accountNo = UUID.randomUUID().toString()
 
-        val domain = wooriBankTransactionFixture.make(messageCode = messageCode, messageNo = messageNo, orgMessageNo = orgMessageNo, accountNo = accountNo, trDate = trDate, trTime = trTime)
+        val domain = wooriBankTransactionFixture.make(messageType = messageType, messageNo = messageNo, orgMessageNo = orgMessageNo, accountNo = accountNo, trDate = trDate, trTime = trTime)
 
         `when`("'orgMessageNo' 기준 충전 거래 정보 존재하지 않는 경우") {
             val result = wooriBankTransactionService.depositCancel(domain)
@@ -244,9 +244,9 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
     }
 
     given("우리은행 가상 계좌 '입금 확인 통보' 전문 요청되어") {
-        val messageCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode
+        val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM
         val messageNo = UUID.randomUUID().toString().substring(0, 6)
-        val domain = wooriBankTransactionFixture.make(messageCode = messageCode, messageNo = messageNo)
+        val domain = wooriBankTransactionFixture.make(messageType = messageType, messageNo = messageNo)
 
         `when`("'messageNo' 기준 충전 거래 정보 존재하지 않는 경우") {
             val result = wooriBankTransactionService.depositConfirm(domain)

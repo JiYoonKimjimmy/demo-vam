@@ -35,7 +35,7 @@ class WooriBankManagementEntityAdapterFixture : WooriBankManagementEntityAdapter
                 && ifNotNullEquals(predicate.businessTypeCode, it.businessTypeCode)
                 && ifNotNullEquals(predicate.messageNo, it.messageNo)
                 && ifNotNullEquals(predicate.responseCode, it.responseCode)
-                && ifNotNullEquals(predicate.messageTypeCode, it.messageTypeCode)
+                && ifNotNullEquals(predicate.transmissionDate, it.transmissionDate)
             }
             .let { Optional.ofNullable(it) }
     }

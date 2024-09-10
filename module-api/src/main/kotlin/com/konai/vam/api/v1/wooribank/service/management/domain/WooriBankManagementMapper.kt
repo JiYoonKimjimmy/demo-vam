@@ -1,6 +1,7 @@
 package com.konai.vam.api.v1.wooribank.service.management.domain
 
 import com.konai.vam.api.v1.wooribank.service.transaction.domain.WooriBankTransaction
+import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.repository.wooribank.management.entity.WooriBankManagementEntity
 import com.konai.vam.core.repository.wooribank.management.jdsl.WooriBankManagementPredicate
 import org.springframework.stereotype.Component
@@ -19,6 +20,7 @@ class WooriBankManagementMapper {
 
     fun entityToDomain(entity: WooriBankManagementEntity): WooriBankManagement {
         return WooriBankManagement(
+            id = entity.id,
             identifierCode = entity.identifierCode,
             companyNo = entity.companyNo,
             institutionCode = entity.institutionCode,
@@ -53,6 +55,7 @@ class WooriBankManagementMapper {
 
     fun domainToEntity(domain: WooriBankManagement): WooriBankManagementEntity {
         return WooriBankManagementEntity(
+            id = domain.id,
             identifierCode = domain.identifierCode,
             companyNo = domain.companyNo,
             institutionCode = domain.institutionCode,
@@ -90,8 +93,7 @@ class WooriBankManagementMapper {
             identifierCode = domain.identifierCode,
             companyNo = domain.companyNo,
             institutionCode = domain.institutionCode,
-            messageTypeCode = domain.messageTypeCode,
-            businessTypeCode = domain.businessTypeCode,
+            messageType = WooriBankMessageType.find(domain.messageTypeCode, domain.businessTypeCode),
             transmissionCount = domain.transmissionCount,
             messageNo = domain.messageNo,
             transmissionDate = domain.transmissionDate,
@@ -120,8 +122,8 @@ class WooriBankManagementMapper {
             identifierCode = transaction.identifierCode,
             companyNo = transaction.companyNo,
             institutionCode = transaction.institutionCode,
-            messageTypeCode = transaction.messageTypeCode,
-            businessTypeCode = transaction.businessTypeCode,
+            messageTypeCode = transaction.messageType.requestCode.messageTypeCode,
+            businessTypeCode = transaction.messageType.requestCode.businessTypeCode,
             transmissionCount = transaction.transmissionCount,
             messageNo = transaction.messageNo,
             transmissionDate = transaction.transmissionDate,

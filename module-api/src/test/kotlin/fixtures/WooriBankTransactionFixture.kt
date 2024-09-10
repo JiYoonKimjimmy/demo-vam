@@ -16,7 +16,7 @@ class WooriBankTransactionFixture {
 
     fun make(
         id: Long? = null,
-        messageCode: WooriBankMessageType.Code = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode,
+        messageType: WooriBankMessageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT,
         messageNo: String,
         orgMessageNo: String? = null,
         accountNo: String = "1234567890",
@@ -30,8 +30,7 @@ class WooriBankTransactionFixture {
             identifierCode = WOORI_BANK_IDENTIFIER_CODE,
             companyNo = WOORI_BANK_COMPANY_NO,
             institutionCode = WOORI_BANK_INSTITUTION_CODE,
-            messageTypeCode = messageCode.messageTypeCode,
-            businessTypeCode = messageCode.businessTypeCode,
+            messageType = messageType,
             transmissionCount = 0,
             messageNo = messageNo,
             transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN),

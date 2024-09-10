@@ -11,6 +11,7 @@ import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.YesOrNo
 
 data class WooriBankManagement(
+    val id: Long? = null,
     val identifierCode: String,
     val companyNo : String,
     val institutionCode : String,
@@ -31,13 +32,13 @@ data class WooriBankManagement(
     val otherCashierCheckAmount: Int,
     val etcOtherCashierCheckAmount: Int,
     val trBranch: String,
-    val depositorName: String,
+    val depositorName: String?,
     val accountNo: String,
     val accountName: String = WOORI_BANK_ACCOUNT_NAME,
     val accountBalance: Long = WOORI_BANK_ACCOUNT_BALANCE,
-    val cashDepositYn: String,
+    val cashDepositYn: String?,
     val cashierCheckAmount: Int,
-    val branchCode: String,
+    val branchCode: String?,
     val depositConfirm: YesOrNo = YesOrNo.N,
     val responseMessage: String? = null
 ) {
@@ -52,11 +53,23 @@ data class WooriBankManagement(
         }
     }
 
+    fun success(): WooriBankManagement {
+        return this.copy(responseCode = WooriBankResponseCode.`0000`)
+    }
+
     fun fail(exception: Exception): WooriBankManagement {
         val errorResponse = WooriBankErrorResponse.of(exception)
         return this.copy(
             responseCode = errorResponse.responseCode,
             responseMessage = errorResponse.responseMessage
+        )
+    }
+
+    fun convertToResponseCode(): WooriBankManagement {
+        val responseCode = runCatching { WooriBankMessageType.find(this.messageTypeCode, this.businessTypeCode) }.getOrNull()?.responseCode
+        return this.copy(
+            messageTypeCode = responseCode?.messageTypeCode ?: this.messageTypeCode,
+            businessTypeCode = responseCode?.businessTypeCode ?: this.businessTypeCode
         )
     }
 

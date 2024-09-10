@@ -44,4 +44,8 @@ data class VirtualAccount(
         return this
     }
 
+    fun isExistsParAndServiceId(): Boolean {
+        return !this.par.isNullOrEmpty() && !this.serviceId.isNullOrEmpty()
+    }
+
 }
