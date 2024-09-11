@@ -18,7 +18,7 @@ class WooriBankManagementModelMapper {
             messageNo = request.messageNo,
             transmissionDate = request.transmissionDate,
             transmissionTime = request.transmissionTime,
-            responseCode = request.responseCode?.let(WooriBankResponseCode::valueOf),
+            responseCode = request.responseCode?.takeIf { it.isNotEmpty() }?.let(WooriBankResponseCode::valueOf),
             orgMessageNo = request.orgMessageNo,
             parentAccount = request.parentAccount,
             trDate = request.trDate,
