@@ -117,34 +117,10 @@ class WooriBankManagementMapper {
         )
     }
 
-    fun transactionToDomain(transaction: WooriBankTransaction): WooriBankManagement {
-        return WooriBankManagement(
-            identifierCode = transaction.identifierCode,
-            companyNo = transaction.companyNo,
-            institutionCode = transaction.institutionCode,
-            messageTypeCode = transaction.messageType.requestCode.messageTypeCode,
-            businessTypeCode = transaction.messageType.requestCode.businessTypeCode,
-            transmissionCount = transaction.transmissionCount,
-            messageNo = transaction.messageNo,
-            transmissionDate = transaction.transmissionDate,
-            transmissionTime = transaction.transmissionTime,
-            responseCode = transaction.responseCode,
-            orgMessageNo = transaction.orgMessageNo,
-            parentAccount = transaction.parentAccount,
-            trDate = transaction.trDate,
-            trTime = transaction.trTime,
-            tid = transaction.tid,
-            trMedium = transaction.trMedium,
-            trAmount = transaction.trAmount.toInt(),
-            otherCashierCheckAmount = transaction.otherCashierCheckAmount.toInt(),
-            etcOtherCashierCheckAmount = transaction.etcOtherCashierCheckAmount.toInt(),
-            trBranch = transaction.trBranch,
-            depositorName = transaction.depositorName,
-            accountNo = transaction.accountNo,
-            cashDepositYn = transaction.cashDepositYn,
-            cashierCheckAmount = transaction.cashierCheckAmount.toInt(),
-            branchCode = transaction.branchCode,
+    fun transactionToDomain(domain: WooriBankManagement, transaction: WooriBankTransaction): WooriBankManagement {
+        return domain.copy(
             depositConfirm = transaction.depositConfirm,
+            responseCode = transaction.responseCode,
             responseMessage = transaction.responseMessage,
         )
     }

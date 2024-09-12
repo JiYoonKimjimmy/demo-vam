@@ -53,7 +53,7 @@ class WooriBankTransactionService(
      * 우리은행 가상계좌 '입금 확인 통보' 처리
      */
     override fun depositConfirm(domain: WooriBankTransaction): WooriBankTransaction {
-        return depositConfirmProc(domain).let { this.afterProc(it) }
+        return depositConfirmProc(domain)
     }
 
     private fun depositProc(domain: WooriBankTransaction): WooriBankTransaction {
@@ -84,7 +84,7 @@ class WooriBankTransactionService(
         return try {
             findSuccessRechargeTransaction(domain.tranNo, domain.accountNo)
                 .checkIfDepositCanBeConfirmed()
-                .let { domain.depositConfirmed().success(responseCode = `0000`) }
+                .let { domain.depositConfirmed().success() }
         } catch (e: Exception) {
             errorResponse(domain, e)
         }

@@ -155,6 +155,13 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
                 entity.businessTypeCode shouldBe "600"
                 entity.responseCode shouldBe `0000`
             }
+
+            then("우리은행 '입금(0200-600)' 전문 연동 요청 내역 1건 저장 정상 확인한다") {
+                val predicate = WooriBankManagementPredicate("0200", "600", messageNo, transmissionDate)
+                val entities = wooriBankManagementEntityAdapter.findAll(predicate)
+                entities.size shouldBe 1
+                entities.first().id shouldNotBe null
+            }
         }
 
         `when`("가상 계좌 '입금 취소(0420-700)' 전문 요청 성공인 경우") {

@@ -78,7 +78,7 @@ class WooriBankManagementService(
     private fun transactionProc(domain: WooriBankManagement, function: (WooriBankTransaction) -> WooriBankTransaction): WooriBankManagement {
         return wooriBankManagementMapper.domainToTransaction(domain)
             .let(function)
-            .let(wooriBankManagementMapper::transactionToDomain)
+            .let { wooriBankManagementMapper.transactionToDomain(domain, it) }
     }
 
 }
