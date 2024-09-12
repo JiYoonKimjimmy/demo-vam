@@ -16,8 +16,6 @@ import java.time.LocalTime
 
 class WooriBankManagementEntityFixture {
 
-    val entities = mutableListOf<WooriBankManagementEntity>()
-
     fun make(
         messageCode: WooriBankMessageType.Code,
         messageNo: String,
@@ -25,49 +23,6 @@ class WooriBankManagementEntityFixture {
         responseCode: WooriBankResponseCode? = null,
         accountNo: String = "1234567890",
         trAmount: Long = 100000
-    ): WooriBankManagementEntity {
-        return findDuplicated(messageCode, messageNo) ?: generateEntity(messageCode, messageNo, transmissionDate, responseCode, accountNo, trAmount)
-    }
-
-    fun save(
-        messageCode: WooriBankMessageType.Code,
-        messageNo: String,
-        transmissionDate: String,
-        responseCode: WooriBankResponseCode?
-    ): WooriBankManagementEntity {
-        return save(make(messageCode, messageNo, transmissionDate, responseCode))
-    }
-
-    fun save(entity: WooriBankManagementEntity): WooriBankManagementEntity {
-        deleteDuplicated(entity)
-        entity.id = SecureRandom().nextLong()
-        entities += entity
-        return entity
-    }
-
-    private fun deleteDuplicated(entity: WooriBankManagementEntity) {
-        entities.removeIf {
-            it.messageTypeCode == entity.messageTypeCode
-            && it.businessTypeCode == entity.businessTypeCode
-            && it.messageNo == entity.messageNo
-        }
-    }
-
-    private fun findDuplicated(messageCode: WooriBankMessageType.Code, messageNo: String): WooriBankManagementEntity? {
-        return entities.find {
-            it.messageTypeCode == messageCode.messageTypeCode
-            && it.businessTypeCode == messageCode.businessTypeCode
-            && it.messageNo == messageNo
-        }
-    }
-
-    private fun generateEntity(
-        messageCode: WooriBankMessageType.Code,
-        messageNo: String,
-        transmissionDate: String,
-        responseCode: WooriBankResponseCode?,
-        accountNo: String,
-        trAmount: Long
     ): WooriBankManagementEntity {
         return WooriBankManagementEntity(
             id = SecureRandom().nextLong(),

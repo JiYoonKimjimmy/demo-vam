@@ -14,6 +14,7 @@ import java.util.*
 class WooriBankManagementEntityAdapterFixture : WooriBankManagementEntityAdapter {
 
     private val wooriBankManagementEntityFixture = WooriBankManagementEntityFixture()
+    private val entities = mutableListOf<WooriBankManagementEntity>()
 
     fun save(
         messageCode: WooriBankMessageType.Code,
@@ -21,15 +22,18 @@ class WooriBankManagementEntityAdapterFixture : WooriBankManagementEntityAdapter
         transmissionDate: String = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN),
         responseCode: WooriBankResponseCode? = null
     ): WooriBankManagementEntity {
-        return wooriBankManagementEntityFixture.save(messageCode, messageNo, transmissionDate, responseCode)
+        val entity = wooriBankManagementEntityFixture.make(messageCode, messageNo, transmissionDate, responseCode)
+        return save(entity)
     }
 
     override fun save(entity: WooriBankManagementEntity): WooriBankManagementEntity {
-        return wooriBankManagementEntityFixture.save(entity)
+        entities.removeIf { it.id == entity.id }
+        entities += entity
+        return entity
     }
 
     override fun findByPredicate(predicate: WooriBankManagementPredicate): Optional<WooriBankManagementEntity> {
-        return wooriBankManagementEntityFixture.entities
+        return entities
             .find {
                 ifNotNullEquals(predicate.messageTypeCode, it.messageTypeCode)
                 && ifNotNullEquals(predicate.businessTypeCode, it.businessTypeCode)
