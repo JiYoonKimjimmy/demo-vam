@@ -2,6 +2,7 @@ package com.konai.vam.api.v1.wooribank.service.transaction.domain
 
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.api.v1.wooribank.service.common.WooriBankErrorResponse
+import com.konai.vam.core.common.WOORI_BANK_PREFIX
 import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
@@ -38,8 +39,8 @@ data class WooriBankTransaction(
     val depositConfirm: YesOrNo = YesOrNo.N
 ) {
     val bankCode = VirtualAccountBankConst.woori.bankCode
-    val tranNo: String by lazy { "$trDate$trTime$messageNo" }
-    val orgTranNo: String by lazy { "$trDate$trTime$orgMessageNo" }
+    val tranNo: String by lazy { "$WOORI_BANK_PREFIX$trDate$messageNo" }
+    val orgTranNo: String by lazy { "$WOORI_BANK_PREFIX$trDate$orgMessageNo" }
 
     lateinit var par: String
     lateinit var serviceId: String

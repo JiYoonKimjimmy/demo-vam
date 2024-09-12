@@ -159,7 +159,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 충전 내역 원거래 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = "$trDate$trTime$orgMessageNo", accountNo = accountNo)
+        rechargeTransactionEntityAdaptor.save(tranNo = domain.orgTranNo, accountNo = accountNo)
 
         `when`("'accountNo' 기준 가상 계좌 정보 없는 경우") {
             val result = wooriBankTransactionService.depositCancel(domain)

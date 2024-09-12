@@ -2,6 +2,7 @@ package com.konai.vam.api.v1.wooribank.service.management
 
 import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
+import com.konai.vam.core.common.WOORI_BANK_PREFIX
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.RestClientServiceException
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.CONNECTED
@@ -174,7 +175,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = orgMessageNo)
 
             // 충전 내역 원거래 정보 저장
-            rechargeTransactionEntityAdaptor.save(tranNo = "${domain.trDate}${domain.trTime}$orgMessageNo", accountNo = domain.accountNo)
+            rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$orgMessageNo", accountNo = domain.accountNo)
             // 가상 계좌 정보 저장 처리
             val accountNo = domain.accountNo
             val par = "par$accountNo"
@@ -217,7 +218,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = messageNo)
 
             // 충전 내역 원거래 정보 저장
-            rechargeTransactionEntityAdaptor.save(tranNo = "${domain.trDate}${domain.trTime}$messageNo", accountNo = domain.accountNo)
+            rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$messageNo", accountNo = domain.accountNo)
             // 가상 계좌 정보 저장 처리
             val accountNo = domain.accountNo
             val par = "par$accountNo"
@@ -259,8 +260,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
 
             // 충전 내역 원거래 '충전 실패' 정보 저장
-            val tranNo = "${domain.trDate}${domain.trTime}${domain.messageNo}"
-            rechargeTransactionEntityAdaptor.save(tranNo = tranNo, accountNo = domain.accountNo)
+            rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}${domain.messageNo}", accountNo = domain.accountNo)
 
             val result = wooriBankManagementService.management(domain)
 
@@ -288,7 +288,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = messageNo)
 
         // 충전 내역 원거래 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = "${domain.trDate}${domain.trTime}$messageNo", accountNo = domain.accountNo)
+        rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$messageNo", accountNo = domain.accountNo)
         // 가상 계좌 정보 저장 처리
         val accountNo = domain.accountNo
         val par = "par$accountNo"

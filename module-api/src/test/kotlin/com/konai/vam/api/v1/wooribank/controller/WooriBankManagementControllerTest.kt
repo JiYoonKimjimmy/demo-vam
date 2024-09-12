@@ -2,6 +2,7 @@ package com.konai.vam.api.v1.wooribank.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.core.common.WOORI_BANK_PREFIX
 import com.konai.vam.core.enumerate.RechargeTransactionCancelStatus
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
 import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
@@ -64,7 +65,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
                 // 충전 거래 내역 조회 검증
                 println("${request.trDate}${request.trTime}${request.messageNo}")
                 val successResult = rechargeTransactionRepository.findByTranNoAndAccountNoAndTranTypeAndResult(
-                    tranNo = "${request.trDate}${request.trTime}${request.messageNo}",
+                    tranNo = "$WOORI_BANK_PREFIX${request.trDate}${request.messageNo}",
                     accountNo = accountNo,
                     tranType = RECHARGE,
                     result = SUCCESS
@@ -96,7 +97,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
             then("카드 충전 취소 완료 성공한다") {
                 // 충전 취소 거래 내역 조회 검증
                 val successResult = rechargeTransactionRepository.findByTranNoAndAccountNoAndTranTypeAndResult(
-                    tranNo = "${request.trDate}${request.trTime}${request.orgMessageNo}",
+                    tranNo = "$WOORI_BANK_PREFIX${request.trDate}${request.orgMessageNo}",
                     accountNo = accountNo,
                     tranType = RECHARGE,
                     result = SUCCESS
@@ -105,7 +106,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
                 successResult?.cancelStatus shouldBe RechargeTransactionCancelStatus.CANCEL
 
                 val cancelResult = rechargeTransactionRepository.findByTranNoAndAccountNoAndTranTypeAndResult(
-                    tranNo = "${request.trDate}${request.trTime}${request.messageNo}",
+                    tranNo = "$WOORI_BANK_PREFIX${request.trDate}${request.messageNo}",
                     accountNo = accountNo,
                     tranType = CANCEL,
                     result = SUCCESS
