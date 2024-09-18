@@ -37,7 +37,7 @@ management:
 
 # masking
 masking:
-  fields: FIELD|token|6|4, FIELD|aspId|4|4, FIELD|di|0|0, FIELD|ci|0|0, FIELD|mpaId|0|0, FIELD|address|2|0, FIELD|mobileTokenList|2|0, FIELD|cardInfoList|2|0
+  fields: token|6|4
 
 # encrypt cubeone
 database:
