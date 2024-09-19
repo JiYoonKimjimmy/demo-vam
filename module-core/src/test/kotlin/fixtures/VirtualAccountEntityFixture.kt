@@ -15,7 +15,7 @@ class VirtualAccountEntityFixture {
 
     fun make(
         id: Long? = SecureRandom().nextLong(),
-        accountNo: String = UUID.randomUUID().toString(),
+        accountNo: String = UUID.randomUUID().toString().replace("-", "").substring(0, 14),
         bankCode: String = "020",
         connectType: VirtualAccountConnectType = FIXATION,
         status: VirtualAccountStatus = ACTIVE,

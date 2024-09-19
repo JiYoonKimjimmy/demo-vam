@@ -54,6 +54,6 @@ class VirtualAccountEntity(
 
     @Convert(converter = EncryptionCustomerInfoConverter::class)
     @Column(name = "ENC_MACN_NO")
-    val parentAccountNo: String? = null,
+    val parentAccountNo: String? = null
 
-    ) : BaseEntity()
+) : BaseEntity()
