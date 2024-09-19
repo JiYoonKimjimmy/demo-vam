@@ -8,7 +8,6 @@ import com.konai.vam.core.enumerate.YesOrNo
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
-import org.apache.commons.lang3.StringUtils.substring
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
