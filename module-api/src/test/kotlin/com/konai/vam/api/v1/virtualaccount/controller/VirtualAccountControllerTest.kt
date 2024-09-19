@@ -114,7 +114,7 @@ class VirtualAccountControllerTest(
 
         `when`("'accountNo' 일치한 가상 계좌 목록 조회인 경우") {
             val accountNumber = "1234567890"
-            val request = FindAllVirtualAccountRequest(accountNumber = accountNumber, pageable = PageableRequest(number, size))
+            val request = FindAllVirtualAccountRequest(accountNo = accountNumber, pageable = PageableRequest(number, size))
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
             val content = listOf(virtualAccountFixture.make())

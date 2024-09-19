@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity
 
 data class FindAllVirtualAccountRequest(
     @field:Length(min = 1, max = 20, message = "Account number lengths are allowed from 1 to 20 characters.")
-    val accountNumber: String? = null,
+    val accountNo: String? = null,
     @field:Pattern(regexp = "\\d{3}", message = "Bank code must be exactly 3 digits")
     val bankCode: String? = null,
     val connectType: VirtualAccountConnectType? = null,

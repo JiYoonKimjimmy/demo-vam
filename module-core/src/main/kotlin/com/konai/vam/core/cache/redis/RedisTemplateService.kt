@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 class RedisTemplateService(
     private val numberRedisTemplate: RedisTemplate<String, Number>,
-) : RedisTemplateAdaptor {
+) : RedisTemplateAdapter {
 
     override fun getNumberMultiValues(keys: List<String>): List<Number> {
         return numberRedisTemplate.opsForValue().multiGet(keys) ?: emptyList()

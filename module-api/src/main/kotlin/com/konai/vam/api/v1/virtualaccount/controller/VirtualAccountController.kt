@@ -26,6 +26,15 @@ class VirtualAccountController(
             .success(HttpStatus.CREATED)
     }
 
+    @PostMapping("/one")
+    fun findOne(@RequestBody @Valid request: FindOneVirtualAccountRequest): ResponseEntity<FindOneVirtualAccountResponse> {
+        return virtualAccountModelMapper.requestToPredicate(request)
+            .let { virtualAccountAdapter.findOne(it) }
+            .let { virtualAccountModelMapper.domainToModel(it) }
+            .let { FindOneVirtualAccountResponse(it) }
+            .success(HttpStatus.OK)
+    }
+
     @PostMapping("/all")
     fun findPage(@RequestBody @Valid request: FindAllVirtualAccountRequest = FindAllVirtualAccountRequest()): ResponseEntity<FindAllVirtualAccountResponse> {
         return virtualAccountModelMapper.requestToPredicate(request)

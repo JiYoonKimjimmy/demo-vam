@@ -1,6 +1,6 @@
 package com.konai.vam.core.cache.redis
 
-interface RedisTemplateAdaptor {
+interface RedisTemplateAdapter {
 
     fun getNumberMultiValues(keys: List<String>): List<Number>
 

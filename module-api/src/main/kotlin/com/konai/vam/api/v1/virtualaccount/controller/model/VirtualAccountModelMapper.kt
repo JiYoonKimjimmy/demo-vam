@@ -17,9 +17,16 @@ class VirtualAccountModelMapper {
         )
     }
 
+    fun requestToPredicate(request: FindOneVirtualAccountRequest): VirtualAccountPredicate {
+        return VirtualAccountPredicate(
+            accountNo = request.accountNo,
+            par = request.par
+        )
+    }
+
     fun requestToPredicate(request: FindAllVirtualAccountRequest): VirtualAccountPredicate {
         return VirtualAccountPredicate(
-            accountNo = request.accountNumber,
+            accountNo = request.accountNo,
             bankCode = request.bankCode,
             connectType = request.connectType,
         )
@@ -31,6 +38,7 @@ class VirtualAccountModelMapper {
             bankCode = domain.bankAccount.bankCode,
             connectType = domain.connectType,
             status = domain.status,
+            par = domain.par
         )
     }
 

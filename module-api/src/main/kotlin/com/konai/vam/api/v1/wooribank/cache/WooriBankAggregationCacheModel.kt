@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.cache
 
-import com.konai.vam.core.cache.redis.RedisTemplateAdaptor
+import com.konai.vam.core.cache.redis.RedisTemplateAdapter
 import com.konai.vam.core.enumerate.RechargeTransactionType
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
 import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
@@ -29,18 +29,18 @@ data class WooriBankAggregationCache(
         )
     }
 
-    fun incremet(redisTemplateAdaptor: RedisTemplateAdaptor, amount: Long, tranType: RechargeTransactionType): WooriBankAggregationCache {
+    fun increment(redisTemplateAdapter: RedisTemplateAdapter, amount: Long, tranType: RechargeTransactionType): WooriBankAggregationCache {
         return when (tranType) {
             RECHARGE -> {
                 copy(
-                    konaDepositCount = redisTemplateAdaptor.increment(this.depositCountCacheKey).toInt(),
-                    konaDepositAmount = redisTemplateAdaptor.increment(this.depositAmountCacheKey, amount)
+                    konaDepositCount = redisTemplateAdapter.increment(this.depositCountCacheKey).toInt(),
+                    konaDepositAmount = redisTemplateAdapter.increment(this.depositAmountCacheKey, amount)
                 )
             }
             CANCEL -> {
                 copy(
-                    konaDepositCancelCount = redisTemplateAdaptor.increment(this.depositCancelCountCacheKey).toInt(),
-                    konaDepositCancelAmount = redisTemplateAdaptor.increment(this.depositCancelAmountCacheKey, amount)
+                    konaDepositCancelCount = redisTemplateAdapter.increment(this.depositCancelCountCacheKey).toInt(),
+                    konaDepositCancelAmount = redisTemplateAdapter.increment(this.depositCancelAmountCacheKey, amount)
                 )
             }
         }

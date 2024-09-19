@@ -7,6 +7,7 @@ import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionServi
 import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransactionMapper
 import com.konai.vam.api.v1.sequencegenerator.service.SequenceGeneratorService
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindService
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountService
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.api.v1.virtualaccountbank.service.VirtualAccountBankFindService
 import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBankMapper
@@ -29,6 +30,7 @@ import fixtures.*
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.mockk
 import org.springframework.data.redis.core.RedisTemplate
+import java.util.UUID
 
 abstract class CustomBehaviorSpec(body: BaseBehaviorSpec.() -> Unit = {}) : BaseBehaviorSpec() {
     init {
@@ -40,18 +42,20 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val wooriBankTransactionMapper = WooriBankTransactionMapper()
 
-    private val virtualAccountEntityAdaptor = VirtualAccountEntityAdapterFixture()
+    private val virtualAccountEntityAdapter = VirtualAccountEntityAdapterFixture()
     private val virtualAccountMapper = VirtualAccountMapper()
-    private val virtualAccountFindService = VirtualAccountFindService(virtualAccountEntityAdaptor, virtualAccountMapper)
 
-    private val virtualAccountBankEntityAdaptor = VirtualAccountBankEntityAdapterFixture()
+    private val virtualAccountService = VirtualAccountService(virtualAccountEntityAdapter, virtualAccountMapper)
+    private val virtualAccountFindService = VirtualAccountFindService(virtualAccountEntityAdapter, virtualAccountMapper)
+
+    private val virtualAccountBankEntityAdapter = VirtualAccountBankEntityAdapterFixture()
     private val virtualAccountBankMapper = VirtualAccountBankMapper()
-    private val virtualAccountBankFindService = VirtualAccountBankFindService(virtualAccountBankEntityAdaptor, virtualAccountBankMapper)
+    private val virtualAccountBankFindService = VirtualAccountBankFindService(virtualAccountBankEntityAdapter, virtualAccountBankMapper)
 
-    private val rechargeTransactionEntityAdaptor = RechargeTransactionRepositoryFixture()
+    private val rechargeTransactionEntityAdapter = RechargeTransactionRepositoryFixture()
     private val rechargeTransactionMapper = RechargeTransactionMapper()
-    private val rechargeTransactionSaveService = RechargeTransactionSaveService(rechargeTransactionEntityAdaptor, rechargeTransactionMapper)
-    private val rechargeTransactionFindService = RechargeTransactionFindService(rechargeTransactionEntityAdaptor, rechargeTransactionMapper)
+    private val rechargeTransactionSaveService = RechargeTransactionSaveService(rechargeTransactionEntityAdapter, rechargeTransactionMapper)
+    private val rechargeTransactionFindService = RechargeTransactionFindService(rechargeTransactionEntityAdapter, rechargeTransactionMapper)
 
     private val mockNumberRedisTemplate = mockk<RedisTemplate<String, Number>>()
     private val redisTemplateService = RedisTemplateService(mockNumberRedisTemplate)
@@ -90,8 +94,11 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val virtualAccountCardBatchService = VirtualAccountCardBatchService(mockVamBatchRestClient)
 
     private val wooriBankMessageFixture = WooriBankMessageFixture()
+    private val virtualAccountFixture = VirtualAccountFixture()
+    private val virtualAccountEntityFixture = VirtualAccountEntityFixture()
 
     // service
+    fun virtualAccountService() = this.virtualAccountService
     fun virtualAccountFindService() = this.virtualAccountFindService
     fun virtualAccountBankFindService() = this.virtualAccountBankFindService
     fun virtualAccountCardBatchService() = this.virtualAccountCardBatchService
@@ -106,14 +113,14 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun wooriBankWorkService() = this.wooriBankWorkService
     fun redisTemplateService() = this.redisTemplateService
 
-    // entity adaptor
-    fun virtualAccountEntityAdaptor() = this.virtualAccountEntityAdaptor
-    fun virtualAccountBankEntityAdaptor() = this.virtualAccountBankEntityAdaptor
+    // entity adapter
+    fun virtualAccountEntityAdapter() = this.virtualAccountEntityAdapter
+    fun virtualAccountBankEntityAdapter() = this.virtualAccountBankEntityAdapter
     fun wooriBankAggregationEntityAdapter() = this.wooriBankAggregationEntityAdapter
     fun wooriBankManagementEntityAdapter() = this.wooriBankManagementEntityAdapter
 
     // repository
-    fun rechargeTransactionEntityAdaptor() = this.rechargeTransactionEntityAdaptor
+    fun rechargeTransactionEntityAdapter() = this.rechargeTransactionEntityAdapter
 
     // mapper
     fun virtualAccountMapper() = this.virtualAccountMapper
@@ -125,11 +132,18 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun mockVamBatchRestClient() = this.mockVamBatchRestClient
 
     // fixture
+    fun virtualAccountFixture() = this.virtualAccountFixture
+    fun virtualAccountEntityFixture() = this.virtualAccountEntityFixture
     fun wooriBankTransactionFixture() = this.wooriBankTransactionFixture
     fun rechargeTransactionFixture() = this.rechargeTransactionFixture
     fun rechargeTransactionEntityFixture() = this.rechargeTransactionEntityFixture
     fun wooriBankRestClientModelFixture() = this.wooriBankRestClientModelFixture
     fun wooriBankManagementFixture() = this.wooriBankManagementFixture
     fun wooriBankCommonMessageFixture() = this.wooriBankMessageFixture
+
+    // etc functions
+    fun generateUUID(): String {
+        return UUID.randomUUID().toString()
+    }
 
 }

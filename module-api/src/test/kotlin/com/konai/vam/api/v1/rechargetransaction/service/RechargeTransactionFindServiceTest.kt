@@ -12,13 +12,13 @@ import java.time.LocalDateTime
 
 class RechargeTransactionFindServiceTest : CustomBehaviorSpec({
 
-    val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()
+    val rechargeTransactionEntityAdapter = rechargeTransactionEntityAdapter()
     val rechargeTransactionFindService = rechargeTransactionFindService()
 
     given("충전 처리 완료 내역 조회 요청하여") {
         val tranNo = LocalDateTime.now().convertPatternOf(DATE_TIME_BASIC_PATTERN)
         val accountNo = "1234567890"
-        rechargeTransactionEntityAdaptor.save(tranNo = tranNo, accountNo = accountNo, result = Result.SUCCESS)
+        rechargeTransactionEntityAdapter.save(tranNo = tranNo, accountNo = accountNo, result = Result.SUCCESS)
 
         `when`("정보 등록된 경우") {
             val result = rechargeTransactionFindService.findSuccessRechargeTransaction(tranNo, accountNo)

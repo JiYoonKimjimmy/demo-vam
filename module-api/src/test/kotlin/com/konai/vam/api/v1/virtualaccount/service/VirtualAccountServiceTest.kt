@@ -1,68 +1,79 @@
 package com.konai.vam.api.v1.virtualaccount.service
 
+import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
-import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
+import com.konai.vam.core.common.error.ErrorCode
+import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
-import com.konai.vam.core.repository.virtualaccount.VirtualAccountEntityAdapter
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
-import fixtures.VirtualAccountEntityFixture
-import fixtures.VirtualAccountFixture
-import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.date.after
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
-import io.mockk.mockk
+import java.util.UUID
 
-class VirtualAccountServiceTest : BehaviorSpec({
+class VirtualAccountServiceTest : CustomBehaviorSpec({
 
-    val virtualAccountEntityAdapter: VirtualAccountEntityAdapter = mockk()
-    val virtualAccountMapper: VirtualAccountMapper = mockk()
-    val virtualAccountService = VirtualAccountService(virtualAccountEntityAdapter, virtualAccountMapper)
-    val virtualAccountFixture = VirtualAccountFixture()
-    val virtualAccountEntityFixture = VirtualAccountEntityFixture()
+    val virtualAccountService = virtualAccountService()
 
-    given("가상 계좌 다건 조회 요청하여") {
-        `when`("size 1건 요청하는 경우") {
-            val number = 0
-            val size = 1
-            val predicate = VirtualAccountPredicate()
-            val pageableRequest = PageableRequest(number, size)
+    val virtualAccountEntityAdapter = virtualAccountEntityAdapter()
+    val virtualAccountEntityFixture = virtualAccountEntityFixture()
 
-            val pageable = BasePageable.Pageable(numberOfElements = size)
-            val entities = listOf(virtualAccountEntityFixture.make())
-            val content = listOf(virtualAccountFixture.make())
+    afterTest {
+        virtualAccountEntityAdapter.clear()
+    }
 
-            every { virtualAccountEntityAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, entities)
-            every { virtualAccountMapper.entitiesToPageable(any()) } returns BasePageable(pageable, content)
+    given("'accountNo' 요청 정보 기준 가상 계좌 단건 조회 요청하여") {
+        val accountNo = generateUUID()
+        val par = generateUUID()
+        val predicate = VirtualAccountPredicate(accountNo = accountNo)
 
-            val result = virtualAccountService.findPage(predicate, pageableRequest)
+        `when`("조회 결과 없는 경우") {
+            val exception = shouldThrow<ResourceNotFoundException> { virtualAccountService.findOne(predicate) }
 
-            then("1건 조회 성공한다") {
-                result.pageable.numberOfElements shouldBe size
-                result.content.size shouldBe size
+            then("ResourceNotFoundException 예외 발생 정상 확인한다") {
+                exception.errorCode shouldBe ErrorCode.VIRTUAL_ACCOUNT_NOT_FOUND
             }
         }
 
+        virtualAccountEntityAdapter.save(virtualAccountEntityFixture.make(accountNo = accountNo, par = par))
+
+        `when`("조회 결과 있는 경우") {
+            val result = virtualAccountService.findOne(predicate)
+
+            then("가상 계좌 조회 결과 정상 확인한다") {
+                result shouldNotBe null
+                result.bankAccount.accountNo shouldBe accountNo
+                result.par shouldBe par
+            }
+        }
+    }
+
+    given("가상 계좌 다건 조회 요청하여") {
+        val number = 0
+        val size = 1
+        val predicate = VirtualAccountPredicate()
+        val pageableRequest = PageableRequest(number, size)
+
         `when`("조회 결과 없는 경우") {
-            val number = 1
-            val size = 1
-            val predicate = VirtualAccountPredicate()
-            val pageableRequest = PageableRequest(number, size)
-
-            val pageable = BasePageable.Pageable()
-            val entities = emptyList<VirtualAccountEntity>()
-            val content = emptyList<VirtualAccount>()
-
-            every { virtualAccountEntityAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, entities)
-            every { virtualAccountMapper.entitiesToPageable(any()) } returns BasePageable(pageable, content)
-
             val result = virtualAccountService.findPage(predicate, pageableRequest)
 
             then("0건 조회 성공한다") {
-                result.pageable.numberOfElements shouldBe 0
                 result.content.shouldBeEmpty()
+            }
+        }
+
+        virtualAccountEntityAdapter.save(virtualAccountEntityFixture.make())
+
+        `when`("size 1건 요청하는 경우") {
+            val result = virtualAccountService.findPage(predicate, pageableRequest)
+
+            then("1건 조회 성공한다") {
+                result.content.size shouldBe 1
             }
         }
     }

@@ -25,7 +25,7 @@ class WooriBankTransactionService(
 
     private val wooriBankTransactionMapper: WooriBankTransactionMapper,
 
-    private val rechargeTransactionAdaptor: RechargeTransactionAdapter,
+    private val rechargeTransactionAdapter: RechargeTransactionAdapter,
     private val rechargeTransactionFindAdapter: RechargeTransactionFindAdapter,
     private val wooriBankAggregationAdapter: WooriBankAggregationAdapter,
     private val virtualAccountFindAdapter: VirtualAccountFindAdapter,
@@ -121,14 +121,14 @@ class WooriBankTransactionService(
 
     private fun executeRechargeTransaction(domain: WooriBankTransaction): WooriBankTransaction {
         return wooriBankTransactionMapper.domainToRechargeTransaction(domain)
-            .let { rechargeTransactionAdaptor.recharge(it) }
+            .let { rechargeTransactionAdapter.recharge(it) }
             .let { checkRechargeTransactionResult(it) }
             .let { domain.success(responseCode = it) }
     }
 
     private fun executeRechargeCancelTransaction(domain: WooriBankTransaction): WooriBankTransaction {
         return wooriBankTransactionMapper.domainToRechargeCancelTransaction(domain)
-            .let { rechargeTransactionAdaptor.cancel(it) }
+            .let { rechargeTransactionAdapter.cancel(it) }
             .let { checkRechargeTransactionResult(it) }
             .let { domain.success(responseCode = it) }
     }

@@ -27,15 +27,15 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
 
     val wooriBankManagementService = wooriBankManagementService()
 
-    val virtualAccountEntityAdaptor = virtualAccountEntityAdaptor()
-    val virtualAccountBankEntityAdaptor = virtualAccountBankEntityAdaptor()
+    val virtualAccountEntityAdapter = virtualAccountEntityAdapter()
+    val virtualAccountBankEntityAdapter = virtualAccountBankEntityAdapter()
     val wooriBankManagementEntityAdapter = wooriBankManagementEntityAdapter()
 
     val mockCsRestClient = mockCsRestClient()
     val mockNumberRedisTemplate = mockNumberRedisTemplate()
 
     val wooriBankManagementFixture = wooriBankManagementFixture()
-    val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()
+    val rechargeTransactionEntityAdapter = rechargeTransactionEntityAdapter()
 
     given("우리은행 가상 계좌 관리 전문 연동 요청되어") {
         `when`("전문 번호가 미정의된 요청으로 실패인 경우") {
@@ -121,15 +121,15 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, accountNo = accountNo)
 
             // 가상 계좌 정보 저장 처리
-            virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED)
+            virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED)
             // 가상 계좌 정보 저장 처리
             val par = "par$accountNo"
             val serviceId = "serviceId"
-            virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+            virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
             // 가상 계좌 은행 정보 저장 처리
             val bank = VirtualAccountBankConst.woori
             val rechargerId = "rechargerId"
-            virtualAccountBankEntityAdaptor.save(bank, rechargerId)
+            virtualAccountBankEntityAdapter.save(bank, rechargerId)
             // CS 시스템 충전 요청 처리
             val transactionId = "transactionId"
             val nrNumber = "nrNumber"
@@ -175,12 +175,12 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = orgMessageNo)
 
             // 충전 내역 원거래 정보 저장
-            rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$orgMessageNo", accountNo = domain.accountNo)
+            rechargeTransactionEntityAdapter.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$orgMessageNo", accountNo = domain.accountNo)
             // 가상 계좌 정보 저장 처리
             val accountNo = domain.accountNo
             val par = "par$accountNo"
             val serviceId = "serviceId"
-            virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+            virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
             // CS 시스템 충전 요청 성공 mocking 처리
             every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } returns CsPostRechargesSystemManualsReversalResponse(transactionId = "transactionId")
             // 우리은행 집계 cache 정보 mocking 처리
@@ -218,12 +218,12 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = messageNo)
 
             // 충전 내역 원거래 정보 저장
-            rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$messageNo", accountNo = domain.accountNo)
+            rechargeTransactionEntityAdapter.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$messageNo", accountNo = domain.accountNo)
             // 가상 계좌 정보 저장 처리
             val accountNo = domain.accountNo
             val par = "par$accountNo"
             val serviceId = "serviceId"
-            virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+            virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
             // CS 시스템 충전 요청 성공 mocking 처리
             every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } returns CsPostRechargesSystemManualsReversalResponse(transactionId = "transactionId")
             // 우리은행 집계 cache 정보 mocking 처리
@@ -260,7 +260,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate)
 
             // 충전 내역 원거래 '충전 실패' 정보 저장
-            rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}${domain.messageNo}", accountNo = domain.accountNo)
+            rechargeTransactionEntityAdapter.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}${domain.messageNo}", accountNo = domain.accountNo)
 
             val result = wooriBankManagementService.management(domain)
 
@@ -288,12 +288,12 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = messageNo)
 
         // 충전 내역 원거래 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$messageNo", accountNo = domain.accountNo)
+        rechargeTransactionEntityAdapter.save(tranNo = "$WOORI_BANK_PREFIX${domain.trDate}$messageNo", accountNo = domain.accountNo)
         // 가상 계좌 정보 저장 처리
         val accountNo = domain.accountNo
         val par = "par$accountNo"
         val serviceId = "serviceId"
-        virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+        virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
         // CS 시스템 충전 요청 성공 mocking 처리
         every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } throws RestClientServiceException(ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_CANCEL_FAILED)
 

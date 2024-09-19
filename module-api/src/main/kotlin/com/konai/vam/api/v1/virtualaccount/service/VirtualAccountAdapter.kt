@@ -9,6 +9,8 @@ interface VirtualAccountAdapter {
 
     fun create(account: VirtualAccount): VirtualAccount
 
+    fun findOne(predicate: VirtualAccountPredicate): VirtualAccount
+
     fun findPage(predicate: VirtualAccountPredicate, pageable: PageableRequest): BasePageable<VirtualAccount>
 
 }

@@ -32,6 +32,10 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
         return save(entity)
     }
 
+    fun clear() {
+        virtualAccountEntityFixture.entities.clear()
+    }
+
     override fun saveAll(entities: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
         return virtualAccountEntityFixture.entities
     }

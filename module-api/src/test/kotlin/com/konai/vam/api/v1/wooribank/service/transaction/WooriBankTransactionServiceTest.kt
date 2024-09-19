@@ -32,11 +32,11 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
     val wooriBankTransactionService = wooriBankTransactionService()
     val wooriBankAggregationCacheService = wooriBankAggregationCacheService()
 
-    val virtualAccountEntityAdaptor = virtualAccountEntityAdaptor()
-    val virtualAccountBankEntityAdaptor = virtualAccountBankEntityAdaptor()
+    val virtualAccountEntityAdapter = virtualAccountEntityAdapter()
+    val virtualAccountBankEntityAdapter = virtualAccountBankEntityAdapter()
 
     val wooriBankTransactionFixture = wooriBankTransactionFixture()
-    val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()
+    val rechargeTransactionEntityAdapter = rechargeTransactionEntityAdapter()
 
     val mockCsRestClient = mockCsRestClient()
 
@@ -57,7 +57,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 가상 계좌 정보 저장 처리
-        virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE)
+        virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE)
 
         `when`("가상 계좌 정보는 있지만 연결 카드가 등록되지 않은 경우") {
             val result = wooriBankTransactionService.deposit(domain)
@@ -71,7 +71,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         // 가상 계좌 정보 저장 처리
         val par = "par$accountNo"
         val serviceId = "serviceId"
-        virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+        virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
 
         `when`("가상 계좌 은행 정보가 등록되지 않은 경우") {
             val result = wooriBankTransactionService.deposit(domain)
@@ -85,7 +85,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         // 가상 계좌 은행 정보 저장 처리
         val bank = VirtualAccountBankConst.woori
         val rechargerId = "rechargerId"
-        virtualAccountBankEntityAdaptor.save(bank, rechargerId)
+        virtualAccountBankEntityAdapter.save(bank, rechargerId)
 
         // CS 시스템 충전 요청 실패 mocking 처리
         every { mockCsRestClient.postRechargesSystemManuals(any()) } throws InternalServiceException(ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_FAILED)
@@ -148,7 +148,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 충전 내역 원거래 취소 완료 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = domain.orgTranNo, accountNo = accountNo, cancelStatus = RechargeTransactionCancelStatus.CANCEL)
+        rechargeTransactionEntityAdapter.save(tranNo = domain.orgTranNo, accountNo = accountNo, cancelStatus = RechargeTransactionCancelStatus.CANCEL)
 
         `when`("'orgMessageNo' 기준 원거래 정보가 이미 취소된 경우") {
             val result = wooriBankTransactionService.depositCancel(domain)
@@ -159,7 +159,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 충전 내역 원거래 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = domain.orgTranNo, accountNo = accountNo)
+        rechargeTransactionEntityAdapter.save(tranNo = domain.orgTranNo, accountNo = accountNo)
 
         `when`("'accountNo' 기준 가상 계좌 정보 없는 경우") {
             val result = wooriBankTransactionService.depositCancel(domain)
@@ -170,7 +170,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 가상 계좌 정보 저장 처리
-        virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE)
+        virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE)
 
         `when`("'accountNo' 기준 가상 계좌 카드 미연결 상태인 경우") {
             val result = wooriBankTransactionService.depositCancel(domain)
@@ -183,7 +183,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         // 가상 계좌 정보 저장 처리
         val par = "par$accountNo"
         val serviceId = "serviceId"
-        virtualAccountEntityAdaptor.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
+        virtualAccountEntityAdapter.save(accountNo = accountNo, status = ACTIVE, cardConnectStatus = CONNECTED, par = par, serviceId = serviceId)
 
         // CS 시스템 충전 요청 실패 mocking 처리
         every { mockCsRestClient.postRechargesSystemManualsReversal(any()) } throws RestClientServiceException(ErrorCode.VIRTUAL_ACCOUNT_RECHARGE_CANCEL_FAILED)
@@ -196,7 +196,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
             }
 
             then("충전 취소 내역 DB 정상 확인한다") {
-                val entityResult = rechargeTransactionEntityAdaptor.findByTranNoAndTranType(domain.tranNo, CANCEL)!!
+                val entityResult = rechargeTransactionEntityAdapter.findByTranNoAndTranType(domain.tranNo, CANCEL)!!
                 entityResult.result shouldBe FAILED
                 entityResult.reason shouldBe "[014] Virtual account recharge cancel failed"
             }
@@ -223,14 +223,14 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
             }
 
             then("원거래 기준 충전 내역 취소 처리 DB 정상 확인한다") {
-                val entityResult = rechargeTransactionEntityAdaptor.findByTranNoAndTranType(domain.orgTranNo)!!
+                val entityResult = rechargeTransactionEntityAdapter.findByTranNoAndTranType(domain.orgTranNo)!!
                 entityResult.result shouldBe SUCCESS
                 entityResult.tranType shouldBe RECHARGE
                 entityResult.cancelStatus shouldBe RechargeTransactionCancelStatus.CANCEL
             }
 
             then("충전 취소 내역 DB 정상 확인한다") {
-                val entityResult = rechargeTransactionEntityAdaptor.findByTranNoAndTranType(domain.tranNo, CANCEL)!!
+                val entityResult = rechargeTransactionEntityAdapter.findByTranNoAndTranType(domain.tranNo, CANCEL)!!
                 entityResult.result shouldBe SUCCESS
                 entityResult.tranType shouldBe CANCEL
             }
@@ -258,7 +258,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 충전 내역 원거래 '충전 취소' 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = domain.tranNo, accountNo = domain.accountNo, tranType = CANCEL)
+        rechargeTransactionEntityAdapter.save(tranNo = domain.tranNo, accountNo = domain.accountNo, tranType = CANCEL)
 
         `when`("'messageNO' 기준 원거래 정보가 '충전 취소' 거래만 있는 경우") {
             val result = wooriBankTransactionService.depositConfirm(domain)
@@ -270,7 +270,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 충전 내역 원거래 '충전 실패' 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = domain.tranNo, accountNo = domain.accountNo, tranType = CANCEL, result = FAILED)
+        rechargeTransactionEntityAdapter.save(tranNo = domain.tranNo, accountNo = domain.accountNo, tranType = CANCEL, result = FAILED)
 
         `when`("'messageNO' 기준 원거래 정보가 '충전 실패' 거래만 있는 경우") {
             val result = wooriBankTransactionService.depositConfirm(domain)
@@ -282,7 +282,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 충전 내역 원거래 '충전 실패' 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = domain.tranNo, accountNo = domain.accountNo, cancelStatus = RechargeTransactionCancelStatus.CANCEL)
+        rechargeTransactionEntityAdapter.save(tranNo = domain.tranNo, accountNo = domain.accountNo, cancelStatus = RechargeTransactionCancelStatus.CANCEL)
 
         `when`("'messageNo' 기준 원거래 정보가 이미 취소된 경우") {
             val result = wooriBankTransactionService.depositConfirm(domain)
@@ -294,7 +294,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 충전 내역 원거래 '충전 실패' 정보 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = domain.tranNo, accountNo = domain.accountNo)
+        rechargeTransactionEntityAdapter.save(tranNo = domain.tranNo, accountNo = domain.accountNo)
 
         `when`("'messageNo' 기준 원거래 충전 결과 정상 확인되는 경우") {
             val result = wooriBankTransactionService.depositConfirm(domain)

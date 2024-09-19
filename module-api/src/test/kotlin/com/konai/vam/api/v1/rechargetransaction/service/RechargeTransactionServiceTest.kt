@@ -16,7 +16,7 @@ import java.util.*
 class RechargeTransactionServiceTest : CustomBehaviorSpec({
 
     val rechargeTransactionFixture = rechargeTransactionFixture()
-    val rechargeTransactionEntityAdaptor = rechargeTransactionEntityAdaptor()
+    val rechargeTransactionEntityAdapter = rechargeTransactionEntityAdapter()
     val mockCsRestClient = mockCsRestClient()
 
     val rechargeTransactionService = rechargeTransactionService()
@@ -84,7 +84,7 @@ class RechargeTransactionServiceTest : CustomBehaviorSpec({
                 result.result shouldBe SUCCESS
                 result.reason shouldBe null
 
-                rechargeTransactionEntityAdaptor.findByTranNoAndTranType(tranNo)?.let {
+                rechargeTransactionEntityAdapter.findByTranNoAndTranType(tranNo)?.let {
                     it.result shouldBe SUCCESS
                     it.transactionId shouldBe transactionId
                     it.nrNumber shouldBe nrNumber
@@ -111,7 +111,7 @@ class RechargeTransactionServiceTest : CustomBehaviorSpec({
         }
 
         // 가상 계좌 충전 거래 entity 저장
-        rechargeTransactionEntityAdaptor.save(tranNo = orgTranNo, accountNo = domain.bankAccount.accountNo, result = SUCCESS)
+        rechargeTransactionEntityAdapter.save(tranNo = orgTranNo, accountNo = domain.bankAccount.accountNo, result = SUCCESS)
 
         `when`("완료 거래 기준 취소 API 요청하였지만 실패인 경우") {
             // CS 시스템 충전 요청 mocking 처리

@@ -12,7 +12,7 @@ import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 
 class VirtualAccountFindServiceTest : CustomBehaviorSpec({
 
-    val virtualAccountEntityAdaptor = virtualAccountEntityAdaptor()
+    val virtualAccountEntityAdapter = virtualAccountEntityAdapter()
     val virtualAccountMapper = virtualAccountMapper()
     val virtualAccountFindService = virtualAccountFindService()
 
@@ -21,7 +21,7 @@ class VirtualAccountFindServiceTest : CustomBehaviorSpec({
         val status = ACTIVE
         val par = "par$accountNo"
         val cardConnectStatus = CONNECTED
-        virtualAccountEntityAdaptor.save(accountNo = accountNo, status = status, par = par, cardConnectStatus = cardConnectStatus)
+        virtualAccountEntityAdapter.save(accountNo = accountNo, status = status, par = par, cardConnectStatus = cardConnectStatus)
 
         `when`("Entity 정보 없는 경우") {
             val exception = shouldThrow<ResourceNotFoundException> {
@@ -35,7 +35,7 @@ class VirtualAccountFindServiceTest : CustomBehaviorSpec({
 
         `when`("Entity 정보가 있는 경우") {
             val result = virtualAccountFindService.findCardConnectedVirtualAccount(accountNo)
-            virtualAccountEntityAdaptor.save(virtualAccountMapper.domainToEntity(result))
+            virtualAccountEntityAdapter.save(virtualAccountMapper.domainToEntity(result))
 
             then("도메인 객체 변환하여 반환한다") {
                 result shouldNotBeSameInstanceAs VirtualAccount::class
