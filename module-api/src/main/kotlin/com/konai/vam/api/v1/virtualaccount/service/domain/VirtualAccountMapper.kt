@@ -35,6 +35,7 @@ class VirtualAccountMapper {
             cardConnected = entity.cardConnected,
             cardDisconnected = entity.cardDisconnected,
             cardSeBatchId = entity.cardSeBatchId,
+            parentAccountNo = entity.parentAccountNo
         )
     }
 

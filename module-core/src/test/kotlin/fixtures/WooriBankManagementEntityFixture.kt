@@ -37,7 +37,7 @@ class WooriBankManagementEntityFixture {
             transmissionTime = LocalTime.now().convertPatternOf(),
             responseCode = responseCode,
             orgMessageNo = "orgMessageNo",
-            parentAccount = "parentAccount",
+            parentAccountNo = "parentAccountNo",
             trDate = LocalDate.now().convertPatternOf(),
             trTime = LocalTime.now().convertPatternOf(),
             tid = RequestContext.generateId(),

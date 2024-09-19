@@ -29,16 +29,20 @@ class VirtualAccountRepositoryTest {
     private val virtualAccountEntityFixture = VirtualAccountEntityFixture()
     private lateinit var saved: VirtualAccountEntity
 
+    private fun generateAccountNo() = UUID.randomUUID().toString().split("-").subList(0, 2).joinToString()
+
     @BeforeEach
     fun before() {
-        val fixture = virtualAccountEntityFixture.make()
-        saved = virtualAccountRepository.save(fixture)
+        val accountNo = generateAccountNo()
+        val entity = virtualAccountEntityFixture.make(accountNo = accountNo)
+        saved = virtualAccountRepository.save(entity)
     }
 
     @Test
     fun `가상 계좌 단건 entity 생성하여 저장 성공한다`() {
         // given
-        val entity = virtualAccountEntityFixture.make()
+        val accountNo = generateAccountNo()
+        val entity = virtualAccountEntityFixture.make(accountNo = accountNo)
 
         // when
         val result = virtualAccountRepository.save(entity)
@@ -63,10 +67,10 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `가상 계좌 단건 entity 조회없어 ResourceNotFoundException 예외 발생하여 실패한다`() {
         // given
-        val accountId = SecureRandom().nextLong()
+        val id = SecureRandom().nextLong()
 
         // when
-        val exception = assertThrows<ResourceNotFoundException> { virtualAccountRepository.findById(accountId) }
+        val exception = assertThrows<ResourceNotFoundException> { virtualAccountRepository.findById(id) }
 
         // then
         assertThat(exception.errorCode).isEqualTo(ErrorCode.VIRTUAL_ACCOUNT_NOT_FOUND)
@@ -75,8 +79,8 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `가상 계좌 단건 entity 조회없어 새로운 entity 반환하고 성공한다`() {
         // given
-        val accountId = SecureRandom().nextLong()
-        val fixture = virtualAccountEntityFixture.make(accountId)
+        val id = SecureRandom().nextLong()
+        val fixture = virtualAccountEntityFixture.make(id)
 
         // virtualAccountRepository 조회 결과 없는 경우, 신규 entity 생성하여 대체
         val afterProc: ((Optional<VirtualAccountEntity>) -> VirtualAccountEntity) = {
@@ -84,11 +88,11 @@ class VirtualAccountRepositoryTest {
         }
 
         // when
-        val result = virtualAccountRepository.findById(accountId, afterProc)
+        val result = virtualAccountRepository.findById(id, afterProc)
 
         // then
         assertThat(result).isNotNull()
-        assertThat(result.id).isEqualTo(accountId)
+        assertThat(result.id).isEqualTo(id)
     }
 
     @Test
@@ -131,7 +135,8 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `요청 Par 가 이미 가상계좌매핑에 사용되었으면 true 정상 확인한다`(){
         // given
-        virtualAccountRepository.save(virtualAccountEntityFixture.make(par = "par"))
+        val entity = virtualAccountEntityFixture.make(accountNo =  generateAccountNo(), par = "par")
+        virtualAccountRepository.save(entity)
 
         // when
         val result = virtualAccountJpaRepository.existsByParIn(listOf("par"))
@@ -144,7 +149,9 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `Par 매핑이 이뤄지지 않은 가상계좌가 한 건 이상이다`(){
         // given : 매핑이 이뤄지지 않은 가상 계좌를 생성한다.
-        virtualAccountRepository.save(virtualAccountEntityFixture.make(cardConnectStatus = DISCONNECTED, cardSeBatchId = "batchId"))
+        val accountNo =  generateAccountNo()
+        val entity = virtualAccountEntityFixture.make(accountNo =  accountNo, cardConnectStatus = DISCONNECTED, cardSeBatchId = "batchId")
+        virtualAccountRepository.save(entity)
 
         // when : 매핑이 이뤄지지 않은 가상계좌를 조회한다.
         val predicate = VirtualAccountPredicate(
@@ -162,9 +169,11 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `가상 계좌 동일한 'batchId' & 'connectStatus' 존재 여부 확인하여 'true' 정상 확인한다`() {
         // given
+        val accountNo =  generateAccountNo()
         val connectStatus = CONNECTED
         val cardSeBatchId = "batchId"
-        virtualAccountRepository.save(virtualAccountEntityFixture.make(cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId))
+        val entity = virtualAccountEntityFixture.make(accountNo = accountNo, cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId)
+        virtualAccountRepository.save(entity)
 
         // when
         val result = virtualAccountRepository.existsByConnectStatusAndBatchId(connectStatus, cardSeBatchId)
@@ -176,9 +185,10 @@ class VirtualAccountRepositoryTest {
     @Test
     fun `가상 계좌 동일한 'batchId' & 'connectStatus' 존재 여부 확인하여 'false' 정상 확인한다`() {
         // given
+        val accountNo =  generateAccountNo()
         val connectStatus = CONNECTED
         val cardSeBatchId = "batchId"
-        virtualAccountRepository.save(virtualAccountEntityFixture.make(cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId))
+        virtualAccountRepository.save(virtualAccountEntityFixture.make(accountNo = accountNo, cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId))
 
         // when
         val result = virtualAccountRepository.existsByConnectStatusAndBatchId(connectStatus, "$cardSeBatchId-TEST")

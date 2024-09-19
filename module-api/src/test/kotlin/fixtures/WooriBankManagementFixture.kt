@@ -38,7 +38,7 @@ class WooriBankManagementFixture {
             transmissionTime = LocalTime.now().convertPatternOf(TIME_BASIC_PATTERN),
             responseCode = null,
             orgMessageNo = orgMessageNo,
-            parentAccount = UUID.randomUUID().toString().substring(0, 14),
+            parentAccountNo = UUID.randomUUID().toString().substring(0, 14),
             trDate = trDate,
             trTime = trTime,
             tid = RequestContext.generateId(),

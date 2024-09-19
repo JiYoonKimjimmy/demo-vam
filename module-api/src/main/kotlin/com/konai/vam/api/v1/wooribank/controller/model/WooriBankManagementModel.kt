@@ -1,5 +1,6 @@
 package com.konai.vam.api.v1.wooribank.controller.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.konai.vam.core.common.model.BaseResponse
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
@@ -42,9 +43,10 @@ data class WooriBankManagementRequest(
     val orgMessageNo: String?,
 
     // management layer
+    @field:JsonProperty("parentAccount")
     @field:NotBlank(message = "parentAccount must not be empty")
     @field:Length(min = 1, max = 14, message = "parentAccount length are allowed from 1 to 14 characters.")
-    val parentAccount: String,
+    val parentAccountNo: String,
     @field:NotBlank(message = "trDate must not be empty")
     @field:Length(min = 8, max = 8, message = "trDate length are allowed from 8 to 8 characters.")
     val trDate: String,
@@ -93,7 +95,8 @@ data class WooriBankManagementResponse(
     val orgMessageNo: String?,
 
     // management layer
-    val parentAccount: String,
+    @field:JsonProperty("parentAccount")
+    val parentAccountNo: String,
     val trDate: String,
     val trTime: String,
     val trMedium: String,

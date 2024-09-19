@@ -10,7 +10,7 @@ import com.konai.vam.core.enumerate.Result.SUCCESS
 import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.repository.rechargetransaction.RechargeTransactionRepository
 import com.konai.vam.core.util.convertPatternOf
-import fixtures.WooriBankManagementFixture
+import fixtures.WooriBankManagementRequestFixture
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +32,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
     private val rechargeTransactionRepository: RechargeTransactionRepository
 ) : CustomBehaviorSpec({
 
-    val wooriBankManagementFixture = WooriBankManagementFixture()
+    val wooriBankManagementRequestFixture = WooriBankManagementRequestFixture()
     val objectMapper = jacksonObjectMapper()
 
     given("우리은행 가상 계좌 '입금' & '입금 취소' 전문 요청되어") {
@@ -43,7 +43,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
         val trTime = LocalTime.now().convertPatternOf()
 
         `when`("정상 신규 '입금' 전문인 경우") {
-            val request = wooriBankManagementFixture.make(
+            val request = wooriBankManagementRequestFixture.make(
                 messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.messageTypeCode,
                 businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.businessTypeCode,
                 messageNo = messageNo,
@@ -57,7 +57,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
                 post("/api/v1/woori/virtual-account/management")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
-                )
+            )
                 .andDo(print())
                 .andExpect(status().isOk)
 
@@ -75,7 +75,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
         }
 
         `when`("정상 '입금 취소' 전문인 경우") {
-            val request = wooriBankManagementFixture.make(
+            val request = wooriBankManagementRequestFixture.make(
                 messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.messageTypeCode,
                 businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.businessTypeCode,
                 messageNo = UUID.randomUUID().toString().substring(0, 6),
@@ -90,7 +90,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
                 post("/api/v1/woori/virtual-account/management")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
-                )
+            )
                 .andDo(print())
                 .andExpect(status().isOk)
 

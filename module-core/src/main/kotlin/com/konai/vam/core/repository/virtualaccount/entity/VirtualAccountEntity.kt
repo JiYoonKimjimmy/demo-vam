@@ -50,6 +50,10 @@ class VirtualAccountEntity(
     val cardDisconnected: LocalDateTime? = null,
 
     @Column(name = "CRD_ISU_BAT_ID")
-    val cardSeBatchId: String? = null
+    val cardSeBatchId: String? = null,
 
-) : BaseEntity()
+    @Convert(converter = EncryptionCustomerInfoConverter::class)
+    @Column(name = "ENC_MACN_NO")
+    val parentAccountNo: String? = null,
+
+    ) : BaseEntity()

@@ -8,5 +8,6 @@ data class VirtualAccountModel(
     val bankCode: String,
     val connectType: VirtualAccountConnectType,
     val status: VirtualAccountStatus,
-    val par: String?
+    val par: String?,
+    val parentAccountNo: String?
 )

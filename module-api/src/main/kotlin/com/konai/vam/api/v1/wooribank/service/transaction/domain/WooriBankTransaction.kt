@@ -21,7 +21,7 @@ data class WooriBankTransaction(
     val transmissionTime: String,
     val responseCode: WooriBankResponseCode?,
     val orgMessageNo: String?,
-    val parentAccount: String,
+    val parentAccountNo: String,
     val trDate: String,
     val trTime: String,
     val tid: String,

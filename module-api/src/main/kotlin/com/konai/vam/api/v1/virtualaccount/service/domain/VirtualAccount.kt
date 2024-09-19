@@ -20,6 +20,7 @@ data class VirtualAccount(
     var cardConnected: LocalDateTime? = null,
     val cardDisconnected: LocalDateTime? = null,
     var cardSeBatchId: String? = null,
+    val parentAccountNo: String? = null,
 ) {
 
     fun connectedCard(

@@ -52,7 +52,7 @@ class WooriBankManagementEntity(
 
     @Convert(converter = EncryptionCustomerInfoConverter::class)
     @Column(name = "ENC_MACN_NO")
-    val parentAccount: String,
+    val parentAccountNo: String,
 
     @Column(name = "TR_DT")
     val trDate: String,

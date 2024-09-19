@@ -23,7 +23,7 @@ data class WooriBankManagement(
     val transmissionTime: String,
     var responseCode: WooriBankResponseCode?,
     val orgMessageNo: String?,
-    val parentAccount: String,
+    val parentAccountNo: String,
     val trDate: String,
     val trTime: String,
     val tid: String,

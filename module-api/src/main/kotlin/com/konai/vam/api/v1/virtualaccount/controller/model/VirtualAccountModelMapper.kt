@@ -38,7 +38,8 @@ class VirtualAccountModelMapper {
             bankCode = domain.bankAccount.bankCode,
             connectType = domain.connectType,
             status = domain.status,
-            par = domain.par
+            par = domain.par,
+            parentAccountNo = domain.parentAccountNo
         )
     }
 
