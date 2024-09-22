@@ -37,7 +37,7 @@ class RechargeTransactionFixture {
             result = result,
             reason = reason,
             amount = amount,
-            bankAccount = BankAccount(accountNo, bankCode),
+            bankAccount = BankAccount(bankCode, accountNo),
             par = par,
             serviceId = serviceId,
             transactionId = transactionId,

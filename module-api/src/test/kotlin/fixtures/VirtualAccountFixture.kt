@@ -8,7 +8,7 @@ import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
 
 class VirtualAccountFixture {
 
-    fun make(id: Long? = null, bankAccount: BankAccount = BankAccount("1234567890", "020")): VirtualAccount {
+    fun make(id: Long? = null, bankAccount: BankAccount = BankAccount("020", "1234567890")): VirtualAccount {
         return VirtualAccount(
             id = id,
             bankAccount = bankAccount,

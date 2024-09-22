@@ -26,7 +26,7 @@ class VirtualAccountMapper {
     fun entityToDomain(entity: VirtualAccountEntity): VirtualAccount {
         return VirtualAccount(
             id = entity.id,
-            bankAccount = BankAccount(entity.accountNo, entity.bankCode),
+            bankAccount = BankAccount(entity.bankCode, entity.accountNo),
             connectType = entity.connectType,
             status = entity.status,
             par = entity.par,

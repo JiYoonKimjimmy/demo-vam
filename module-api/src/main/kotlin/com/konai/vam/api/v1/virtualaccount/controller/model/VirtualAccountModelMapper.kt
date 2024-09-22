@@ -11,7 +11,7 @@ class VirtualAccountModelMapper {
 
     fun requestToDomain(request: CreateVirtualAccountRequest): VirtualAccount {
         return VirtualAccount(
-            bankAccount = BankAccount(request.accountNo, request.bankCode),
+            bankAccount = BankAccount(request.bankCode, request.accountNo),
             connectType = request.connectType,
             status = VirtualAccountStatus.ACTIVE,
         )

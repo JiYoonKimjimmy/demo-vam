@@ -38,7 +38,7 @@ class RechargeTransactionMapper {
             tranType = entity.tranType,
             result = entity.result,
             amount = entity.amount,
-            bankAccount = BankAccount(entity.accountNo, entity.bankCode),
+            bankAccount = BankAccount(entity.bankCode, entity.accountNo),
             par = entity.par,
             serviceId = entity.serviceId,
             transactionId = entity.transactionId,
