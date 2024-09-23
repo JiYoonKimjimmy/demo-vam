@@ -8,10 +8,10 @@ import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
 import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsResponse
 import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsReversalResponse
+import fixtures.generateUUID
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
-import java.util.*
 
 class RechargeTransactionServiceTest : CustomBehaviorSpec({
 
@@ -22,7 +22,7 @@ class RechargeTransactionServiceTest : CustomBehaviorSpec({
     val rechargeTransactionService = rechargeTransactionService()
 
     given("CS 컴포넌트의 시스템 충전 API 요청하여") {
-        val tranNo = UUID.randomUUID().toString()
+        val tranNo = generateUUID()
 
         `when`("충전 카드 상태 'ACTIVE' 아닌 경우") {
             val domain = rechargeTransactionFixture.make(tranNo = tranNo)
@@ -94,8 +94,8 @@ class RechargeTransactionServiceTest : CustomBehaviorSpec({
     }
 
     given("CS 컴포넌트의 시스템 충전 취소 API 요청하여") {
-        val tranNo = UUID.randomUUID().toString().substring(0, 6)
-        val orgTranNo = UUID.randomUUID().toString().substring(0, 6)
+        val tranNo = generateUUID(6)
+        val orgTranNo = generateUUID(6)
         val domain = rechargeTransactionFixture.make(tranNo = tranNo, cancelOrgTranNo = orgTranNo, tranType = CANCEL)
 
         `when`("완료 거래 정보가 없는 경우") {

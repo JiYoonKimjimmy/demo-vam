@@ -5,11 +5,11 @@ import com.konai.vam.core.enumerate.WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT
 import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
 import com.konai.vam.core.repository.wooribank.management.jdsl.WooriBankManagementPredicate
 import fixtures.WooriBankManagementEntityFixture
+import fixtures.generateUUID
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 
 @CustomDataJpaTest
 class WooriBankManagementRepositoryTest(
@@ -21,7 +21,7 @@ class WooriBankManagementRepositoryTest(
     val wooriBankManagementEntityFixture = WooriBankManagementEntityFixture()
 
     given("우리은행 전문 연동 'messageTypeCode' & 'businessTypeCode' & 'messageNo' & 'responseCode' 기준 조회 요청하여") {
-        val messageNo = UUID.randomUUID().toString()
+        val messageNo = generateUUID(6)
         val messageCode = VIRTUAL_ACCOUNT_DEPOSIT.requestCode
         val responseCode = `0000`
 

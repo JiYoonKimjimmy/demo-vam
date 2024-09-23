@@ -17,11 +17,11 @@ import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsReversalResp
 import com.konai.vam.core.util.DATE_BASIC_PATTERN
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.convertPatternOf
+import fixtures.generateUUID
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import java.time.LocalDate
-import java.util.*
 
 class WooriBankManagementServiceTest : CustomBehaviorSpec({
 
@@ -39,7 +39,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
 
     given("우리은행 가상 계좌 관리 전문 연동 요청되어") {
         `when`("전문 번호가 미정의된 요청으로 실패인 경우") {
-            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageNo = generateUUID(6)
             val messageTypeCode = "9999"
             val businessTypeCode = "999"
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
@@ -62,7 +62,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("동일한 '전문코드' & '전문번호' & '전송일자' 중복 연동 내역 정보 존재하는 경우") {
-            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageNo = generateUUID(6)
             val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_INQUIRY
             val messageTypeCode = messageType.requestCode.messageTypeCode
             val businessTypeCode = messageType.requestCode.businessTypeCode
@@ -91,7 +91,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '조회(0200-400)' 전문 요청 성공인 경우") {
-            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageNo = generateUUID(6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
 
             val domain = wooriBankManagementFixture.make("0200", "400", messageNo)
@@ -113,9 +113,9 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '입금(0200-600)' 전문 요청 성공인 경우") {
-            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageNo = generateUUID(6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
-            val accountNo = UUID.randomUUID().toString()
+            val accountNo = generateUUID()
             val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.messageTypeCode
             val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT.requestCode.businessTypeCode
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, accountNo = accountNo)
@@ -166,12 +166,12 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '입금 취소(0420-700)' 전문 요청 성공인 경우") {
-            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageNo = generateUUID(6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
             val messageTypeCode = messageType.requestCode.messageTypeCode
             val businessTypeCode = messageType.requestCode.businessTypeCode
-            val orgMessageNo = UUID.randomUUID().toString().substring(0, 6)
+            val orgMessageNo = generateUUID(6)
             val domain = wooriBankManagementFixture.make(messageTypeCode, businessTypeCode, messageNo, transmissionDate, orgMessageNo = orgMessageNo)
 
             // 충전 내역 원거래 정보 저장
@@ -210,7 +210,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '입금 자동 취소(0420-700)/(전문번호 = 원전문번호)' 전문 요청 성공인 경우") {
-            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageNo = generateUUID(6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
             val messageTypeCode = messageType.requestCode.messageTypeCode
@@ -253,7 +253,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("가상 계좌 '입금 확인 통보(0200-800)' 전문 요청인 경우") {
-            val messageNo = UUID.randomUUID().toString().substring(0, 6)
+            val messageNo = generateUUID(6)
             val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
             val messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.messageTypeCode
             val businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM.requestCode.businessTypeCode
@@ -280,7 +280,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
     }
     
     given("우리은행 가상 계좌 '자동 취소' 전문 연동 요청되어") {
-        val messageNo = UUID.randomUUID().toString().substring(0, 6)
+        val messageNo = generateUUID(6)
         val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)
         val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
         val messageTypeCode = messageType.requestCode.messageTypeCode

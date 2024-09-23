@@ -5,16 +5,16 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.enumerate.WooriBankMessageType.*
 import com.konai.vam.core.enumerate.WooriBankResponseCode
+import fixtures.generateUUID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import java.util.*
 
 class WooriBankManagementTest : CustomBehaviorSpec({
 
     val wooriBankManagementFixture = wooriBankManagementFixture()
 
     given("우리은행 가상 계좌 관리 전문 연동 요청되어") {
-        val messageNo = UUID.randomUUID().toString()
+        val messageNo = generateUUID()
 
         `when`("전문 번호가 미정의된 요청인 경우") {
             val domain = wooriBankManagementFixture.make("9999", "999", messageNo)

@@ -30,7 +30,6 @@ import fixtures.*
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.mockk
 import org.springframework.data.redis.core.RedisTemplate
-import java.util.UUID
 
 abstract class CustomBehaviorSpec(body: BaseBehaviorSpec.() -> Unit = {}) : BaseBehaviorSpec() {
     init {
@@ -140,10 +139,5 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun wooriBankRestClientModelFixture() = this.wooriBankRestClientModelFixture
     fun wooriBankManagementFixture() = this.wooriBankManagementFixture
     fun wooriBankCommonMessageFixture() = this.wooriBankMessageFixture
-
-    // etc functions
-    fun generateUUID(): String {
-        return UUID.randomUUID().toString()
-    }
 
 }

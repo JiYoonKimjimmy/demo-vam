@@ -38,3 +38,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+module-api/bin/
+module-batch/bin/

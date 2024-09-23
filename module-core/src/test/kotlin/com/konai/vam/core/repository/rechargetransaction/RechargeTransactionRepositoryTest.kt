@@ -2,34 +2,32 @@ package com.konai.vam.core.repository.rechargetransaction
 
 import com.konai.vam.core.common.annotation.CustomDataJpaTest
 import fixtures.RechargeTransactionEntityFixture
+import fixtures.generateUUID
+import io.kotest.core.spec.style.StringSpec
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 
 @CustomDataJpaTest
-class RechargeTransactionRepositoryTest {
+class RechargeTransactionRepositoryTest(
+    private val rechargeTransactionJpaRepository: RechargeTransactionJpaRepository
+) : StringSpec({
 
-    @Autowired
-    private lateinit var rechargeTransactionJpaRepository: RechargeTransactionJpaRepository
+    val rechargeTransactionRepository = RechargeTransactionRepository(rechargeTransactionJpaRepository)
+    val rechargeTransactionEntityFixture = RechargeTransactionEntityFixture()
 
-    private val rechargeTransactionRepository by lazy { RechargeTransactionRepository(rechargeTransactionJpaRepository) }
-
-    private val rechargeTransactionEntityFixture = RechargeTransactionEntityFixture()
-
-    @Test
-    fun `CS 시스템 충전 성공하여 충전 내역 정보 저장 성공한다`() {
-    	// given
-        val tranNo = UUID.randomUUID().toString()
+    "CS 시스템 충전 성공하여 충전 내역 정보 저장 성공한다"() {
+        // given
+        val tranNo = generateUUID()
         val entity = rechargeTransactionEntityFixture.make(tranNo = tranNo)
 
-    	// when
+        // when
         val result = rechargeTransactionRepository.save(entity)
 
-    	// then
+        // then
         assertThat(result).isNotNull
         assertThat(result.id).isNotEqualTo(0)
         assertThat(result.tranNo).isEqualTo(tranNo)
     }
 
-}
+})

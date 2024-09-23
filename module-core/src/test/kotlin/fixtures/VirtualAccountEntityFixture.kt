@@ -7,7 +7,6 @@ import com.konai.vam.core.enumerate.VirtualAccountStatus
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import java.security.SecureRandom
-import java.util.*
 
 class VirtualAccountEntityFixture {
 
@@ -15,7 +14,7 @@ class VirtualAccountEntityFixture {
 
     fun make(
         id: Long? = SecureRandom().nextLong(),
-        accountNo: String = UUID.randomUUID().toString().replace("-", "").substring(0, 14),
+        accountNo: String = generateUUID(14),
         bankCode: String = "020",
         connectType: VirtualAccountConnectType = FIXATION,
         status: VirtualAccountStatus = ACTIVE,

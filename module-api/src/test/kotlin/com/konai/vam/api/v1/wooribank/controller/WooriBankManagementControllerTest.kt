@@ -11,6 +11,7 @@ import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.repository.rechargetransaction.RechargeTransactionRepository
 import com.konai.vam.core.util.convertPatternOf
 import fixtures.WooriBankManagementRequestFixture
+import fixtures.generateUUID
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -36,7 +36,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
     val objectMapper = jacksonObjectMapper()
 
     given("우리은행 가상 계좌 '입금' & '입금 취소' 전문 요청되어") {
-        val messageNo = UUID.randomUUID().toString().substring(0, 6)
+        val messageNo = generateUUID(6)
         val accountNo = "94000016118257"
         val trAmount = 200000
         val trDate = LocalDate.now().convertPatternOf()
@@ -78,7 +78,7 @@ class WooriBankManagementControllerTest @Autowired constructor(
             val request = wooriBankManagementRequestFixture.make(
                 messageTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.messageTypeCode,
                 businessTypeCode = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CANCEL.requestCode.businessTypeCode,
-                messageNo = UUID.randomUUID().toString().substring(0, 6),
+                messageNo = generateUUID(6),
                 trDate = trDate,
                 trTime = trTime,
                 accountNo = accountNo,

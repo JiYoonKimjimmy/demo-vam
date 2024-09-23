@@ -8,6 +8,7 @@ import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
+import fixtures.generateUUID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.date.after

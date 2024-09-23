@@ -11,7 +11,6 @@ import com.konai.vam.core.util.convertPatternOf
 import com.konasl.commonlib.springweb.correlation.core.RequestContext
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 
 class WooriBankManagementFixture {
 
@@ -38,7 +37,7 @@ class WooriBankManagementFixture {
             transmissionTime = LocalTime.now().convertPatternOf(TIME_BASIC_PATTERN),
             responseCode = null,
             orgMessageNo = orgMessageNo,
-            parentAccountNo = UUID.randomUUID().toString().substring(0, 14),
+            parentAccountNo = generateUUID(14),
             trDate = trDate,
             trTime = trTime,
             tid = RequestContext.generateId(),

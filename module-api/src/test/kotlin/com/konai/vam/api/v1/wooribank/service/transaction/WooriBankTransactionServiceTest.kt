@@ -21,11 +21,11 @@ import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsResponse
 import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsReversalResponse
 import com.konai.vam.core.util.DATE_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
+import fixtures.generateUUID
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 
 class WooriBankTransactionServiceTest : CustomBehaviorSpec({
 
@@ -43,8 +43,8 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
     val mockNumberRedisTemplate = mockNumberRedisTemplate()
 
     given("우리은행 가상 계좌 '입금' 신규 전문 요청되어") {
-        val messageNo = UUID.randomUUID().toString().substring(0, 6)
-        val accountNo = UUID.randomUUID().toString()
+        val messageNo = generateUUID(6)
+        val accountNo = generateUUID()
         val domain = wooriBankTransactionFixture.make(messageNo = messageNo, accountNo = accountNo)
 
         `when`("가상 계좌 정보가 등록되지 않은 경우") {
@@ -133,9 +133,9 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
         val messageType = VIRTUAL_ACCOUNT_DEPOSIT_CANCEL
         val trDate = LocalDate.now().convertPatternOf()
         val trTime = LocalTime.now().convertPatternOf()
-        val messageNo = UUID.randomUUID().toString().substring(0, 6)
-        val orgMessageNo = UUID.randomUUID().toString().substring(0, 6)
-        val accountNo = UUID.randomUUID().toString()
+        val messageNo = generateUUID(6)
+        val orgMessageNo = generateUUID(6)
+        val accountNo = generateUUID()
 
         val domain = wooriBankTransactionFixture.make(messageType = messageType, messageNo = messageNo, orgMessageNo = orgMessageNo, accountNo = accountNo, trDate = trDate, trTime = trTime)
 
@@ -245,7 +245,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
 
     given("우리은행 가상 계좌 '입금 확인 통보' 전문 요청되어") {
         val messageType = WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT_CONFIRM
-        val messageNo = UUID.randomUUID().toString().substring(0, 6)
+        val messageNo = generateUUID(6)
         val domain = wooriBankTransactionFixture.make(messageType = messageType, messageNo = messageNo)
 
         `when`("'messageNo' 기준 충전 거래 정보 존재하지 않는 경우") {
