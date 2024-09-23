@@ -5,8 +5,6 @@ import fixtures.RechargeTransactionEntityFixture
 import fixtures.generateUUID
 import io.kotest.core.spec.style.StringSpec
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 
 @CustomDataJpaTest
 class RechargeTransactionRepositoryTest(

@@ -10,7 +10,6 @@ import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 
 class WooriBankManagementRequestFixture {
 
