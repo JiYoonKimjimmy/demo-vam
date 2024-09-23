@@ -1,9 +1,8 @@
-package com.konai.vam.core.repository.virtualaccount
+package com.konai.vam.core.repository.virtualaccountbatchhistory
 
 import com.konai.vam.core.common.annotation.CustomDataJpaTest
 import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
-import com.konai.vam.core.repository.virtualaccountbatchhistory.VirtualAccountBatchHistoryJpaRepository
 import fixtures.VirtualAccountBatchHistoryEntityFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
