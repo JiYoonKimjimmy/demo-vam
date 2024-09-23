@@ -53,6 +53,18 @@ class ParentAccountJpaRepositoryTest(
         result!!.id shouldBe saved.id
     }
 
+    "모계좌 Entity 정보 'parentAccountNo', 'bankCode' 조건 존재 여부 정상 확인한다" {
+        // given
+        val parentAccountNo = saved.parentAccountNo
+        val bankCode = "020"
+
+        // when
+        val result = parentAccountJpaRepository.existsByParentAccountNoAndBankCode(parentAccountNo, bankCode)
+
+        // then
+        result shouldBe true
+    }
+
     "모계좌 Entity 정보 'parentAccountNo', 'bankCode' 조건으로 조회하여 정상 확인한다" {
         // given
         val parentAccountNo = saved.parentAccountNo

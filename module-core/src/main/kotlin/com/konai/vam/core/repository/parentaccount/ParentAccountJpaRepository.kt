@@ -8,4 +8,6 @@ interface ParentAccountJpaRepository : JpaRepository<ParentAccountEntity, Long>,
 
     fun findByParentAccountNo(parentAccountNo: String): ParentAccountEntity?
 
+    fun existsByParentAccountNoAndBankCode(parentAccountNo: String, bankCode: String): Boolean
+
 }

@@ -6,10 +6,12 @@ import java.util.*
 
 interface ParentAccountEntityAdapter {
 
-    fun saveAll(entities: List<ParentAccountEntity>): List<ParentAccountEntity>
+    fun save(entity: ParentAccountEntity): ParentAccountEntity
 
     fun findByPredicate(predicate: ParentAccountPredicate): Optional<ParentAccountEntity>
 
     fun delete(id: Long)
+
+    fun checkDuplicated(entity: ParentAccountEntity): ParentAccountEntity
 
 }
