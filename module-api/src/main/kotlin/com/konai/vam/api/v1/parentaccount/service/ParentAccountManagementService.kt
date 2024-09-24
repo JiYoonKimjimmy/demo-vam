@@ -11,8 +11,8 @@ class ParentAccountManagementService(
     private val parentAccountEntityAdapter: ParentAccountEntityAdapter
 ) : ParentAccountManagementAdapter {
 
-    override fun save(domains: ParentAccount): ParentAccount {
-        return parentAccountMapper.domainToEntity(domains)
+    override fun save(domain: ParentAccount): ParentAccount {
+        return parentAccountMapper.domainToEntity(domain)
             .let { parentAccountEntityAdapter.checkDuplicated(it) }
             .let { parentAccountEntityAdapter.save(it) }
             .let { parentAccountMapper.entityToDomain(it) }
