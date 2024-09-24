@@ -2,7 +2,6 @@ package com.konai.vam.api.v1.parentaccount.service
 
 import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
-import fixtures.TestExtensionFunctions
 import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
