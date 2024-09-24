@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/api/v1/parent-account/management")
+@RequestMapping("/api/v1/parent-account")
 @RestController
-class ParentAccountManagementController(
+class ParentAccountController(
     private val parentAccountModelMapper: ParentAccountModelMapper,
     private val parentAccountManagementAdapter: ParentAccountManagementAdapter
 ) {

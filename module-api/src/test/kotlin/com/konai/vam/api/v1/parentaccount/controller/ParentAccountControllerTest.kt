@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.post
 
 @AutoConfigureMockMvc
 @SpringBootTest
-class ParentAccountManagementControllerTest(
+class ParentAccountControllerTest(
     private val mockMvc: MockMvc
 ) : CustomBehaviorSpec({
 
@@ -24,7 +24,7 @@ class ParentAccountManagementControllerTest(
         val parentAccountNo = ExtensionFunctions.generateUUID()
         val bankCode = "020"
         val request = CreateParentAccountRequest(parentAccountNo, bankCode)
-        val createParentAccountUrl = "/api/v1/parent-account/management"
+        val createParentAccountUrl = "/api/v1/parent-account"
 
         `when`("정상 신규 등록 요청인 경우") {
             val result = mockMvc
