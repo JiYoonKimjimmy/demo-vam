@@ -3,6 +3,7 @@ package fixtures
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.ifNotNullEquals
+import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
@@ -45,4 +46,14 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
         }
     }
 
+    override fun findAllByPredicate(predicate: ParentAccountPredicate): BasePageable<ParentAccountEntity?> {
+        return rows
+            .values
+            .filter {
+                ifNotNullEquals(predicate.id, it.id)
+                && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
+                && ifNotNullEquals(predicate.bankCode, it.bankCode)
+            }
+            .let { BasePageable(content = it) }
+    }
 }

@@ -1,6 +1,9 @@
 package com.konai.vam.api.v1.parentaccount.service.domain
 
+import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
+import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
+import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,6 +22,13 @@ class ParentAccountMapper {
             id = entity.id,
             parentAccountNo = entity.parentAccountNo,
             bankCode = entity.bankCode,
+        )
+    }
+
+    fun entitiesToPageable(entities: BasePageable<ParentAccountEntity?>): BasePageable<ParentAccount> {
+        return BasePageable(
+            pageable = entities.pageable,
+            content = entities.content.filterNotNull().map(this::entityToDomain)
         )
     }
 

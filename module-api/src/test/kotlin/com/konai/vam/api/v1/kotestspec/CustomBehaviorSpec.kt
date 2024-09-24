@@ -1,6 +1,7 @@
 package com.konai.vam.api.v1.kotestspec
 
 import com.konai.vam.api.v1.batch.service.VirtualAccountCardBatchService
+import com.konai.vam.api.v1.parentaccount.service.ParentAccountFindService
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountManagementService
 import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccountMapper
 import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionFindService
@@ -100,7 +101,10 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val parentAccountMapper = ParentAccountMapper()
     private val parentAccountEntityAdapter = ParentAccountEntityAdapterFixture()
-    private val parentAccountService = ParentAccountManagementService(parentAccountMapper, parentAccountEntityAdapter)
+    private val parentAccountManagementService = ParentAccountManagementService(parentAccountMapper, parentAccountEntityAdapter)
+
+    private val parentAccountFindService = ParentAccountFindService(parentAccountMapper, parentAccountEntityAdapter)
+    private val parentAccountEntityFixture = ParentAccountEntityFixture()
 
     // service
     fun virtualAccountService() = this.virtualAccountService
@@ -117,7 +121,8 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun wooriBankCommonMessageService() = this.wooriBankCommonMessageService
     fun wooriBankWorkService() = this.wooriBankWorkService
     fun redisTemplateService() = this.redisTemplateService
-    fun parentAccountService() = this.parentAccountService
+    fun parentAccountManagementService() = this.parentAccountManagementService
+    fun parentAccountFindService() = this.parentAccountFindService
 
     // entity adapter
     fun virtualAccountEntityAdapter() = this.virtualAccountEntityAdapter
@@ -145,5 +150,6 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun wooriBankRestClientModelFixture() = this.wooriBankRestClientModelFixture
     fun wooriBankManagementFixture() = this.wooriBankManagementFixture
     fun wooriBankCommonMessageFixture() = this.wooriBankMessageFixture
+    fun parentAccountEntityFixture() = this.parentAccountEntityFixture
 
 }

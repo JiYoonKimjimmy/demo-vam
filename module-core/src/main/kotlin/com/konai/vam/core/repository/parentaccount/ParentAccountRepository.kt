@@ -3,8 +3,12 @@ package com.konai.vam.core.repository.parentaccount
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.getContentFirstOrNull
+import com.konai.vam.core.common.model.BasePageable
+import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
+import com.konai.vam.core.util.PageRequestUtil.toBasePageable
+import com.konai.vam.core.util.PageRequestUtil.toPageRequest
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -42,5 +46,11 @@ class ParentAccountRepository(
             entity
         }
     }
-    
+
+    override fun findAllByPredicate(predicate: ParentAccountPredicate): BasePageable<ParentAccountEntity?> {
+        return parentAccountJpaRepository.findSlice(
+            pageable = PageableRequest(size = 1000).toPageRequest(),
+            init = predicate.generateQuery()
+        ).toBasePageable()
+    }
 }
