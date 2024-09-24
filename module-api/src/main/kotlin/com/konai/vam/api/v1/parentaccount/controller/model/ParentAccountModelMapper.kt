@@ -16,7 +16,7 @@ class ParentAccountModelMapper {
 
     fun domainToModel(domain: ParentAccount): ParentAccountModel {
         return ParentAccountModel(
-            id = domain.id,
+            parentAccountId = domain.id,
             parentAccountNo = domain.parentAccountNo,
             bankCode = domain.bankCode
         )

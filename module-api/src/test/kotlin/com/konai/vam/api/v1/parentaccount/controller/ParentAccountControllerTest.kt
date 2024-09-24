@@ -49,7 +49,7 @@ class ParentAccountControllerTest(
                     .andExpect {
                         status { isCreated() }
                         content {
-                            jsonPath("data.id", greaterThan(0))
+                            jsonPath("data.parentAccountId", greaterThan(0))
                             jsonPath("data.parentAccountNo", equalTo(parentAccountNo))
                         }
                     }
