@@ -4,7 +4,7 @@ import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccount
 
 interface ParentAccountManagementAdapter {
 
-    fun save(domain: ParentAccount): ParentAccount
+    fun create(domain: ParentAccount): ParentAccount
 
     fun update(domain: ParentAccount): ParentAccount
 

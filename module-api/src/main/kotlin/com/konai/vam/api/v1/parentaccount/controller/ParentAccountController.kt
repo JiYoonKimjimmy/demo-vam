@@ -19,7 +19,7 @@ class ParentAccountController(
     @PostMapping
     fun create(@RequestBody @Valid request: CreateParentAccountRequest): ResponseEntity<CreateParentAccountResponse> {
         return parentAccountModelMapper.requestToDomain(request)
-            .let { parentAccountManagementAdapter.save(it) }
+            .let { parentAccountManagementAdapter.create(it) }
             .let { parentAccountModelMapper.domainToModel(it) }
             .let { CreateParentAccountResponse(it) }
             .success(HttpStatus.CREATED)

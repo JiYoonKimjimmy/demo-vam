@@ -6,6 +6,8 @@ import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
 
 interface ParentAccountFindAdapter {
 
+    fun findOne(predicate: ParentAccountPredicate): ParentAccount
+
     fun findAll(predicate: ParentAccountPredicate): BasePageable<ParentAccount>
 
 }
