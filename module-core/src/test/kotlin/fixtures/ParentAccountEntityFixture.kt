@@ -1,3 +1,5 @@
+package fixtures
+
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import fixtures.TestExtensionFunctions.generateSequence
 
