@@ -12,7 +12,7 @@ data class CreateParentAccountRequest(
     @field:Length(min = 1, max = 20, message = "Parent account number lengths are allowed from 1 to 20 characters.")
     val parentAccountNo: String,
     @field:NotBlank(message = "Bank code must not be empty")
-    @field:Pattern(regexp = "\\d{3}", message = "Bank code must be exactly 3 digits")
+    @field:Pattern(regexp = "\\d{3}", message = "Bank code must be exactly 3 digits.")
     val bankCode: String
 )
 

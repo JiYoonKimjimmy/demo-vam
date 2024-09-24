@@ -1,9 +1,9 @@
 package com.konai.vam.api.v1.parentaccount.controller
 
-import com.konai.vam.api.v1.parentaccount.controller.model.CreateParentAccountRequest
-import com.konai.vam.api.v1.parentaccount.controller.model.CreateParentAccountResponse
-import com.konai.vam.api.v1.parentaccount.controller.model.ParentAccountModelMapper
+import com.konai.vam.api.v1.parentaccount.controller.model.*
+import com.konai.vam.api.v1.parentaccount.service.ParentAccountFindAdapter
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountManagementAdapter
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,16 +15,25 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ParentAccountController(
     private val parentAccountModelMapper: ParentAccountModelMapper,
-    private val parentAccountManagementAdapter: ParentAccountManagementAdapter
+    private val parentAccountManagementAdapter: ParentAccountManagementAdapter,
+    private val parentAccountFindAdapter: ParentAccountFindAdapter
 ) {
 
     @PostMapping
-    fun create(@RequestBody request: CreateParentAccountRequest): ResponseEntity<CreateParentAccountResponse> {
+    fun create(@RequestBody @Valid request: CreateParentAccountRequest): ResponseEntity<CreateParentAccountResponse> {
         return parentAccountModelMapper.requestToDomain(request)
             .let { parentAccountManagementAdapter.save(it) }
             .let { parentAccountModelMapper.domainToModel(it) }
             .let { CreateParentAccountResponse(it) }
             .success(HttpStatus.CREATED)
+    }
+
+    @PostMapping("/all")
+    fun findAll(@RequestBody @Valid request: FindAllParentAccountRequest = FindAllParentAccountRequest()): ResponseEntity<FindAllParentAccountResponse> {
+        return parentAccountModelMapper.requestToPredicate(request)
+            .let { parentAccountFindAdapter.findAll(it) }
+            .let { FindAllParentAccountResponse(it, parentAccountModelMapper::domainToModel) }
+            .success(HttpStatus.OK)
     }
 
 }
