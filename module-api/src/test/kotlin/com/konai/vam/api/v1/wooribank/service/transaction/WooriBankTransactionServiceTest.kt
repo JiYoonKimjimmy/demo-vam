@@ -21,7 +21,7 @@ import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsResponse
 import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsReversalResponse
 import com.konai.vam.core.util.DATE_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import java.time.LocalDate
@@ -190,7 +190,7 @@ class WooriBankTransactionServiceTest : CustomBehaviorSpec({
 
         `when`("원거래 정보 'transactionId' 기준 CS 충전 취소 요청 실패하는 경우") {
             val result = wooriBankTransactionService.depositCancel(domain)
-            
+
             then("입금 취소 전문 응답코드 'K777', 'Recharge transaction cancel failed' 에러 사유 설정되어 반환한다") {
                 result.responseCode shouldBe K777
             }

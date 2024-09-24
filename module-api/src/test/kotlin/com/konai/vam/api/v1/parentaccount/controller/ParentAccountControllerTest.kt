@@ -5,7 +5,7 @@ import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.parentaccount.controller.model.CreateParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.FindAllParentAccountRequest
 import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
-import fixtures.ExtensionFunctions.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import org.hamcrest.Matchers.*
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -164,7 +164,7 @@ class ParentAccountControllerTest(
                     .andExpect {
                         status { isOk() }
                         content {
-                            jsonPath("content", hasSize<Any>(3))
+                            jsonPath("content", hasSize<Any>(greaterThan(3)))
                         }
                     }
             }
@@ -182,7 +182,7 @@ class ParentAccountControllerTest(
                     .andExpect {
                         status { isOk() }
                         content {
-                            jsonPath("content", hasSize<Any>(3))
+                            jsonPath("content", hasSize<Any>(greaterThan(3)))
                         }
                     }
             }

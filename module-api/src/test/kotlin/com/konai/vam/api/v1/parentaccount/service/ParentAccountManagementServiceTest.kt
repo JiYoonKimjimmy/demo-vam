@@ -4,7 +4,7 @@ import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccount
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
-import fixtures.ExtensionFunctions
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -15,7 +15,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
     val parentAccountEntityAdapter = parentAccountEntityAdapter()
 
     given("모계좌 등록 요청되어") {
-        val parentAccountNo = ExtensionFunctions.generateUUID()
+        val parentAccountNo = generateUUID()
         val bankCode = "020"
         val domain = ParentAccount(parentAccountNo = parentAccountNo, bankCode = bankCode)
 

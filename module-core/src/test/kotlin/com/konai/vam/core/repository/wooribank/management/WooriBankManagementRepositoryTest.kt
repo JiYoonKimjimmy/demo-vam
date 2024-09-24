@@ -5,7 +5,7 @@ import com.konai.vam.core.enumerate.WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT
 import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
 import com.konai.vam.core.repository.wooribank.management.jdsl.WooriBankManagementPredicate
 import fixtures.WooriBankManagementEntityFixture
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

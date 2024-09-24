@@ -5,7 +5,7 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe

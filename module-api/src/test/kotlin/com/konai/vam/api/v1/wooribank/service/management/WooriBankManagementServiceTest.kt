@@ -17,7 +17,7 @@ import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsReversalResp
 import com.konai.vam.core.util.DATE_BASIC_PATTERN
 import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.convertPatternOf
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -278,7 +278,7 @@ class WooriBankManagementServiceTest : CustomBehaviorSpec({
             }
         }
     }
-    
+
     given("우리은행 가상 계좌 '자동 취소' 전문 연동 요청되어") {
         val messageNo = generateUUID(6)
         val transmissionDate = LocalDate.now().convertPatternOf(DATE_yyMMdd_PATTERN)

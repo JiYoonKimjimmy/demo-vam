@@ -5,7 +5,7 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.enumerate.WooriBankMessageType.*
 import com.konai.vam.core.enumerate.WooriBankResponseCode
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 

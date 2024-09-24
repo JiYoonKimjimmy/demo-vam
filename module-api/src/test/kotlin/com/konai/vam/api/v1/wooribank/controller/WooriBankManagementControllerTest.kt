@@ -11,7 +11,7 @@ import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.repository.rechargetransaction.RechargeTransactionRepository
 import com.konai.vam.core.util.convertPatternOf
 import fixtures.WooriBankManagementRequestFixture
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired

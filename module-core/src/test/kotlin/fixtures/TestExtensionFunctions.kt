@@ -1,9 +1,9 @@
 package fixtures
 
 import java.security.SecureRandom
-import java.util.UUID
+import java.util.*
 
-object ExtensionFunctions {
+object TestExtensionFunctions {
 
     fun generateUUID(length: Int = 10): String {
         return UUID.randomUUID().toString().replace("-", "").substring(0, length)
@@ -13,8 +13,4 @@ object ExtensionFunctions {
         return id ?: SecureRandom().nextLong()
     }
 
-}
-
-fun generateUUID(length: Int = 10): String {
-    return UUID.randomUUID().toString().replace("-", "").substring(0, length)
 }

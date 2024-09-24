@@ -4,7 +4,7 @@ import com.konai.vam.core.common.annotation.CustomDataJpaTest
 import com.konai.vam.core.common.getContentFirstOrNull
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
@@ -73,9 +73,9 @@ class ParentAccountJpaRepositoryTest(
 
         // when
         val result = parentAccountJpaRepository.findSlice(
-                pageable = PageRequest.of(0, 1),
-                init = predicate.generateQuery()
-            )
+            pageable = PageRequest.of(0, 1),
+            init = predicate.generateQuery()
+        )
             .getContentFirstOrNull()
             .let { Optional.ofNullable(it) }
             .orElse(null)

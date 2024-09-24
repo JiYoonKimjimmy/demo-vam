@@ -8,6 +8,7 @@ import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
+import fixtures.TestExtensionFunctions.generateSequence
 import java.util.*
 
 class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
@@ -15,7 +16,7 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
     private val rows = mutableMapOf<Long, ParentAccountEntity>()
 
     override fun save(entity: ParentAccountEntity): ParentAccountEntity {
-        val id = ExtensionFunctions.generateSequence(entity.id)
+        val id = generateSequence(entity.id)
         rows[id] = entity
         return entity.apply { this.id = id }
     }
@@ -25,8 +26,8 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
             .values
             .find {
                 ifNotNullEquals(predicate.id, it.id)
-                && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
-                && ifNotNullEquals(predicate.bankCode, it.bankCode)
+                        && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
+                        && ifNotNullEquals(predicate.bankCode, it.bankCode)
             }
             .let { Optional.ofNullable(it) }
     }
@@ -52,8 +53,8 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
             .values
             .filter {
                 ifNotNullEquals(predicate.id, it.id)
-                && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
-                && ifNotNullEquals(predicate.bankCode, it.bankCode)
+                        && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
+                        && ifNotNullEquals(predicate.bankCode, it.bankCode)
             }
             .let { BasePageable(content = it) }
     }

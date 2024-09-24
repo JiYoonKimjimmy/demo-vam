@@ -8,7 +8,7 @@ import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
 import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsResponse
 import com.konai.vam.core.restclient.cs.CsPostRechargesSystemManualsReversalResponse
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every

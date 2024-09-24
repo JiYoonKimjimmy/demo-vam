@@ -1,11 +1,10 @@
-package fixtures
-
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
+import fixtures.TestExtensionFunctions.generateSequence
 
 class ParentAccountEntityFixture {
 
     fun make(
-        id: Long? = ExtensionFunctions.generateSequence(),
+        id: Long? = generateSequence(),
         parentAccountNo: String,
         bankCode: String
     ): ParentAccountEntity {

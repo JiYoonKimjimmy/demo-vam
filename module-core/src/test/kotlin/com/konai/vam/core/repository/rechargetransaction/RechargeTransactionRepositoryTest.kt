@@ -2,7 +2,7 @@ package com.konai.vam.core.repository.rechargetransaction
 
 import com.konai.vam.core.common.annotation.CustomDataJpaTest
 import fixtures.RechargeTransactionEntityFixture
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.core.spec.style.StringSpec
 import org.assertj.core.api.Assertions.assertThat
 

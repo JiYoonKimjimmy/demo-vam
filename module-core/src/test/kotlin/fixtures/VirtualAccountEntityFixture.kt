@@ -6,6 +6,7 @@ import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.konai.vam.core.enumerate.VirtualAccountStatus
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
+import fixtures.TestExtensionFunctions.generateUUID
 import java.security.SecureRandom
 
 class VirtualAccountEntityFixture {

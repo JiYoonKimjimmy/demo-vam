@@ -11,7 +11,7 @@ import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 import fixtures.VirtualAccountEntityFixture
-import fixtures.generateUUID
+import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.core.spec.style.StringSpec
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
