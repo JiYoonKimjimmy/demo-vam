@@ -4,6 +4,8 @@ import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccount
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
+import com.konai.vam.core.common.error.exception.ResourceNotFoundException
+import fixtures.TestExtensionFunctions.generateSequence
 import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -13,10 +15,11 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
 
     val parentAccountManagementService = parentAccountManagementService()
     val parentAccountEntityAdapter = parentAccountEntityAdapter()
+    val parentAccountEntityFixture = parentAccountEntityFixture()
 
     given("모계좌 등록 요청되어") {
         val parentAccountNo = generateUUID()
-        val bankCode = "020"
+        val bankCode = "123"
         val domain = ParentAccount(parentAccountNo = parentAccountNo, bankCode = bankCode)
 
         `when`("신규 생성 요청인 경우") {
@@ -37,7 +40,41 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
             val exception = shouldThrow<InternalServiceException> { parentAccountManagementService.save(domain) }
 
             then("'PARENT_ACCOUNT_NO_IS_DUPLICATED' 예외 발생 확인한다") {
-                exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_NO_IS_DUPLICATED
+                exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_IS_DUPLICATED
+            }
+        }
+    }
+
+    given("모계좌 수정 요청되어") {
+        val id = generateSequence()
+        val parentAccountNo = generateUUID()
+        val bankCode = "123"
+
+        `when`("'id' 기준 등록 정보 없는 경우") {
+            val exception = shouldThrow<ResourceNotFoundException> { parentAccountManagementService.update(id, parentAccountNo, bankCode) }
+
+            then("'PARENT_ACCOUNT_NOT_FOUND' 예외 발생 확인한다") {
+                exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_NOT_FOUND
+            }
+        }
+
+        parentAccountEntityAdapter.save(parentAccountEntityFixture.make(id, parentAccountNo, bankCode))
+
+        `when`("'parentAccountNo' & 'bankCode' 중복 등록인 경우") {
+            val exception = shouldThrow<InternalServiceException> { parentAccountManagementService.update(id, parentAccountNo, bankCode) }
+
+            then("'PARENT_ACCOUNT_IS_DUPLICATED' 예외 발생 확인한다") {
+                exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_IS_DUPLICATED
+            }
+        }
+
+        `when`("정상 수정 요청인 경우") {
+            val result = parentAccountManagementService.update(id, "1234567890", bankCode)
+
+            then("수정 성공 정확 확인한다") {
+                result.id shouldBe id
+                result.parentAccountNo shouldBe "1234567890"
+                result.bankCode shouldBe bankCode
             }
         }
     }

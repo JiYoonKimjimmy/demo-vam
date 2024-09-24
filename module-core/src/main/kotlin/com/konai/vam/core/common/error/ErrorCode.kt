@@ -31,7 +31,7 @@ enum class ErrorCode(
     RECHARGE_AMOUNT_EXCEEDED(HttpStatus.BAD_REQUEST, "021", "The recharge amount limit has been exceeded"),
     RECHARGE_CARD_STATUS_IS_NOT_ACTIVE(HttpStatus.BAD_REQUEST, "022", "The recharge card status is not active"),
     PARENT_ACCOUNT_NOT_FOUND(HttpStatus.BAD_REQUEST, "023", "Parent account not found"),
-    PARENT_ACCOUNT_NO_IS_DUPLICATED(HttpStatus.BAD_REQUEST, "024", "Parent account no is duplicated"),
+    PARENT_ACCOUNT_IS_DUPLICATED(HttpStatus.BAD_REQUEST, "024", "Parent account is duplicated"),
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "900", "Internal server error"),
     ARGUMENT_NOT_VALID_ERROR(HttpStatus.BAD_REQUEST, "901", "Argument not valid"),

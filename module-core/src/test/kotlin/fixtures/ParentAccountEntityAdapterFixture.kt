@@ -1,7 +1,5 @@
 package fixtures
 
-import com.konai.vam.core.common.error.ErrorCode
-import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.ifNotNullEquals
 import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
@@ -9,7 +7,6 @@ import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
 import fixtures.TestExtensionFunctions.generateSequence
-import java.util.*
 
 class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
 
@@ -21,15 +18,14 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
         return entity.apply { this.id = id }
     }
 
-    override fun findByPredicate(predicate: ParentAccountPredicate): Optional<ParentAccountEntity> {
+    override fun findByPredicate(predicate: ParentAccountPredicate): ParentAccountEntity? {
         return rows
             .values
             .find {
                 ifNotNullEquals(predicate.id, it.id)
-                        && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
-                        && ifNotNullEquals(predicate.bankCode, it.bankCode)
+                && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
+                && ifNotNullEquals(predicate.bankCode, it.bankCode)
             }
-            .let { Optional.ofNullable(it) }
     }
 
     override fun delete(id: Long) {
@@ -40,12 +36,8 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
         return rows.values.toList()
     }
 
-    override fun checkDuplicated(entity: ParentAccountEntity): ParentAccountEntity {
-        return if (rows.values.any { it.parentAccountNo == entity.parentAccountNo && it.bankCode == entity.bankCode }) {
-            throw InternalServiceException(ErrorCode.PARENT_ACCOUNT_NO_IS_DUPLICATED)
-        } else {
-            entity
-        }
+    override fun checkDuplicated(parentAccountNo: String, bankCode: String): Boolean {
+        return rows.values.any { it.parentAccountNo == parentAccountNo && it.bankCode == bankCode }
     }
 
     override fun findAllByPredicate(predicate: ParentAccountPredicate, pageableRequest: PageableRequest): BasePageable<ParentAccountEntity?> {
@@ -53,8 +45,8 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
             .values
             .filter {
                 ifNotNullEquals(predicate.id, it.id)
-                        && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
-                        && ifNotNullEquals(predicate.bankCode, it.bankCode)
+                && ifNotNullEquals(predicate.parentAccountNo, it.parentAccountNo)
+                && ifNotNullEquals(predicate.bankCode, it.bankCode)
             }
             .let { BasePageable(content = it) }
     }
