@@ -15,4 +15,6 @@ enum class FeatureCode(
     WOORI_BANK_MANAGEMENT_SERVICE           ("2001", "Woori Bank Management Service"),
     WOORI_BANK_AGGREGATION_SERVICE          ("2002", "Woori Bank Aggregation Service"),
 
+    PARENT_ACCOUNT_MANAGEMENT_SERVICE       ("3000", "Parent Account Management Service"),
+
 }

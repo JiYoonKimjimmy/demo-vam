@@ -6,10 +6,10 @@ import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import org.springframework.stereotype.Service
 
 @Service
-class ParentAccountService(
+class ParentAccountManagementService(
     private val parentAccountMapper: ParentAccountMapper,
     private val parentAccountEntityAdapter: ParentAccountEntityAdapter
-) : ParentAccountAdapter {
+) : ParentAccountManagementAdapter {
 
     override fun save(domains: ParentAccount): ParentAccount {
         return parentAccountMapper.domainToEntity(domains)

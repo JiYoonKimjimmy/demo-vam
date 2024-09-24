@@ -1,0 +1,24 @@
+package com.konai.vam.api.v1.parentaccount.controller.model
+
+import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccount
+import org.springframework.stereotype.Component
+
+@Component
+class ParentAccountModelMapper {
+
+    fun requestToDomain(request: CreateParentAccountRequest): ParentAccount {
+        return ParentAccount(
+            parentAccountNo = request.parentAccountNo,
+            bankCode = request.bankCode
+        )
+    }
+
+    fun domainToModel(domain: ParentAccount): ParentAccountModel {
+        return ParentAccountModel(
+            id = domain.id,
+            parentAccountNo = domain.parentAccountNo,
+            bankCode = domain.bankCode
+        )
+    }
+
+}

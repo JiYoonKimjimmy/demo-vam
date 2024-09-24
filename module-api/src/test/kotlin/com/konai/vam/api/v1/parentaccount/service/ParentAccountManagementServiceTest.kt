@@ -9,7 +9,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
-class ParentAccountServiceTest : CustomBehaviorSpec({
+class ParentAccountManagementServiceTest : CustomBehaviorSpec({
 
     val parentAccountService = parentAccountService()
     val parentAccountEntityAdapter = parentAccountEntityAdapter()

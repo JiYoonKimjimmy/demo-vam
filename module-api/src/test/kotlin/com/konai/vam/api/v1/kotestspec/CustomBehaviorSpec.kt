@@ -1,7 +1,7 @@
 package com.konai.vam.api.v1.kotestspec
 
 import com.konai.vam.api.v1.batch.service.VirtualAccountCardBatchService
-import com.konai.vam.api.v1.parentaccount.service.ParentAccountService
+import com.konai.vam.api.v1.parentaccount.service.ParentAccountManagementService
 import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccountMapper
 import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionFindService
 import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionSaveService
@@ -100,7 +100,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val parentAccountMapper = ParentAccountMapper()
     private val parentAccountEntityAdapter = ParentAccountEntityAdapterFixture()
-    private val parentAccountService = ParentAccountService(parentAccountMapper, parentAccountEntityAdapter)
+    private val parentAccountService = ParentAccountManagementService(parentAccountMapper, parentAccountEntityAdapter)
 
     // service
     fun virtualAccountService() = this.virtualAccountService
