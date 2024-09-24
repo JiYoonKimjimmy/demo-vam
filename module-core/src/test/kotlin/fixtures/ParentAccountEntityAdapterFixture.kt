@@ -4,6 +4,7 @@ import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.common.ifNotNullEquals
 import com.konai.vam.core.common.model.BasePageable
+import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
@@ -46,7 +47,7 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
         }
     }
 
-    override fun findAllByPredicate(predicate: ParentAccountPredicate): BasePageable<ParentAccountEntity?> {
+    override fun findAllByPredicate(predicate: ParentAccountPredicate, pageableRequest: PageableRequest): BasePageable<ParentAccountEntity?> {
         return rows
             .values
             .filter {
@@ -56,4 +57,5 @@ class ParentAccountEntityAdapterFixture : ParentAccountEntityAdapter {
             }
             .let { BasePageable(content = it) }
     }
+
 }

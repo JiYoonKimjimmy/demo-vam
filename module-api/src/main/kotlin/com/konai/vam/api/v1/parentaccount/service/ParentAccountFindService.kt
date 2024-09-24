@@ -3,6 +3,7 @@ package com.konai.vam.api.v1.parentaccount.service
 import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccount
 import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccountMapper
 import com.konai.vam.core.common.model.BasePageable
+import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
 import org.springframework.stereotype.Service
@@ -14,7 +15,7 @@ class ParentAccountFindService(
 ) : ParentAccountFindAdapter {
 
     override fun findAll(predicate: ParentAccountPredicate): BasePageable<ParentAccount> {
-        return parentAccountEntityAdapter.findAllByPredicate(predicate)
+        return parentAccountEntityAdapter.findAllByPredicate(predicate, PageableRequest(size = 1000))
             .let { parentAccountMapper.entitiesToPageable(it) }
     }
 

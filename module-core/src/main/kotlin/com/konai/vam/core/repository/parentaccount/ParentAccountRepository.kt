@@ -47,10 +47,11 @@ class ParentAccountRepository(
         }
     }
 
-    override fun findAllByPredicate(predicate: ParentAccountPredicate): BasePageable<ParentAccountEntity?> {
+    override fun findAllByPredicate(predicate: ParentAccountPredicate, pageableRequest: PageableRequest): BasePageable<ParentAccountEntity?> {
         return parentAccountJpaRepository.findSlice(
-            pageable = PageableRequest(size = 1000).toPageRequest(),
+            pageable = pageableRequest.toPageRequest(),
             init = predicate.generateQuery()
         ).toBasePageable()
     }
+
 }
