@@ -6,6 +6,6 @@ interface ParentAccountManagementAdapter {
 
     fun save(domain: ParentAccount): ParentAccount
 
-    fun update(id: Long, parentAccountNo: String?, bankCode: String?): ParentAccount
+    fun update(domain: ParentAccount): ParentAccount
 
 }

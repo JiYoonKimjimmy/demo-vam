@@ -6,10 +6,7 @@ import com.konai.vam.api.v1.parentaccount.service.ParentAccountManagementAdapter
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/v1/parent-account")
 @RestController
@@ -29,10 +26,22 @@ class ParentAccountController(
     }
 
     @PostMapping("/all")
-    fun findAll(@RequestBody @Valid request: FindAllParentAccountRequest = FindAllParentAccountRequest()): ResponseEntity<FindAllParentAccountResponse> {
+    fun findAll(@RequestBody @Valid request: FindAllParentAccountRequest?): ResponseEntity<FindAllParentAccountResponse> {
         return parentAccountModelMapper.requestToPredicate(request)
             .let { parentAccountFindAdapter.findAll(it) }
             .let { FindAllParentAccountResponse(it, parentAccountModelMapper::domainToModel) }
+            .success(HttpStatus.OK)
+    }
+
+    @PutMapping("/{parentAccountId}")
+    fun update(
+        @PathVariable parentAccountId: Long,
+        @RequestBody @Valid request: UpdateParentAccountRequest?
+    ): ResponseEntity<UpdateParentAccountResponse> {
+        return parentAccountModelMapper.requestToDomain(parentAccountId, request)
+            .let { parentAccountManagementAdapter.update(it) }
+            .let { parentAccountModelMapper.domainToModel(it) }
+            .let { UpdateParentAccountResponse(it) }
             .success(HttpStatus.OK)
     }
 

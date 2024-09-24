@@ -4,7 +4,9 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.parentaccount.controller.model.CreateParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.FindAllParentAccountRequest
+import com.konai.vam.api.v1.parentaccount.controller.model.UpdateParentAccountRequest
 import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
+import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import fixtures.TestExtensionFunctions.generateUUID
 import org.hamcrest.Matchers.*
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -12,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import org.springframework.transaction.annotation.Transactional
 
 @AutoConfigureMockMvc
@@ -25,7 +28,7 @@ class ParentAccountControllerTest(
     val objectMapper = jacksonObjectMapper()
     val parentAccountEntityFixture = parentAccountEntityFixture()
 
-    val saveParentAccountEntity: (String, String) -> (Unit) = { parentAccountNo, bankCode ->
+    val saveParentAccountEntity: (String, String) -> (ParentAccountEntity) = { parentAccountNo, bankCode ->
         val entity = parentAccountEntityFixture.make(parentAccountNo = parentAccountNo, bankCode = bankCode)
         parentAccountEntityAdapter.save(entity)
     }
@@ -64,12 +67,13 @@ class ParentAccountControllerTest(
                 }
                 .andDo { print() }
 
-            then("'400 BAD_REQUEST' 응답 정상 확인한다") {
+            then("'[218_3000_024] Parent Account Service. Parent account is duplicated.' 실패 결과 정상 확인한다") {
                 result
                     .andExpect {
                         status { isBadRequest() }
                         content {
                             jsonPath("result.code", equalTo("218_3000_024"))
+                            jsonPath("result.message", equalTo("Parent Account Service. Parent account is duplicated."))
                         }
                     }
             }
@@ -197,7 +201,7 @@ class ParentAccountControllerTest(
                 }
                 .andDo { print() }
 
-            then("'218_3000_901' 실패 결과 정상 확인한다") {
+            then("'[218_3000_901] Parent account number lengths are allowed from 1 to 20 characters.' 실패 결과 정상 확인한다") {
                 result
                     .andExpect {
                         status { isBadRequest() }
@@ -218,7 +222,7 @@ class ParentAccountControllerTest(
                 }
                 .andDo { print() }
 
-            then("'218_3000_901' 실패 결과 정상 확인한다") {
+            then("'[218_3000_901] Bank code must be exactly 3 digits.' 실패 결과 정상 확인한다") {
                 result
                     .andExpect {
                         status { isBadRequest() }
@@ -230,6 +234,80 @@ class ParentAccountControllerTest(
             }
         }
 
+    }
+
+    given("모계좌 수정 API 요청되어") {
+        val updateParentAccountUrl = "/api/v1/parent-account"
+
+        `when`("'parentAccountId' 요청 기준 등록 정보 없는 경우") {
+            val result = mockMvc
+                .put("$updateParentAccountUrl/9999999999") {
+                    contentType = MediaType.APPLICATION_JSON
+                }
+                .andDo { print() }
+
+            then("'[218_3000_023] Parent Account Service. Parent account not found.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isNotFound() }
+                        content {
+                            jsonPath("result.code", equalTo("218_3000_023"))
+                            jsonPath("result.message", equalTo("Parent Account Service. Parent account not found."))
+                        }
+                    }
+            }
+        }
+
+        val parentAccountNo = generateUUID()
+        val bankCode = "123"
+        val saved = saveParentAccountEntity(parentAccountNo, bankCode)
+
+        `when`("변경 요청 'parentAccountNo' & 'bankCode' 기준 동일한 정보가 있는 경우") {
+            val parentAccountId = saved.id
+            val request = UpdateParentAccountRequest(saved.parentAccountNo, saved.bankCode)
+
+            val result = mockMvc
+                .put("$updateParentAccountUrl/$parentAccountId") {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_3000_024] Parent Account Service. Parent account is duplicated.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isBadRequest() }
+                        content {
+                            jsonPath("result.code", equalTo("218_3000_024"))
+                            jsonPath("result.message", equalTo("Parent Account Service. Parent account is duplicated."))
+                        }
+                    }
+            }
+        }
+
+        `when`("'parentAccountNo' 정보 정상 수정 요청인 경우") {
+            val parentAccountId = saved.id
+            val request = UpdateParentAccountRequest("1234567890", saved.bankCode)
+
+            val result = mockMvc
+                .put("$updateParentAccountUrl/$parentAccountId") {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("성공 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isOk() }
+                        content {
+                            jsonPath("data.parentAccountId", equalTo(parentAccountId?.toInt()))
+                            jsonPath("data.parentAccountNo", equalTo("1234567890"))
+                            jsonPath("data.bankCode", equalTo(bankCode))
+                        }
+                    }
+            }
+        }
     }
 
 })

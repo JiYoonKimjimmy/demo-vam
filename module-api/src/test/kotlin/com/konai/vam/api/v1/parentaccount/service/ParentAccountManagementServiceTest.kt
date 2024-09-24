@@ -51,7 +51,8 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
         val bankCode = "123"
 
         `when`("'id' 기준 등록 정보 없는 경우") {
-            val exception = shouldThrow<ResourceNotFoundException> { parentAccountManagementService.update(id, parentAccountNo, bankCode) }
+            val domain = ParentAccount(id = id, parentAccountNo = parentAccountNo, bankCode = bankCode)
+            val exception = shouldThrow<ResourceNotFoundException> { parentAccountManagementService.update(domain) }
 
             then("'PARENT_ACCOUNT_NOT_FOUND' 예외 발생 확인한다") {
                 exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_NOT_FOUND
@@ -61,7 +62,8 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
         parentAccountEntityAdapter.save(parentAccountEntityFixture.make(id, parentAccountNo, bankCode))
 
         `when`("'parentAccountNo' & 'bankCode' 중복 등록인 경우") {
-            val exception = shouldThrow<InternalServiceException> { parentAccountManagementService.update(id, parentAccountNo, bankCode) }
+            val domain = ParentAccount(id = id, parentAccountNo = parentAccountNo, bankCode = bankCode)
+            val exception = shouldThrow<InternalServiceException> { parentAccountManagementService.update(domain) }
 
             then("'PARENT_ACCOUNT_IS_DUPLICATED' 예외 발생 확인한다") {
                 exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_IS_DUPLICATED
@@ -69,7 +71,8 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("정상 수정 요청인 경우") {
-            val result = parentAccountManagementService.update(id, "1234567890", bankCode)
+            val domain = ParentAccount(id = id, parentAccountNo = "1234567890", bankCode = bankCode)
+            val result = parentAccountManagementService.update(domain)
 
             then("수정 성공 정확 확인한다") {
                 result.id shouldBe id

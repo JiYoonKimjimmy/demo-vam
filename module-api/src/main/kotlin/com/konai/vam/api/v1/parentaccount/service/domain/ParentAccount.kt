@@ -8,8 +8,8 @@ data class ParentAccount(
 
     fun updateParentAccountNoOrBankCode(parentAccountNo: String?, bankCode: String?): ParentAccount {
         return this.copy(
-            parentAccountNo = parentAccountNo ?: this.parentAccountNo,
-            bankCode = bankCode ?: this.bankCode
+            parentAccountNo = parentAccountNo?.takeIf { it.isNotEmpty() } ?: this.parentAccountNo,
+            bankCode = bankCode?.takeIf { it.isNotEmpty() } ?: this.bankCode
         )
     }
 

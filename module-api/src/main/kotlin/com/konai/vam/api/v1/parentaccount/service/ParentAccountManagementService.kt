@@ -25,13 +25,12 @@ class ParentAccountManagementService(
         }
     }
 
-    override fun update(id: Long, parentAccountNo: String?, bankCode: String?): ParentAccount {
-        return ParentAccountPredicate(id = id)
+    override fun update(domain: ParentAccount): ParentAccount {
+        return ParentAccountPredicate(id = domain.id)
             .let { parentAccountEntityAdapter.findByPredicate(it) }
             ?.let { parentAccountMapper.entityToDomain(it) }
-            ?.updateParentAccountNoOrBankCode(parentAccountNo, bankCode)
+            ?.updateParentAccountNoOrBankCode(domain.parentAccountNo, domain.bankCode)
             ?.let { this.save(it) }
             ?: throw ResourceNotFoundException(ErrorCode.PARENT_ACCOUNT_NOT_FOUND)
     }
-
 }
