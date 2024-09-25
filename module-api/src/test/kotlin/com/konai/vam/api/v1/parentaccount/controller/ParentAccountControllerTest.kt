@@ -5,6 +5,7 @@ import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
 import com.konai.vam.api.v1.parentaccount.controller.model.CreateParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.FindAllParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.UpdateParentAccountRequest
+import com.konai.vam.core.enumerate.Result
 import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import fixtures.TestExtensionFunctions.generateUUID
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
 import org.springframework.transaction.annotation.Transactional
@@ -304,6 +306,49 @@ class ParentAccountControllerTest(
                             jsonPath("data.parentAccountId", equalTo(parentAccountId?.toInt()))
                             jsonPath("data.parentAccountNo", equalTo("1234567890"))
                             jsonPath("data.bankCode", equalTo(bankCode))
+                        }
+                    }
+            }
+        }
+    }
+
+    given("모계좌 삭제 API 요청되어") {
+        val deleteParentAccountUrl = "/api/v1/parent-account"
+
+        `when`("'parentAccountId' 기준 등록 정보 없는 경우") {
+            val parentAccountId = "1234567890"
+
+            val result = mockMvc
+                .delete("$deleteParentAccountUrl/$parentAccountId")
+                .andDo { print() }
+
+            then("'[218_3000_023] Parent Account Service. Parent account not found.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isNotFound() }
+                        content {
+                            jsonPath("result.code", equalTo("218_3000_023"))
+                            jsonPath("result.message", equalTo("Parent Account Service. Parent account not found."))
+                        }
+                    }
+            }
+        }
+
+        val parentAccountNo = generateUUID()
+        val bankCode = "123"
+        val saved = saveParentAccountEntity(parentAccountNo, bankCode)
+
+        `when`("정상 삭제 요청인 경우") {
+            val result = mockMvc
+                .delete("$deleteParentAccountUrl/${saved.id}")
+                .andDo { print() }
+
+            then("성공 경과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isOk() }
+                        content {
+                            jsonPath("result.status", equalTo(Result.SUCCESS.name))
                         }
                     }
             }

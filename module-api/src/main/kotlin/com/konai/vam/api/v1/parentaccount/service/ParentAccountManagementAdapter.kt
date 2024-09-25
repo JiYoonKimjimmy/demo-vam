@@ -8,4 +8,6 @@ interface ParentAccountManagementAdapter {
 
     fun update(domain: ParentAccount): ParentAccount
 
+    fun delete(id: Long)
+
 }

@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service
 @Service
 class ParentAccountManagementService(
     private val parentAccountSaveAdapter: ParentAccountSaveAdapter,
-    private val parentAccountFindAdapter: ParentAccountFindAdapter
+    private val parentAccountFindAdapter: ParentAccountFindAdapter,
+    private val parentAccountDeleteAdapter: ParentAccountDeleteAdapter
 ) : ParentAccountManagementAdapter {
 
     override fun create(domain: ParentAccount): ParentAccount {
@@ -18,6 +19,11 @@ class ParentAccountManagementService(
         return parentAccountFindAdapter.findOne(ParentAccountPredicate(id = domain.id))
             .updateParentAccountNoOrBankCode(domain.parentAccountNo, domain.bankCode)
             .let { parentAccountSaveAdapter.save(it) }
+    }
+
+    override fun delete(id: Long) {
+        parentAccountFindAdapter.findOne(ParentAccountPredicate(id = id))
+            .let { parentAccountDeleteAdapter.delete(id) }
     }
 
 }

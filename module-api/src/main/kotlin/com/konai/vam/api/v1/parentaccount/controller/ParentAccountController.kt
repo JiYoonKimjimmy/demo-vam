@@ -3,6 +3,8 @@ package com.konai.vam.api.v1.parentaccount.controller
 import com.konai.vam.api.v1.parentaccount.controller.model.*
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountFindAdapter
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountManagementAdapter
+import com.konai.vam.core.common.model.VoidResponse
+import com.konai.vam.core.common.model.success
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -43,6 +45,12 @@ class ParentAccountController(
             .let { parentAccountModelMapper.domainToModel(it) }
             .let { UpdateParentAccountResponse(it) }
             .success(HttpStatus.OK)
+    }
+
+    @DeleteMapping("/{parentAccountId}")
+    fun delete(@PathVariable parentAccountId: Long): ResponseEntity<VoidResponse> {
+        parentAccountManagementAdapter.delete(parentAccountId)
+        return success(HttpStatus.OK)
     }
 
 }
