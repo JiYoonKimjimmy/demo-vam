@@ -9,6 +9,8 @@ import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.enumerate.WooriBankMessageType.*
 import com.konai.vam.core.enumerate.WooriBankResponseCode
 import com.konai.vam.core.enumerate.YesOrNo
+import com.konai.vam.core.util.convertPatternOf
+import java.time.LocalTime
 
 data class WooriBankManagement(
     val id: Long? = null,
@@ -68,6 +70,7 @@ data class WooriBankManagement(
     fun convertToResponse(): WooriBankManagement {
         val messageType = runCatching { WooriBankMessageType.find(this.messageTypeCode, this.businessTypeCode) }.getOrNull()
         return this.copy(
+            transmissionTime = LocalTime.now().convertPatternOf(),
             messageTypeCode = messageType?.responseCode?.messageTypeCode ?: this.messageTypeCode,
             businessTypeCode = messageType?.responseCode?.businessTypeCode ?: this.businessTypeCode,
             responseCode = messageType?.let(this::convertResponseCode) ?: this.responseCode
