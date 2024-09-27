@@ -2,7 +2,7 @@ package com.konai.vam.api.v1.virtualaccount.controller
 
 import com.konai.vam.api.v1.virtualaccount.controller.model.*
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindAdapter
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountWriteAdapter
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountManageAdapter
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class VirtualAccountController(
     private val virtualAccountModelMapper: VirtualAccountModelMapper,
-    private val virtualAccountWriteAdapter: VirtualAccountWriteAdapter,
+    private val virtualAccountManageAdapter: VirtualAccountManageAdapter,
     private val virtualAccountFindAdapter: VirtualAccountFindAdapter
 ) {
 
     @PostMapping
     fun create(@RequestBody @Valid request: CreateVirtualAccountRequest): ResponseEntity<CreateVirtualAccountResponse> {
         return virtualAccountModelMapper.requestToDomain(request)
-            .let { virtualAccountWriteAdapter.create(it) }
+            .let { virtualAccountManageAdapter.create(it) }
             .let { virtualAccountModelMapper.domainToModel(it) }
             .let { CreateVirtualAccountResponse(it) }
             .success(HttpStatus.CREATED)

@@ -3,7 +3,7 @@ package com.konai.vam.api.testsupport
 import com.konai.vam.api.v1.batch.service.VirtualAccountCardBatchService
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountDeleteService
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountFindService
-import com.konai.vam.api.v1.parentaccount.service.ParentAccountManagementService
+import com.konai.vam.api.v1.parentaccount.service.ParentAccountManageService
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountSaveService
 import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccountMapper
 import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionFindService
@@ -12,7 +12,7 @@ import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionServi
 import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransactionMapper
 import com.konai.vam.api.v1.sequencegenerator.service.SequenceGeneratorService
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindService
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountWriteService
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountManageService
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.api.v1.virtualaccountbank.service.VirtualAccountBankFindService
 import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBankMapper
@@ -52,12 +52,12 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val parentAccountSaveService = ParentAccountSaveService(parentAccountMapper, parentAccountEntityAdapter)
     private val parentAccountFindService = ParentAccountFindService(parentAccountMapper, parentAccountEntityAdapter)
     private val parentAccountDeleteService = ParentAccountDeleteService(parentAccountEntityAdapter)
-    private val parentAccountManagementService = ParentAccountManagementService(parentAccountSaveService, parentAccountFindService, parentAccountDeleteService)
+    private val parentAccountManageService = ParentAccountManageService(parentAccountSaveService, parentAccountFindService, parentAccountDeleteService)
 
     private val virtualAccountEntityAdapter = VirtualAccountEntityAdapterFixture()
     private val virtualAccountMapper = VirtualAccountMapper(parentAccountMapper)
 
-    private val virtualAccountWriteService = VirtualAccountWriteService(virtualAccountMapper, virtualAccountEntityAdapter, parentAccountFindService)
+    private val virtualAccountManageService = VirtualAccountManageService(virtualAccountMapper, virtualAccountEntityAdapter, parentAccountFindService)
     private val virtualAccountFindService = VirtualAccountFindService(virtualAccountEntityAdapter, virtualAccountMapper)
 
     private val virtualAccountBankEntityAdapter = VirtualAccountBankEntityAdapterFixture()
@@ -112,7 +112,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val parentAccountEntityFixture = ParentAccountEntityFixture()
 
     // service
-    fun virtualAccountWriteService() = this.virtualAccountWriteService
+    fun virtualAccountManageService() = this.virtualAccountManageService
     fun virtualAccountFindService() = this.virtualAccountFindService
     fun virtualAccountBankFindService() = this.virtualAccountBankFindService
     fun virtualAccountCardBatchService() = this.virtualAccountCardBatchService
@@ -126,7 +126,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     fun wooriBankCommonMessageService() = this.wooriBankCommonMessageService
     fun wooriBankWorkService() = this.wooriBankWorkService
     fun redisTemplateService() = this.redisTemplateService
-    fun parentAccountManagementService() = this.parentAccountManagementService
+    fun parentAccountManageService() = this.parentAccountManageService
     fun parentAccountFindService() = this.parentAccountFindService
 
     // entity adapter

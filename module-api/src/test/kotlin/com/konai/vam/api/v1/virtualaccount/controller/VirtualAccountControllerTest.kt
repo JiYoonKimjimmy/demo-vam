@@ -5,7 +5,7 @@ import com.konai.vam.api.testsupport.CustomMockMvcTest
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindAdapter
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountWriteAdapter
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountManageAdapter
 import com.konai.vam.core.common.enumerate.ResultStatus
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
@@ -29,7 +29,7 @@ class VirtualAccountControllerTest(
 
     @Autowired private val mockMvc: MockMvc,
 
-    @MockkBean private val virtualAccountWriteAdapter: VirtualAccountWriteAdapter,
+    @MockkBean private val virtualAccountManageAdapter: VirtualAccountManageAdapter,
     @MockkBean private val virtualAccountFindAdapter: VirtualAccountFindAdapter
 
 ) : BehaviorSpec({
@@ -71,7 +71,7 @@ class VirtualAccountControllerTest(
         )
 
         `when`("중복 계좌번호 & 은행코드 예외 발생하는 경우") {
-            every { virtualAccountWriteAdapter.create(any()) } throws InternalServiceException(ErrorCode.INTERNAL_SERVER_ERROR)
+            every { virtualAccountManageAdapter.create(any()) } throws InternalServiceException(ErrorCode.INTERNAL_SERVER_ERROR)
 
             then("InternalServerException 예외 발생하여 실패한다") {
                 mockMvc
@@ -88,7 +88,7 @@ class VirtualAccountControllerTest(
         }
 
         `when`("정상 가상 계좌 등록 정보인 경우") {
-            every { virtualAccountWriteAdapter.create(any()) } returns virtualAccountFixture.make()
+            every { virtualAccountManageAdapter.create(any()) } returns virtualAccountFixture.make()
 
             then("DB 저장하여 정상 응답한다") {
                 mockMvc

@@ -5,11 +5,11 @@ import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
 import org.springframework.stereotype.Service
 
 @Service
-class ParentAccountManagementService(
+class ParentAccountManageService(
     private val parentAccountSaveAdapter: ParentAccountSaveAdapter,
     private val parentAccountFindAdapter: ParentAccountFindAdapter,
     private val parentAccountDeleteAdapter: ParentAccountDeleteAdapter
-) : ParentAccountManagementAdapter {
+) : ParentAccountManageAdapter {
 
     override fun create(domain: ParentAccount): ParentAccount {
         return parentAccountSaveAdapter.save(domain)

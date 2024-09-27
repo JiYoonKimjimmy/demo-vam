@@ -12,9 +12,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
-class ParentAccountManagementServiceTest : CustomBehaviorSpec({
+class ParentAccountManageServiceTest : CustomBehaviorSpec({
 
-    val parentAccountManagementService = parentAccountManagementService()
+    val parentAccountManageService = parentAccountManageService()
     val parentAccountEntityAdapter = parentAccountEntityAdapter()
     val parentAccountEntityFixture = parentAccountEntityFixture()
 
@@ -24,7 +24,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
         val domain = ParentAccount(parentAccountNo = parentAccountNo, bankCode = bankCode)
 
         `when`("신규 생성 요청인 경우") {
-            val result = parentAccountManagementService.create(domain)
+            val result = parentAccountManageService.create(domain)
 
             then("생성 결과 정상 확인한다") {
                 result.id shouldNotBe null
@@ -38,7 +38,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
         }
 
         `when`("'parentAccountNo' & 'bankCode' 조건 동일한 모계좌 정보 있는 경우") {
-            val exception = shouldThrow<InternalServiceException> { parentAccountManagementService.create(domain) }
+            val exception = shouldThrow<InternalServiceException> { parentAccountManageService.create(domain) }
 
             then("'PARENT_ACCOUNT_NO_IS_DUPLICATED' 예외 발생 정상 확인한다") {
                 exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_IS_DUPLICATED
@@ -53,7 +53,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
 
         `when`("'id' 기준 등록 정보 없는 경우") {
             val domain = ParentAccount(id = id, parentAccountNo = parentAccountNo, bankCode = bankCode)
-            val exception = shouldThrow<ResourceNotFoundException> { parentAccountManagementService.update(domain) }
+            val exception = shouldThrow<ResourceNotFoundException> { parentAccountManageService.update(domain) }
 
             then("'PARENT_ACCOUNT_NOT_FOUND' 예외 발생 정상 확인한다") {
                 exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_NOT_FOUND
@@ -64,7 +64,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
 
         `when`("'parentAccountNo' & 'bankCode' 중복 등록인 경우") {
             val domain = ParentAccount(id = id, parentAccountNo = parentAccountNo, bankCode = bankCode)
-            val exception = shouldThrow<InternalServiceException> { parentAccountManagementService.update(domain) }
+            val exception = shouldThrow<InternalServiceException> { parentAccountManageService.update(domain) }
 
             then("'PARENT_ACCOUNT_IS_DUPLICATED' 예외 발생 확인한다") {
                 exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_IS_DUPLICATED
@@ -73,7 +73,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
 
         `when`("정상 수정 요청인 경우") {
             val domain = ParentAccount(id = id, parentAccountNo = "1234567890", bankCode = bankCode)
-            val result = parentAccountManagementService.update(domain)
+            val result = parentAccountManageService.update(domain)
 
             then("수정 성공 정상 확인한다") {
                 result.id shouldBe id
@@ -89,7 +89,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
         val bankCode = "123"
 
         `when`("'id' 기준 등록 정보 없는 경우") {
-            val exception = shouldThrow<ResourceNotFoundException> { parentAccountManagementService.delete(id) }
+            val exception = shouldThrow<ResourceNotFoundException> { parentAccountManageService.delete(id) }
 
             then("'PARENT_ACCOUNT_NOT_FOUND' 예외 발생 정상 확인한다") {
                 exception.errorCode shouldBe ErrorCode.PARENT_ACCOUNT_NOT_FOUND
@@ -99,7 +99,7 @@ class ParentAccountManagementServiceTest : CustomBehaviorSpec({
         parentAccountEntityAdapter.save(parentAccountEntityFixture.make(id, parentAccountNo, bankCode))
 
         `when`("정상 삭제 요청인 경우") {
-            parentAccountManagementService.delete(id)
+            parentAccountManageService.delete(id)
 
             then("삭제 성공 정상 확인한다") {
                 val result = parentAccountEntityAdapter.findByPredicate(ParentAccountPredicate(id))

@@ -8,11 +8,11 @@ import com.konai.vam.core.repository.virtualaccount.VirtualAccountEntityAdapter
 import org.springframework.stereotype.Service
 
 @Service
-class VirtualAccountWriteService(
+class VirtualAccountManageService(
     private val virtualAccountMapper: VirtualAccountMapper,
     private val virtualAccountEntityAdapter: VirtualAccountEntityAdapter,
     private val parentAccountFindAdapter: ParentAccountFindAdapter
-) : VirtualAccountWriteAdapter {
+) : VirtualAccountManageAdapter {
 
     override fun create(domain: VirtualAccount): VirtualAccount {
         return domain
