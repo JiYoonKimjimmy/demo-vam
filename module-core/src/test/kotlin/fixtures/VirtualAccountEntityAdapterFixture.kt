@@ -77,10 +77,6 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
         }
     }
 
-    private fun deleteDuplicated(accountNo: String, bankCode: String) {
-        entities.removeIf { it.accountNo == accountNo && it.bankCode == bankCode }
-    }
-
     private fun deleteDuplicated(entity: VirtualAccountEntity) {
         entities.removeIf { it.id == entity.id || (it.accountNo == entity.accountNo && it.bankCode == entity.bankCode) }
     }
