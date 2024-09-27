@@ -9,9 +9,12 @@ import com.konai.vam.core.enumerate.VirtualAccountStatus
 import com.konai.vam.core.repository.virtualaccount.VirtualAccountEntityAdapter
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
+import fixtures.TestExtensionFunctions.generateSequence
 import java.util.*
 
 class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
+
+    val entities = mutableListOf<VirtualAccountEntity>()
 
     private val virtualAccountEntityFixture = VirtualAccountEntityFixture()
 
@@ -33,47 +36,63 @@ class VirtualAccountEntityAdapterFixture : VirtualAccountEntityAdapter {
     }
 
     fun clear() {
-        virtualAccountEntityFixture.entities.clear()
+        entities.clear()
     }
 
     override fun saveAll(entities: List<VirtualAccountEntity>): List<VirtualAccountEntity> {
-        return virtualAccountEntityFixture.entities
+        return entities
     }
 
     override fun save(entity: VirtualAccountEntity): VirtualAccountEntity {
-        return virtualAccountEntityFixture.save(entity)
+        deleteDuplicated(entity)
+        entities += entity.apply { this.id = generateSequence() }
+        return entity
     }
 
     override fun findById(id: Long, afterProc: ((Optional<VirtualAccountEntity>) -> VirtualAccountEntity)?): VirtualAccountEntity {
-        return virtualAccountEntityFixture.entities.first()
+        return entities.first()
     }
 
     override fun findByPredicate(predicate: VirtualAccountPredicate): Optional<VirtualAccountEntity> {
-        return virtualAccountEntityFixture.entities
-            .find {
-                ifNotNullEquals(predicate.accountNo, it.accountNo)
-                && ifNotNullEquals(predicate.bankCode, it.bankCode)
-                && ifNotNullEquals(predicate.connectType, it.connectType)
-                && ifNotNullEquals(predicate.status, it.status)
-                && ifNotNullEquals(predicate.par, it.par)
-                && ifNotNullEquals(predicate.serviceId, it.serviceId)
-                && ifNotNullEquals(predicate.cardConnectStatus, it.cardConnectStatus)
-            }
+        return entities
+            .find { it.checkByPredicate(predicate) }
             .let { Optional.ofNullable(it) }
     }
 
     override fun findAllByPredicate(predicate: VirtualAccountPredicate, pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity?> {
-        return BasePageable(content = virtualAccountEntityFixture.entities)
+        return BasePageable(content = entities)
+    }
+
+    override fun existsByAccountNoAndBankCode(accountNo: String, bankCode: String): Boolean {
+        return entities.any { it.accountNo == accountNo && it.bankCode == bankCode }
     }
 
     override fun existsByPars(pars: List<String>): Boolean {
-        return virtualAccountEntityFixture.entities.any { it.par in pars }
+        return entities.any { it.par in pars }
     }
 
     override fun existsByConnectStatusAndBatchId(connectStatus: VirtualAccountCardConnectStatus, batchId: String): Boolean {
-        return virtualAccountEntityFixture.entities.any {
+        return entities.any {
             it.cardConnectStatus == connectStatus && it.cardSeBatchId == batchId
         }
+    }
+
+    private fun deleteDuplicated(accountNo: String, bankCode: String) {
+        entities.removeIf { it.accountNo == accountNo && it.bankCode == bankCode }
+    }
+
+    private fun deleteDuplicated(entity: VirtualAccountEntity) {
+        entities.removeIf { it.id == entity.id || (it.accountNo == entity.accountNo && it.bankCode == entity.bankCode) }
+    }
+
+    private fun VirtualAccountEntity.checkByPredicate(predicate: VirtualAccountPredicate): Boolean {
+        return ifNotNullEquals(predicate.accountNo, this.accountNo)
+                && ifNotNullEquals(predicate.bankCode, this.bankCode)
+                && ifNotNullEquals(predicate.connectType, this.connectType)
+                && ifNotNullEquals(predicate.status, this.status)
+                && ifNotNullEquals(predicate.par, this.par)
+                && ifNotNullEquals(predicate.serviceId, this.serviceId)
+                && ifNotNullEquals(predicate.cardConnectStatus, this.cardConnectStatus)
     }
 
 }

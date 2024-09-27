@@ -38,8 +38,8 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
     val virtualAccountBatchHistoryEntityAdapter = mockk<VirtualAccountBatchHistoryEntityAdapter>()
     val virtualAccountBatchHistorySaveAdapter = mockk<VirtualAccountBatchHistorySaveAdapter>()
 
-    val virtualAccountFindService = VirtualAccountFindService(virtualAccountEntityAdapter, virtualAccountMapper)
-    val virtualAccountSaveService = VirtualAccountSaveService(virtualAccountEntityAdapter, virtualAccountMapper)
+    val virtualAccountFindService = VirtualAccountFindService(virtualAccountMapper, virtualAccountEntityAdapter)
+    val virtualAccountSaveService = VirtualAccountSaveService(virtualAccountMapper, virtualAccountEntityAdapter)
     val virtualAccountCardConnectMapper = VirtualAccountCardConnectMapper()
 
     val virtualAccountCardConnectService = VirtualAccountCardConnectService(virtualAccountCardConnectMapper, virtualAccountFindService, virtualAccountSaveService, virtualAccountBatchHistorySaveAdapter)

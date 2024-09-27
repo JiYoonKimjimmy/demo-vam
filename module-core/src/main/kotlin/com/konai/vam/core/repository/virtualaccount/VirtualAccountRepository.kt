@@ -56,6 +56,10 @@ class VirtualAccountRepository(
         ).toBasePageable()
     }
 
+    override fun existsByAccountNoAndBankCode(accountNo: String, bankCode: String): Boolean {
+        return virtualAccountJpaRepository.existsByAccountNoAndBankCode(accountNo, bankCode)
+    }
+
     override fun existsByPars(pars: List<String>): Boolean {
         return virtualAccountJpaRepository.existsByParIn(pars)
     }

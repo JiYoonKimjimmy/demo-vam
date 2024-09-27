@@ -13,6 +13,7 @@ import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransacti
 import com.konai.vam.api.v1.sequencegenerator.service.SequenceGeneratorService
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindService
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountManageService
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountSaveService
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.api.v1.virtualaccountbank.service.VirtualAccountBankFindService
 import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBankMapper
@@ -57,8 +58,9 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val virtualAccountEntityAdapter = VirtualAccountEntityAdapterFixture()
     private val virtualAccountMapper = VirtualAccountMapper(parentAccountMapper)
 
+    private val virtualAccountSaveService = VirtualAccountSaveService(virtualAccountMapper, virtualAccountEntityAdapter)
+    private val virtualAccountFindService = VirtualAccountFindService(virtualAccountMapper, virtualAccountEntityAdapter)
     private val virtualAccountManageService = VirtualAccountManageService(virtualAccountMapper, virtualAccountEntityAdapter, parentAccountFindService)
-    private val virtualAccountFindService = VirtualAccountFindService(virtualAccountEntityAdapter, virtualAccountMapper)
 
     private val virtualAccountBankEntityAdapter = VirtualAccountBankEntityAdapterFixture()
     private val virtualAccountBankMapper = VirtualAccountBankMapper()
@@ -112,8 +114,9 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val parentAccountEntityFixture = ParentAccountEntityFixture()
 
     // service
-    fun virtualAccountManageService() = this.virtualAccountManageService
+    fun virtualAccountSaveService() = this.virtualAccountSaveService
     fun virtualAccountFindService() = this.virtualAccountFindService
+    fun virtualAccountManageService() = this.virtualAccountManageService
     fun virtualAccountBankFindService() = this.virtualAccountBankFindService
     fun virtualAccountCardBatchService() = this.virtualAccountCardBatchService
     fun wooriBankTransactionService() = this.wooriBankTransactionService

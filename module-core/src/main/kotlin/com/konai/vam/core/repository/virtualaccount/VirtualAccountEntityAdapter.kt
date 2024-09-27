@@ -19,6 +19,8 @@ interface VirtualAccountEntityAdapter {
 
     fun findAllByPredicate(predicate: VirtualAccountPredicate, pageableRequest: PageableRequest): BasePageable<VirtualAccountEntity?>
 
+    fun existsByAccountNoAndBankCode(accountNo: String, bankCode: String): Boolean
+
     fun existsByPars(pars: List<String>): Boolean
 
     fun existsByConnectStatusAndBatchId(connectStatus: VirtualAccountCardConnectStatus, batchId: String): Boolean

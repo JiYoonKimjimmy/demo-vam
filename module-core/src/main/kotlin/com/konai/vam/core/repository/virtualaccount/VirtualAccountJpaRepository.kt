@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface VirtualAccountJpaRepository : JpaRepository<VirtualAccountEntity, Long>, KotlinJdslJpqlExecutor {
 
+    fun existsByAccountNoAndBankCode(accountNo: String, bankCode: String): Boolean
+
     fun existsByParIn(pars: List<String>): Boolean
 
     fun existsByCardConnectStatusAndCardSeBatchId(connectStatus: VirtualAccountCardConnectStatus, batchId: String): Boolean

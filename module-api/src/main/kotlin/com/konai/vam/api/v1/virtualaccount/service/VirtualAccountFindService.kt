@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class VirtualAccountFindService(
-    private val virtualAccountEntityAdapter: VirtualAccountEntityAdapter,
     private val virtualAccountMapper: VirtualAccountMapper,
+    private val virtualAccountEntityAdapter: VirtualAccountEntityAdapter
 ) : VirtualAccountFindAdapter {
 
     override fun findByPredicate(predicate: VirtualAccountPredicate): VirtualAccount {

@@ -17,7 +17,7 @@ class VirtualAccountEntity(
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VT_ACN_LIST_SNO_SEQ")
     @SequenceGenerator(name = "VT_ACN_LIST_SNO_SEQ", sequenceName = "VT_ACN_LIST_SNO_SEQ", allocationSize = 1)
     @Column(name = "VT_ACN_LIST_SNO")
-    val id: Long? = null,
+    var id: Long? = null,
 
     @Convert(converter = EncryptionCustomerInfoConverter::class)
     @Column(name = "ENC_VT_ACNO")

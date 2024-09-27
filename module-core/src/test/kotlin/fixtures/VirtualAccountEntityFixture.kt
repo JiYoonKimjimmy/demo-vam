@@ -12,8 +12,6 @@ import java.security.SecureRandom
 
 class VirtualAccountEntityFixture {
 
-    val entities = mutableListOf<VirtualAccountEntity>()
-
     fun make(
         id: Long? = SecureRandom().nextLong(),
         accountNo: String = generateUUID(14),
@@ -38,16 +36,6 @@ class VirtualAccountEntityFixture {
             cardSeBatchId = cardSeBatchId,
             parentAccount = parentAccount ?: ParentAccountEntity(id = SecureRandom().nextLong(), parentAccountNo = generateUUID(14), bankCode = bankCode)
         )
-    }
-
-    fun save(entity: VirtualAccountEntity): VirtualAccountEntity {
-        deleteDuplicated(entity.accountNo, entity.bankCode)
-        entities += entity
-        return entity
-    }
-
-    private fun deleteDuplicated(accountNo: String, bankCode: String) {
-        entities.removeIf { it.accountNo == accountNo && it.bankCode == bankCode }
     }
 
 }
