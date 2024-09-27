@@ -1,4 +1,4 @@
-package com.konai.vam.core.config
+package com.konai.vam.api.testsupport
 
 import io.kotest.core.config.AbstractProjectConfig
 import io.kotest.core.extensions.Extension

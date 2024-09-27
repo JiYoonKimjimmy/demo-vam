@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.virtualaccountbatchhistory
 
-import com.konai.vam.core.common.annotation.CustomDataJpaTest
+import com.konai.vam.core.testsupport.CustomDataJpaTest
 import com.konai.vam.core.enumerate.Result.FAILED
 import com.konai.vam.core.enumerate.Result.SUCCESS
 import fixtures.VirtualAccountBatchHistoryEntityFixture

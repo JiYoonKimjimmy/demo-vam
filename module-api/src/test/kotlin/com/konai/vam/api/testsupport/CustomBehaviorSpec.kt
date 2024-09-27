@@ -1,4 +1,4 @@
-package com.konai.vam.api.v1.kotestspec
+package com.konai.vam.api.testsupport
 
 import com.konai.vam.api.v1.batch.service.VirtualAccountCardBatchService
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountDeleteService

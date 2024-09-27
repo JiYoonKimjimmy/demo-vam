@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.management
 
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.api.v1.wooribank.cache.WooriBankAggregationCache
 import com.konai.vam.core.common.WOORI_BANK_PREFIX
 import com.konai.vam.core.common.error.ErrorCode

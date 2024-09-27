@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.sequencegenerator
 
-import com.konai.vam.core.common.annotation.CustomDataJpaTest
+import com.konai.vam.core.testsupport.CustomDataJpaTest
 import com.konai.vam.core.enumerate.SequenceGeneratorType
 import fixtures.SequenceGeneratorEntityFixture
 import io.kotest.core.spec.style.BehaviorSpec

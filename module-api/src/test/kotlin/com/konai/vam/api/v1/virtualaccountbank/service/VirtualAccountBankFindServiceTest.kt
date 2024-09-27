@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.virtualaccountbank.service
 
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.core.repository.virtualaccountbank.VirtualAccountBankConst
 import com.konai.vam.core.repository.virtualaccountbank.jdsl.VirtualAccountBankPredicate
 import io.kotest.matchers.shouldBe

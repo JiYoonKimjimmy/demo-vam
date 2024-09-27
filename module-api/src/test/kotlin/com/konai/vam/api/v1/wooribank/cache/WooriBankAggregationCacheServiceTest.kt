@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.cache
 
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
 import com.konai.vam.core.enumerate.RechargeTransactionType.RECHARGE
 import com.konai.vam.core.util.DATE_BASIC_PATTERN

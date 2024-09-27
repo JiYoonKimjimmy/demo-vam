@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.virtualaccount
 
-import com.konai.vam.core.common.annotation.CustomDataJpaTest
+import com.konai.vam.core.testsupport.CustomDataJpaTest
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.common.model.PageableRequest

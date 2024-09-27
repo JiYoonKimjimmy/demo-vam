@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.wooribank.management
 
-import com.konai.vam.core.common.annotation.CustomDataJpaTest
+import com.konai.vam.core.testsupport.CustomDataJpaTest
 import com.konai.vam.core.enumerate.WooriBankMessageType.VIRTUAL_ACCOUNT_DEPOSIT
 import com.konai.vam.core.enumerate.WooriBankResponseCode.`0000`
 import com.konai.vam.core.repository.wooribank.management.jdsl.WooriBankManagementPredicate

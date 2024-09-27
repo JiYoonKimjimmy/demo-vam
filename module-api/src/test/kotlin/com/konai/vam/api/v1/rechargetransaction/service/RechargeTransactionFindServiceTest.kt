@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.rechargetransaction.service
 
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.ResourceNotFoundException
 import com.konai.vam.core.enumerate.Result

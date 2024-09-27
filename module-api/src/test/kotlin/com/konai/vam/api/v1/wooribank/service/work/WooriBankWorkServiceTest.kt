@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.work
 
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.core.enumerate.WooriBankMessageType
 import io.kotest.matchers.shouldBe
 import io.mockk.every

@@ -1,7 +1,7 @@
 package com.konai.vam.api.v1.parentaccount.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.api.v1.parentaccount.controller.model.CreateParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.FindAllParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.UpdateParentAccountRequest

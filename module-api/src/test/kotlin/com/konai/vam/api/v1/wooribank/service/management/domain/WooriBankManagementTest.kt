@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.wooribank.service.management.domain
 
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.enumerate.WooriBankMessageType.*

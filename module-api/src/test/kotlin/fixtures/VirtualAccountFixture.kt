@@ -6,6 +6,7 @@ import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.DISCONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
+import fixtures.TestExtensionFunctions.generateUUID
 
 class VirtualAccountFixture {
 

@@ -9,6 +9,7 @@ import com.konai.vam.core.util.DATE_yyMMdd_PATTERN
 import com.konai.vam.core.util.TIME_BASIC_PATTERN
 import com.konai.vam.core.util.convertPatternOf
 import com.konasl.commonlib.springweb.correlation.core.RequestContext
+import fixtures.TestExtensionFunctions.generateUUID
 import java.time.LocalDate
 import java.time.LocalTime
 

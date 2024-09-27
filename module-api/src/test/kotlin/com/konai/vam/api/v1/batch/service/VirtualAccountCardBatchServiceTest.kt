@@ -1,6 +1,6 @@
 package com.konai.vam.api.v1.batch.service
 
-import com.konai.vam.api.v1.kotestspec.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.core.common.model.VoidResponse
 import io.mockk.every
 import io.mockk.verify

@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.parentaccount
 
-import com.konai.vam.core.common.annotation.CustomDataJpaTest
+import com.konai.vam.core.testsupport.CustomDataJpaTest
 import com.konai.vam.core.common.getContentFirstOrNull
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate

@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.virtualaccountbank
 
-import com.konai.vam.core.common.annotation.CustomDataJpaTest
+import com.konai.vam.core.testsupport.CustomDataJpaTest
 import com.konai.vam.core.repository.virtualaccountbank.jdsl.VirtualAccountBankPredicate
 import fixtures.VirtualAccountBankEntityFixture
 import org.assertj.core.api.Assertions.assertThat

@@ -1,6 +1,6 @@
 package com.konai.vam.core.repository.rechargetransaction
 
-import com.konai.vam.core.common.annotation.CustomDataJpaTest
+import com.konai.vam.core.testsupport.CustomDataJpaTest
 import fixtures.RechargeTransactionEntityFixture
 import fixtures.TestExtensionFunctions.generateUUID
 import io.kotest.core.spec.style.StringSpec
