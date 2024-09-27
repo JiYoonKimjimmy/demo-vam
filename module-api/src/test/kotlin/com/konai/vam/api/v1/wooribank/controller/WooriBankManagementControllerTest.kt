@@ -2,6 +2,7 @@ package com.konai.vam.api.v1.wooribank.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.testsupport.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomMockMvcTest
 import com.konai.vam.core.common.WOORI_BANK_PREFIX
 import com.konai.vam.core.enumerate.RechargeTransactionCancelStatus
 import com.konai.vam.core.enumerate.RechargeTransactionType.CANCEL
@@ -10,13 +11,11 @@ import com.konai.vam.core.enumerate.Result.SUCCESS
 import com.konai.vam.core.enumerate.WooriBankMessageType
 import com.konai.vam.core.repository.rechargetransaction.RechargeTransactionRepository
 import com.konai.vam.core.util.convertPatternOf
-import fixtures.WooriBankManagementRequestFixture
 import fixtures.TestExtensionFunctions.generateUUID
+import fixtures.WooriBankManagementRequestFixture
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -25,8 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalTime
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@CustomMockMvcTest
 class WooriBankManagementControllerTest @Autowired constructor(
     private val mockMvc: MockMvc,
     private val rechargeTransactionRepository: RechargeTransactionRepository

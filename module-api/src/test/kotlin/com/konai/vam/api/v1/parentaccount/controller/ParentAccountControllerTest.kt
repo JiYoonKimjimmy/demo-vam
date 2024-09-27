@@ -2,6 +2,7 @@ package com.konai.vam.api.v1.parentaccount.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.testsupport.CustomBehaviorSpec
+import com.konai.vam.api.testsupport.CustomMockMvcTest
 import com.konai.vam.api.v1.parentaccount.controller.model.CreateParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.FindAllParentAccountRequest
 import com.konai.vam.api.v1.parentaccount.controller.model.UpdateParentAccountRequest
@@ -10,18 +11,13 @@ import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
 import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import fixtures.TestExtensionFunctions.generateUUID
 import org.hamcrest.Matchers.*
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
-import org.springframework.transaction.annotation.Transactional
 
-@AutoConfigureMockMvc
-@Transactional
-@SpringBootTest
+@CustomMockMvcTest
 class ParentAccountControllerTest(
     private val mockMvc: MockMvc,
     private val parentAccountEntityAdapter: ParentAccountEntityAdapter

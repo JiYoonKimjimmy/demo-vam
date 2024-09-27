@@ -1,6 +1,7 @@
 package com.konai.vam.api.v1.virtualaccount.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.konai.vam.api.testsupport.CustomMockMvcTest
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindAdapter
@@ -16,19 +17,14 @@ import fixtures.VirtualAccountFixture
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.transaction.annotation.Transactional
 
-@AutoConfigureMockMvc
-@Transactional
-@SpringBootTest
+@CustomMockMvcTest
 class VirtualAccountControllerTest(
 
     @Autowired private val mockMvc: MockMvc,
