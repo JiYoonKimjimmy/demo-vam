@@ -12,7 +12,7 @@ import com.konai.vam.api.v1.rechargetransaction.service.RechargeTransactionServi
 import com.konai.vam.api.v1.rechargetransaction.service.domain.RechargeTransactionMapper
 import com.konai.vam.api.v1.sequencegenerator.service.SequenceGeneratorService
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindService
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountService
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountWriteService
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.api.v1.virtualaccountbank.service.VirtualAccountBankFindService
 import com.konai.vam.api.v1.virtualaccountbank.service.domain.VirtualAccountBankMapper
@@ -57,7 +57,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val virtualAccountEntityAdapter = VirtualAccountEntityAdapterFixture()
     private val virtualAccountMapper = VirtualAccountMapper(parentAccountMapper)
 
-    private val virtualAccountService = VirtualAccountService(virtualAccountMapper, virtualAccountEntityAdapter, parentAccountFindService)
+    private val virtualAccountWriteService = VirtualAccountWriteService(virtualAccountMapper, virtualAccountEntityAdapter, parentAccountFindService)
     private val virtualAccountFindService = VirtualAccountFindService(virtualAccountEntityAdapter, virtualAccountMapper)
 
     private val virtualAccountBankEntityAdapter = VirtualAccountBankEntityAdapterFixture()
@@ -112,7 +112,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val parentAccountEntityFixture = ParentAccountEntityFixture()
 
     // service
-    fun virtualAccountService() = this.virtualAccountService
+    fun virtualAccountWriteService() = this.virtualAccountWriteService
     fun virtualAccountFindService() = this.virtualAccountFindService
     fun virtualAccountBankFindService() = this.virtualAccountBankFindService
     fun virtualAccountCardBatchService() = this.virtualAccountCardBatchService

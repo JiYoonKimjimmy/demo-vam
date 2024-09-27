@@ -3,8 +3,8 @@ package com.konai.vam.api.v1.virtualaccount.controller
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountRequest
-import com.konai.vam.api.v1.virtualaccount.controller.model.VirtualAccountModelMapper
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountAdapter
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindAdapter
+import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountWriteAdapter
 import com.konai.vam.core.common.enumerate.ResultStatus
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
@@ -12,28 +12,29 @@ import com.konai.vam.core.common.model.BasePageable
 import com.konai.vam.core.common.model.PageableRequest
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.ninjasquad.springmockk.MockkBean
-import com.ninjasquad.springmockk.SpykBean
 import fixtures.VirtualAccountFixture
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.transaction.annotation.Transactional
 
 @AutoConfigureMockMvc
-@WebMvcTest(VirtualAccountController::class)
+@Transactional
+@SpringBootTest
 class VirtualAccountControllerTest(
 
     @Autowired private val mockMvc: MockMvc,
 
-    @MockkBean private val virtualAccountAdapter: VirtualAccountAdapter,
-    @SpykBean private val virtualAccountModelMapper: VirtualAccountModelMapper
+    @MockkBean private val virtualAccountWriteAdapter: VirtualAccountWriteAdapter,
+    @MockkBean private val virtualAccountFindAdapter: VirtualAccountFindAdapter
 
 ) : BehaviorSpec({
 
@@ -74,7 +75,7 @@ class VirtualAccountControllerTest(
         )
 
         `when`("중복 계좌번호 & 은행코드 예외 발생하는 경우") {
-            every { virtualAccountAdapter.create(any()) } throws InternalServiceException(ErrorCode.INTERNAL_SERVER_ERROR)
+            every { virtualAccountWriteAdapter.create(any()) } throws InternalServiceException(ErrorCode.INTERNAL_SERVER_ERROR)
 
             then("InternalServerException 예외 발생하여 실패한다") {
                 mockMvc
@@ -91,7 +92,7 @@ class VirtualAccountControllerTest(
         }
 
         `when`("정상 가상 계좌 등록 정보인 경우") {
-            every { virtualAccountAdapter.create(any()) } returns virtualAccountFixture.make()
+            every { virtualAccountWriteAdapter.create(any()) } returns virtualAccountFixture.make()
 
             then("DB 저장하여 정상 응답한다") {
                 mockMvc
@@ -118,7 +119,7 @@ class VirtualAccountControllerTest(
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
             val content = listOf(virtualAccountFixture.make())
-            every { virtualAccountAdapter.findPage(any(), any()) } returns BasePageable(pageable, content)
+            every { virtualAccountFindAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, content)
 
             then("1건 조회하여 정상 응답한다") {
                 mockMvc
@@ -141,7 +142,7 @@ class VirtualAccountControllerTest(
 
             val pageable = BasePageable.Pageable(numberOfElements = size)
             val content = listOf(virtualAccountFixture.make())
-            every { virtualAccountAdapter.findPage(any(), any()) } returns BasePageable(pageable, content)
+            every { virtualAccountFindAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, content)
 
             then("조회 결과 정상 응답한다") {
                 mockMvc

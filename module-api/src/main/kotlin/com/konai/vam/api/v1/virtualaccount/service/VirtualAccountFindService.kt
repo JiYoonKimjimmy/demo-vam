@@ -20,16 +20,19 @@ class VirtualAccountFindService(
     private val virtualAccountMapper: VirtualAccountMapper,
 ) : VirtualAccountFindAdapter {
 
+    override fun findByPredicate(predicate: VirtualAccountPredicate): VirtualAccount {
+        return virtualAccountEntityAdapter.findByPredicate(predicate)
+            .orElseThrow { ResourceNotFoundException(ErrorCode.VIRTUAL_ACCOUNT_NOT_FOUND) }
+            .let { virtualAccountMapper.entityToDomain(it) }
+    }
+
+    override fun findAllByPredicate(predicate: VirtualAccountPredicate, pageable: PageableRequest): BasePageable<VirtualAccount> {
+        return virtualAccountEntityAdapter.findAllByPredicate(predicate, pageable)
+            .let { virtualAccountMapper.entitiesToPageable(it) }
+    }
+
     override fun findCardConnectedVirtualAccount(accountNo: String): VirtualAccount {
         return findByPredicate(predicate = VirtualAccountPredicate(accountNo = accountNo, status = ACTIVE)).checkConnected()
-    }
-
-    override fun existsByPars(pars: List<String>): Boolean {
-        return virtualAccountEntityAdapter.existsByPars(pars)
-    }
-
-    override fun existsByConnectStatusAndBatchId(connectStatus: VirtualAccountCardConnectStatus, batchId: String): Boolean {
-        return virtualAccountEntityAdapter.existsByConnectStatusAndBatchId(connectStatus, batchId)
     }
 
     override fun findAllConnectableVirtualAccounts(bankCode: String, size: Int): List<VirtualAccount> {
@@ -38,15 +41,12 @@ class VirtualAccountFindService(
         return findAllByPredicate(predicate, pageable).content
     }
 
-    private fun findByPredicate(predicate: VirtualAccountPredicate): VirtualAccount {
-        return virtualAccountEntityAdapter.findByPredicate(predicate)
-            .orElseThrow { ResourceNotFoundException(ErrorCode.VIRTUAL_ACCOUNT_NOT_FOUND) }
-            .let { virtualAccountMapper.entityToDomain(it) }
+    override fun existsByPars(pars: List<String>): Boolean {
+        return virtualAccountEntityAdapter.existsByPars(pars)
     }
 
-    private fun findAllByPredicate(predicate: VirtualAccountPredicate, pageable: PageableRequest): BasePageable<VirtualAccount> {
-        return virtualAccountEntityAdapter.findAllByPredicate(predicate, pageable)
-            .let { virtualAccountMapper.entitiesToPageable(it) }
+    override fun existsByConnectStatusAndBatchId(connectStatus: VirtualAccountCardConnectStatus, batchId: String): Boolean {
+        return virtualAccountEntityAdapter.existsByConnectStatusAndBatchId(connectStatus, batchId)
     }
 
 }
