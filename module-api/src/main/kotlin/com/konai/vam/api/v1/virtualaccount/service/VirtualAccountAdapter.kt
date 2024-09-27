@@ -7,7 +7,7 @@ import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
 
 interface VirtualAccountAdapter {
 
-    fun create(account: VirtualAccount): VirtualAccount
+    fun create(domain: VirtualAccount): VirtualAccount
 
     fun findOne(predicate: VirtualAccountPredicate): VirtualAccount
 

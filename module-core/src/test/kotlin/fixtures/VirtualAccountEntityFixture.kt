@@ -5,6 +5,7 @@ import com.konai.vam.core.enumerate.VirtualAccountConnectType
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.konai.vam.core.enumerate.VirtualAccountStatus
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
+import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import fixtures.TestExtensionFunctions.generateUUID
 import java.security.SecureRandom
@@ -22,7 +23,8 @@ class VirtualAccountEntityFixture {
         par: String? = null,
         serviceId: String? = null,
         cardConnectStatus: VirtualAccountCardConnectStatus = VirtualAccountCardConnectStatus.DISCONNECTED,
-        cardSeBatchId: String? = null
+        cardSeBatchId: String? = null,
+        parentAccount: ParentAccountEntity? = null
     ): VirtualAccountEntity {
         return VirtualAccountEntity(
             id = id,
@@ -34,6 +36,7 @@ class VirtualAccountEntityFixture {
             serviceId = serviceId,
             cardConnectStatus = cardConnectStatus,
             cardSeBatchId = cardSeBatchId,
+            parentAccount = parentAccount ?: ParentAccountEntity(id = SecureRandom().nextLong(), parentAccountNo = generateUUID(14), bankCode = bankCode)
         )
     }
 

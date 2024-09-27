@@ -1,5 +1,6 @@
 package com.konai.vam.api.v1.virtualaccount.service.domain
 
+import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccount
 import com.konai.vam.core.common.error.ErrorCode
 import com.konai.vam.core.common.error.exception.InternalServiceException
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus
@@ -20,8 +21,14 @@ data class VirtualAccount(
     var cardConnected: LocalDateTime? = null,
     val cardDisconnected: LocalDateTime? = null,
     var cardSeBatchId: String? = null,
-    val parentAccountNo: String? = null,
+    val parentAccountId: Long? = null,
 ) {
+    private lateinit var parentAccount: ParentAccount
+    fun getParentAccount(): ParentAccount = this.parentAccount
+    fun setParentAccount(function: () -> ParentAccount): VirtualAccount {
+        this.parentAccount = function()
+        return this
+    }
 
     fun connectedCard(
         par: String,

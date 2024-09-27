@@ -16,7 +16,7 @@ class VirtualAccountFindServiceTest : CustomBehaviorSpec({
     val virtualAccountMapper = virtualAccountMapper()
     val virtualAccountFindService = virtualAccountFindService()
 
-    given("요청 'accountNo', 'status', 'cardConnectStataus' 정보 기준 카드 연결된 가상 계좌 조회 요청하여") {
+    given("요청 'accountNo', 'status', 'cardConnectStatus' 정보 기준 카드 연결된 가상 계좌 조회 요청하여") {
         val accountNo = "1234567890"
         val status = ACTIVE
         val par = "par$accountNo"

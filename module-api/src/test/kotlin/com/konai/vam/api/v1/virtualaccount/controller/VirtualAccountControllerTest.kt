@@ -44,7 +44,8 @@ class VirtualAccountControllerTest(
             val request = CreateVirtualAccountRequest(
                 accountNo = "",
                 bankCode = "001",
-                connectType = FIXATION
+                connectType = FIXATION,
+                parentAccountId = 1
             )
 
             then("MethodArgumentNotValidException 예외 발생하여 실패한다") {
@@ -68,7 +69,8 @@ class VirtualAccountControllerTest(
         val request = CreateVirtualAccountRequest(
             accountNo = accountNumber,
             bankCode = bankCode,
-            connectType = FIXATION
+            connectType = FIXATION,
+            parentAccountId = 1
         )
 
         `when`("중복 계좌번호 & 은행코드 예외 발생하는 경우") {
@@ -89,9 +91,7 @@ class VirtualAccountControllerTest(
         }
 
         `when`("정상 가상 계좌 등록 정보인 경우") {
-            val domain = virtualAccountModelMapper.requestToDomain(request)
-
-            every { virtualAccountAdapter.create(any()) } returns domain
+            every { virtualAccountAdapter.create(any()) } returns virtualAccountFixture.make()
 
             then("DB 저장하여 정상 응답한다") {
                 mockMvc

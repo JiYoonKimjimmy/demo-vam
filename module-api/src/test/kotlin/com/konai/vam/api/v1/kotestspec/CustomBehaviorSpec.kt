@@ -46,10 +46,18 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val wooriBankTransactionMapper = WooriBankTransactionMapper()
 
-    private val virtualAccountEntityAdapter = VirtualAccountEntityAdapterFixture()
-    private val virtualAccountMapper = VirtualAccountMapper()
+    private val parentAccountMapper = ParentAccountMapper()
+    private val parentAccountEntityAdapter = ParentAccountEntityAdapterFixture()
 
-    private val virtualAccountService = VirtualAccountService(virtualAccountEntityAdapter, virtualAccountMapper)
+    private val parentAccountSaveService = ParentAccountSaveService(parentAccountMapper, parentAccountEntityAdapter)
+    private val parentAccountFindService = ParentAccountFindService(parentAccountMapper, parentAccountEntityAdapter)
+    private val parentAccountDeleteService = ParentAccountDeleteService(parentAccountEntityAdapter)
+    private val parentAccountManagementService = ParentAccountManagementService(parentAccountSaveService, parentAccountFindService, parentAccountDeleteService)
+
+    private val virtualAccountEntityAdapter = VirtualAccountEntityAdapterFixture()
+    private val virtualAccountMapper = VirtualAccountMapper(parentAccountMapper)
+
+    private val virtualAccountService = VirtualAccountService(virtualAccountMapper, virtualAccountEntityAdapter, parentAccountFindService)
     private val virtualAccountFindService = VirtualAccountFindService(virtualAccountEntityAdapter, virtualAccountMapper)
 
     private val virtualAccountBankEntityAdapter = VirtualAccountBankEntityAdapterFixture()
@@ -100,15 +108,6 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
     private val wooriBankMessageFixture = WooriBankMessageFixture()
     private val virtualAccountFixture = VirtualAccountFixture()
     private val virtualAccountEntityFixture = VirtualAccountEntityFixture()
-
-    private val parentAccountMapper = ParentAccountMapper()
-    private val parentAccountEntityAdapter = ParentAccountEntityAdapterFixture()
-
-    private val parentAccountSaveService = ParentAccountSaveService(parentAccountMapper, parentAccountEntityAdapter)
-    private val parentAccountFindService = ParentAccountFindService(parentAccountMapper, parentAccountEntityAdapter)
-    private val parentAccountDeleteService = ParentAccountDeleteService(parentAccountEntityAdapter)
-
-    private val parentAccountManagementService = ParentAccountManagementService(parentAccountSaveService, parentAccountFindService, parentAccountDeleteService)
 
     private val parentAccountEntityFixture = ParentAccountEntityFixture()
 

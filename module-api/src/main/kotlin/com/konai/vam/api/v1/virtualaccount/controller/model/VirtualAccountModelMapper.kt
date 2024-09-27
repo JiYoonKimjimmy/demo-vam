@@ -14,6 +14,7 @@ class VirtualAccountModelMapper {
             bankAccount = BankAccount(request.bankCode, request.accountNo),
             connectType = request.connectType,
             status = VirtualAccountStatus.ACTIVE,
+            parentAccountId = request.parentAccountId
         )
     }
 
@@ -39,7 +40,7 @@ class VirtualAccountModelMapper {
             connectType = domain.connectType,
             status = domain.status,
             par = domain.par,
-            parentAccountNo = domain.parentAccountNo
+            parentAccountNo = domain.getParentAccount().parentAccountNo
         )
     }
 

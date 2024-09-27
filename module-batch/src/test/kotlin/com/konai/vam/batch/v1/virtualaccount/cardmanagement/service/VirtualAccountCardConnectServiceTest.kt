@@ -1,5 +1,6 @@
 package com.konai.vam.batch.v1.virtualaccount.cardmanagement.service
 
+import com.konai.vam.api.v1.parentaccount.service.domain.ParentAccountMapper
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindService
 import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountSaveService
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
@@ -30,7 +31,8 @@ class VirtualAccountCardConnectServiceTest : BehaviorSpec({
     val virtualAccountEntityFixture = VirtualAccountEntityFixture()
     val virtualAccountBatchHistoryEntityFixture = VirtualAccountBatchHistoryEntityFixture()
 
-    val virtualAccountMapper = VirtualAccountMapper()
+    val parentAccountMapper = ParentAccountMapper()
+    val virtualAccountMapper = VirtualAccountMapper(parentAccountMapper)
     val virtualAccountEntityAdapter = mockk<VirtualAccountEntityAdapter>()
     val virtualAccountBatchHistoryMapper = VirtualAccountBatchHistoryMapper()
     val virtualAccountBatchHistoryEntityAdapter = mockk<VirtualAccountBatchHistoryEntityAdapter>()

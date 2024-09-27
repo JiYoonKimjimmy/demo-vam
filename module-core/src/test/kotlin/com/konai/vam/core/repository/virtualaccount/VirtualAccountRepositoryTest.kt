@@ -8,53 +8,72 @@ import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.CONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus.DISCONNECTED
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
 import com.konai.vam.core.enumerate.VirtualAccountStatus.ACTIVE
+import com.konai.vam.core.repository.parentaccount.ParentAccountJpaRepository
+import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
 import com.konai.vam.core.repository.virtualaccount.jdsl.VirtualAccountPredicate
-import fixtures.VirtualAccountEntityFixture
+import fixtures.ParentAccountEntityFixture
 import fixtures.TestExtensionFunctions.generateUUID
+import fixtures.VirtualAccountEntityFixture
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.assertThrows
+import io.kotest.matchers.collections.shouldHaveAtLeastSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import java.security.SecureRandom
 import java.util.*
 
 @CustomDataJpaTest
 class VirtualAccountRepositoryTest(
-    private val virtualAccountJpaRepository: VirtualAccountJpaRepository
+    private val virtualAccountJpaRepository: VirtualAccountJpaRepository,
+    private val parentAccountJpaRepository: ParentAccountJpaRepository
 ) : StringSpec({
 
     val virtualAccountRepository = VirtualAccountRepository(virtualAccountJpaRepository)
     val virtualAccountEntityFixture = VirtualAccountEntityFixture()
-    lateinit var saved: VirtualAccountEntity
+    val parentAccountEntityFixture = ParentAccountEntityFixture()
+
+    lateinit var saveVirtualAccount: VirtualAccountEntity
+    lateinit var saveParentAccount: ParentAccountEntity
+
+    val saveVirtualAccountProc: (() -> VirtualAccountEntity) -> Unit = {
+        virtualAccountJpaRepository.save(it())
+    }
 
     beforeTest {
-        val accountNo = generateUUID()
-        val entity = virtualAccountEntityFixture.make(accountNo = accountNo)
-        saved = virtualAccountRepository.save(entity)
+        val bankCode = "123"
+        val parentAccount = parentAccountEntityFixture.make(parentAccountNo = generateUUID(), bankCode = bankCode)
+        saveParentAccount = parentAccountJpaRepository.save(parentAccount)
+
+        val virtualAccount = virtualAccountEntityFixture.make(accountNo = generateUUID(), bankCode = bankCode, parentAccount = saveParentAccount)
+        saveVirtualAccount = virtualAccountRepository.save(virtualAccount)
     }
 
     "가상 계좌 단건 entity 생성하여 저장 성공한다" {
         // given
         val accountNo = generateUUID()
-        val entity = virtualAccountEntityFixture.make(accountNo = accountNo)
+        val entity = virtualAccountEntityFixture.make(accountNo = accountNo, parentAccount = saveParentAccount)
 
         // when
         val result = virtualAccountRepository.save(entity)
 
         // then
-        assertThat(result.id).isNotNull()
-        assertThat(result.accountNo).isEqualTo(entity.accountNo)
+        result.id shouldNotBe null
+        result.accountNo shouldBe entity.accountNo
+        result.parentAccount.parentAccountNo shouldBe saveParentAccount.parentAccountNo
     }
 
     "가상 계좌 단건 entity 조회 성공한다" {
         // given
-        val accountId = saved.id!!
+        val accountId = saveVirtualAccount.id!!
 
         // when
         val result = virtualAccountRepository.findById(accountId)
 
         // then
-        assertThat(result.id).isEqualTo(accountId)
+        result.id shouldBe accountId
+        result.accountNo shouldBe saveVirtualAccount.accountNo
+        result.parentAccount.parentAccountNo shouldBe saveParentAccount.parentAccountNo
     }
 
     "가상 계좌 단건 entity 조회없어 ResourceNotFoundException 예외 발생하여 실패한다" {
@@ -62,10 +81,10 @@ class VirtualAccountRepositoryTest(
         val id = SecureRandom().nextLong()
 
         // when
-        val exception = assertThrows<ResourceNotFoundException> { virtualAccountRepository.findById(id) }
+        val exception = shouldThrow<ResourceNotFoundException> { virtualAccountRepository.findById(id) }
 
         // then
-        assertThat(exception.errorCode).isEqualTo(ErrorCode.VIRTUAL_ACCOUNT_NOT_FOUND)
+        exception.errorCode shouldBe ErrorCode.VIRTUAL_ACCOUNT_NOT_FOUND
     }
 
     "가상 계좌 단건 entity 조회없어 새로운 entity 반환하고 성공한다" {
@@ -82,8 +101,8 @@ class VirtualAccountRepositoryTest(
         val result = virtualAccountRepository.findById(id, afterProc)
 
         // then
-        assertThat(result).isNotNull()
-        assertThat(result.id).isEqualTo(id)
+        result shouldNotBe null
+        result.id shouldBe id
     }
 
     "요청 'accountNo' 와 일치한 가상 계좌 다건 조회 성공한다" {
@@ -91,15 +110,15 @@ class VirtualAccountRepositoryTest(
         val number = 0
         val size = 1
         val pageableRequest = PageableRequest(number, size)
-        val predicate = VirtualAccountPredicate(accountNo = saved.accountNo, bankCode = saved.bankCode)
+        val predicate = VirtualAccountPredicate(accountNo = saveVirtualAccount.accountNo, bankCode = saveVirtualAccount.bankCode)
 
         // when
         val result = virtualAccountRepository.findAllByPredicate(predicate, pageableRequest)
 
         // then
-        assertThat(result.pageable.numberOfElements).isEqualTo(size)
-        assertThat(result.content.size).isEqualTo(size)
-        assertThat(result.content.first()?.id).isEqualTo(saved.id)
+        result.pageable.numberOfElements shouldBe size
+        result.content.size shouldBe size
+        result.content.first()?.id shouldBe saveVirtualAccount.id
     }
 
     "요청 'accountNo', 'status', 'cardConnectStatus' 와 일치한 가상 계좌 단건 조회 성공한다" {
@@ -108,49 +127,52 @@ class VirtualAccountRepositoryTest(
         val status = ACTIVE
         val cardConnectStatus = CONNECTED
         val predicate = VirtualAccountPredicate(accountNo = accountNo, status = status, cardConnectStatus = cardConnectStatus)
-        virtualAccountEntityFixture.make(accountNo = accountNo, status = status, cardConnectStatus = cardConnectStatus).let(virtualAccountRepository::save)
+
+        saveVirtualAccountProc {
+            virtualAccountEntityFixture.make(accountNo = accountNo, status = status, cardConnectStatus = cardConnectStatus, parentAccount = saveParentAccount)
+        }
 
         // when
-        val result = virtualAccountRepository.findByPredicate(predicate)
+        val result = virtualAccountRepository.findByPredicate(predicate).orElse(null)
 
         // then
-        val entity = result.orElse(null)
-        assertThat(entity).isNotNull()
-        assertThat(entity.accountNo).isEqualTo(accountNo)
-        assertThat(entity.status).isEqualTo(status)
-        assertThat(entity.cardConnectStatus).isEqualTo(cardConnectStatus)
+        result shouldNotBe null
+        result.accountNo shouldBe accountNo
+        result.status shouldBe status
+        result.cardConnectStatus shouldBe cardConnectStatus
     }
 
     "요청 Par 가 이미 가상계좌매핑에 사용되었으면 true 정상 확인한다" {
         // given
-        val entity = virtualAccountEntityFixture.make(accountNo =  generateUUID(), par = "par")
-        virtualAccountRepository.save(entity)
+        saveVirtualAccountProc {
+            virtualAccountEntityFixture.make(accountNo =  generateUUID(), par = "par", parentAccount = saveParentAccount)
+        }
 
         // when
         val result = virtualAccountJpaRepository.existsByParIn(listOf("par"))
 
         // then
-        // 결과가 2건이다.
-        assertThat(result).isTrue()
+        result shouldBe true
     }
 
     "Par 매핑이 이뤄지지 않은 가상계좌가 한 건 이상이다" {
-        // given : 매핑이 이뤄지지 않은 가상 계좌를 생성한다.
-        val accountNo =  generateUUID()
-        val entity = virtualAccountEntityFixture.make(accountNo =  accountNo, cardConnectStatus = DISCONNECTED, cardSeBatchId = "batchId")
-        virtualAccountRepository.save(entity)
-
-        // when : 매핑이 이뤄지지 않은 가상계좌를 조회한다.
+        // given
         val predicate = VirtualAccountPredicate(
             status = ACTIVE,
             connectType = FIXATION,
             cardConnectStatus = DISCONNECTED,
         )
+
+        saveVirtualAccountProc {
+            virtualAccountEntityFixture.make(accountNo =  generateUUID(), cardConnectStatus = DISCONNECTED, cardSeBatchId = "batchId", parentAccount = saveParentAccount)
+        }
+
+        // when
         val result = virtualAccountRepository.findAllByPredicate(predicate, PageableRequest(number = 0, size = 10))
 
         // then
-        assertThat(result).isNotNull
-        assertThat(result.content.size).isGreaterThanOrEqualTo(1)
+        result shouldNotBe null
+        result.content shouldHaveAtLeastSize 1
     }
 
     "가상 계좌 동일한 'batchId' & 'connectStatus' 존재 여부 확인하여 'true' 정상 확인한다" {
@@ -158,14 +180,16 @@ class VirtualAccountRepositoryTest(
         val accountNo =  generateUUID()
         val connectStatus = CONNECTED
         val cardSeBatchId = "batchId"
-        val entity = virtualAccountEntityFixture.make(accountNo = accountNo, cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId)
-        virtualAccountRepository.save(entity)
+
+        saveVirtualAccountProc {
+            virtualAccountEntityFixture.make(accountNo = accountNo, cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId, parentAccount = saveParentAccount)
+        }
 
         // when
         val result = virtualAccountRepository.existsByConnectStatusAndBatchId(connectStatus, cardSeBatchId)
 
         // then
-        assertThat(result).isTrue()
+        result shouldBe true
     }
 
     "가상 계좌 동일한 'batchId' & 'connectStatus' 존재 여부 확인하여 'false' 정상 확인한다" {
@@ -173,13 +197,15 @@ class VirtualAccountRepositoryTest(
         val accountNo =  generateUUID()
         val connectStatus = CONNECTED
         val cardSeBatchId = "batchId"
-        virtualAccountRepository.save(virtualAccountEntityFixture.make(accountNo = accountNo, cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId))
 
+        saveVirtualAccountProc {
+            virtualAccountEntityFixture.make(accountNo = accountNo, cardConnectStatus = connectStatus, cardSeBatchId = cardSeBatchId, parentAccount = saveParentAccount)
+        }
         // when
         val result = virtualAccountRepository.existsByConnectStatusAndBatchId(connectStatus, "$cardSeBatchId-TEST")
 
         // then
-        assertThat(result).isFalse()
+        result shouldBe false
     }
 
 })

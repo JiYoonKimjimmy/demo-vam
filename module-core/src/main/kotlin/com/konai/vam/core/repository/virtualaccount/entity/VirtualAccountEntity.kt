@@ -5,6 +5,7 @@ import com.konai.vam.core.common.entity.BaseEntity
 import com.konai.vam.core.enumerate.VirtualAccountCardConnectStatus
 import com.konai.vam.core.enumerate.VirtualAccountConnectType
 import com.konai.vam.core.enumerate.VirtualAccountStatus
+import com.konai.vam.core.repository.parentaccount.entity.ParentAccountEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -52,8 +53,8 @@ class VirtualAccountEntity(
     @Column(name = "CRD_ISU_BAT_ID")
     val cardSeBatchId: String? = null,
 
-    @Convert(converter = EncryptionCustomerInfoConverter::class)
-    @Column(name = "ENC_MACN_NO")
-    val parentAccountNo: String? = null
+    @JoinColumn(name = "VAM_MACN_LIST_SNO")
+    @ManyToOne(fetch = FetchType.EAGER)
+    val parentAccount: ParentAccountEntity
 
 ) : BaseEntity()
