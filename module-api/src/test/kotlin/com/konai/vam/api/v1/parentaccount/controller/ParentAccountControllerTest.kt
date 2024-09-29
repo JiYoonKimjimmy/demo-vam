@@ -71,7 +71,7 @@ class ParentAccountControllerTest(
                         status { isBadRequest() }
                         content {
                             jsonPath("result.code", equalTo("218_3000_024"))
-                            jsonPath("result.message", equalTo("Parent Account Service. Parent account is duplicated."))
+                            jsonPath("result.message", equalTo("Parent Account Service Failed. Parent account is duplicated."))
                         }
                     }
             }
@@ -250,7 +250,7 @@ class ParentAccountControllerTest(
                         status { isNotFound() }
                         content {
                             jsonPath("result.code", equalTo("218_3000_023"))
-                            jsonPath("result.message", equalTo("Parent Account Service. Parent account not found."))
+                            jsonPath("result.message", equalTo("Parent Account Service Failed. Parent account not found."))
                         }
                     }
             }
@@ -277,7 +277,7 @@ class ParentAccountControllerTest(
                         status { isBadRequest() }
                         content {
                             jsonPath("result.code", equalTo("218_3000_024"))
-                            jsonPath("result.message", equalTo("Parent Account Service. Parent account is duplicated."))
+                            jsonPath("result.message", equalTo("Parent Account Service Failed. Parent account is duplicated."))
                         }
                     }
             }
@@ -324,7 +324,7 @@ class ParentAccountControllerTest(
                         status { isNotFound() }
                         content {
                             jsonPath("result.code", equalTo("218_3000_023"))
-                            jsonPath("result.message", equalTo("Parent Account Service. Parent account not found."))
+                            jsonPath("result.message", equalTo("Parent Account Service Failed. Parent account not found."))
                         }
                     }
             }
