@@ -10,7 +10,11 @@ import fixtures.TestExtensionFunctions.generateUUID
 
 class VirtualAccountFixture {
 
-    fun make(id: Long? = null, bankAccount: BankAccount = BankAccount("020", "1234567890")): VirtualAccount {
+    fun make(
+        id: Long? = null,
+        bankAccount: BankAccount = BankAccount("020", "1234567890"),
+        parentAccount: ParentAccount = ParentAccount(id, generateUUID(), bankAccount.bankCode)
+    ): VirtualAccount {
         return VirtualAccount(
                 id = id,
                 bankAccount = bankAccount,
@@ -21,7 +25,7 @@ class VirtualAccountFixture {
                 cardConnectStatus = DISCONNECTED,
                 cardSeBatchId = "batchId",
             )
-            .setParentAccount { ParentAccount(id, generateUUID(), bankAccount.bankCode) }
+            .setParentAccount { parentAccount }
     }
 
 }

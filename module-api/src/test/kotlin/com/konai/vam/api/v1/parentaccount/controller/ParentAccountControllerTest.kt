@@ -65,7 +65,7 @@ class ParentAccountControllerTest(
                 }
                 .andDo { print() }
 
-            then("'[218_3000_024] Parent Account Service. Parent account is duplicated.' 실패 결과 정상 확인한다") {
+            then("'[218_3000_024] Parent Account Service Failed. Parent account is duplicated.' 실패 결과 정상 확인한다") {
                 result
                     .andExpect {
                         status { isBadRequest() }
@@ -143,7 +143,7 @@ class ParentAccountControllerTest(
                     .andExpect {
                         status { isOk() }
                         content {
-                            jsonPath("content", hasSize<Any>(2))
+                            jsonPath("content", hasSize<Any>(greaterThan(2)))
                         }
                     }
             }
@@ -244,7 +244,7 @@ class ParentAccountControllerTest(
                 }
                 .andDo { print() }
 
-            then("'[218_3000_023] Parent Account Service. Parent account not found.' 실패 결과 정상 확인한다") {
+            then("'[218_3000_023] Parent Account Service Failed. Parent account not found.' 실패 결과 정상 확인한다") {
                 result
                     .andExpect {
                         status { isNotFound() }
@@ -271,7 +271,7 @@ class ParentAccountControllerTest(
                 }
                 .andDo { print() }
 
-            then("'[218_3000_024] Parent Account Service. Parent account is duplicated.' 실패 결과 정상 확인한다") {
+            then("'[218_3000_024] Parent Account Service Failed. Parent account is duplicated.' 실패 결과 정상 확인한다") {
                 result
                     .andExpect {
                         status { isBadRequest() }
@@ -318,7 +318,7 @@ class ParentAccountControllerTest(
                 .delete("$deleteParentAccountUrl/$parentAccountId")
                 .andDo { print() }
 
-            then("'[218_3000_023] Parent Account Service. Parent account not found.' 실패 결과 정상 확인한다") {
+            then("'[218_3000_023] Parent Account Service Failed. Parent account not found.' 실패 결과 정상 확인한다") {
                 result
                     .andExpect {
                         status { isNotFound() }

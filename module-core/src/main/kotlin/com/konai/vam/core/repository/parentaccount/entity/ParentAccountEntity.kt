@@ -1,6 +1,7 @@
 package com.konai.vam.core.repository.parentaccount.entity
 
 import com.konai.vam.core.common.converter.EncryptionCustomerInfoConverter
+import com.konai.vam.core.common.entity.BaseEntity
 import jakarta.persistence.*
 
 @Table(name = "VAM_MACN_LIST")
@@ -20,4 +21,4 @@ class ParentAccountEntity(
     @Column(name = "BANK_CD")
     val bankCode: String
 
-)
+) : BaseEntity()

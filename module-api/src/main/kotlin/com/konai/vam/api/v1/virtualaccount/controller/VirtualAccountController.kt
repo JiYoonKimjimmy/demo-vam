@@ -30,7 +30,8 @@ class VirtualAccountController(
 
     @PostMapping("/one")
     fun findOne(@RequestBody @Valid request: FindOneVirtualAccountRequest): ResponseEntity<FindOneVirtualAccountResponse> {
-        return virtualAccountModelMapper.requestToPredicate(request)
+        return request.validation()
+            .let { virtualAccountModelMapper.requestToPredicate(request) }
             .let { virtualAccountFindAdapter.findByPredicate(it) }
             .let { virtualAccountModelMapper.domainToModel(it) }
             .let { FindOneVirtualAccountResponse(it) }

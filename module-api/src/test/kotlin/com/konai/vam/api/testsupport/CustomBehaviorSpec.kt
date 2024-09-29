@@ -60,7 +60,7 @@ abstract class BaseBehaviorSpec : BehaviorSpec() {
 
     private val virtualAccountSaveService = VirtualAccountSaveService(virtualAccountMapper, virtualAccountEntityAdapter)
     private val virtualAccountFindService = VirtualAccountFindService(virtualAccountMapper, virtualAccountEntityAdapter)
-    private val virtualAccountManageService = VirtualAccountManageService(virtualAccountMapper, virtualAccountEntityAdapter, parentAccountFindService)
+    private val virtualAccountManageService = VirtualAccountManageService(virtualAccountSaveService, parentAccountFindService)
 
     private val virtualAccountBankEntityAdapter = VirtualAccountBankEntityAdapterFixture()
     private val virtualAccountBankMapper = VirtualAccountBankMapper()

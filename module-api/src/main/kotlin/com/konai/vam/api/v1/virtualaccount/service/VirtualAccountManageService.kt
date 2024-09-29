@@ -9,17 +9,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class VirtualAccountManageService(
-    private val virtualAccountMapper: VirtualAccountMapper,
-    private val virtualAccountEntityAdapter: VirtualAccountEntityAdapter,
+    private val virtualAccountSaveAdapter: VirtualAccountSaveAdapter,
     private val parentAccountFindAdapter: ParentAccountFindAdapter
 ) : VirtualAccountManageAdapter {
 
     override fun create(domain: VirtualAccount): VirtualAccount {
         return domain
             .setParentAccount { parentAccountFindAdapter.findOne(ParentAccountPredicate(id = domain.parentAccountId)) }
-            .let { virtualAccountMapper.domainToEntity(it) }
-            .let { virtualAccountEntityAdapter.save(it) }
-            .let { virtualAccountMapper.entityToDomain(it) }
+            .let { virtualAccountSaveAdapter.save(it) }
     }
 
 }

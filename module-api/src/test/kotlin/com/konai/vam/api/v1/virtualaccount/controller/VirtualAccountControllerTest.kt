@@ -1,157 +1,271 @@
 package com.konai.vam.api.v1.virtualaccount.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.konai.vam.api.testsupport.CustomBehaviorSpec
 import com.konai.vam.api.testsupport.CustomMockMvcTest
 import com.konai.vam.api.v1.virtualaccount.controller.model.CreateVirtualAccountRequest
 import com.konai.vam.api.v1.virtualaccount.controller.model.FindAllVirtualAccountRequest
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountFindAdapter
-import com.konai.vam.api.v1.virtualaccount.service.VirtualAccountManageAdapter
-import com.konai.vam.core.common.enumerate.ResultStatus
-import com.konai.vam.core.common.error.ErrorCode
-import com.konai.vam.core.common.error.exception.InternalServiceException
-import com.konai.vam.core.common.model.BasePageable
-import com.konai.vam.core.common.model.PageableRequest
+import com.konai.vam.api.v1.virtualaccount.controller.model.FindOneVirtualAccountRequest
+import com.konai.vam.core.common.EMPTY
 import com.konai.vam.core.enumerate.VirtualAccountConnectType.FIXATION
-import com.ninjasquad.springmockk.MockkBean
-import fixtures.VirtualAccountFixture
-import io.kotest.core.spec.style.BehaviorSpec
-import io.mockk.every
-import org.springframework.beans.factory.annotation.Autowired
+import com.konai.vam.core.repository.parentaccount.ParentAccountEntityAdapter
+import com.konai.vam.core.repository.virtualaccount.VirtualAccountEntityAdapter
+import com.konai.vam.core.repository.virtualaccount.entity.VirtualAccountEntity
+import fixtures.TestExtensionFunctions.generateUUID
+import org.hamcrest.Matchers.*
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.post
 
 @CustomMockMvcTest
 class VirtualAccountControllerTest(
+    private val mockMvc: MockMvc,
+    private val virtualAccountEntityAdapter: VirtualAccountEntityAdapter,
+    private val parentAccountEntityAdapter: ParentAccountEntityAdapter
+) : CustomBehaviorSpec({
 
-    @Autowired private val mockMvc: MockMvc,
+    val createVirtualAccountUrl = "/api/v1/virtual-account"
+    val findOneVirtualAccountUrl = "/api/v1/virtual-account/one"
+    val findAllVirtualAccountUrl = "/api/v1/virtual-account/all"
 
-    @MockkBean private val virtualAccountManageAdapter: VirtualAccountManageAdapter,
-    @MockkBean private val virtualAccountFindAdapter: VirtualAccountFindAdapter
+    val objectMapper = jacksonObjectMapper()
 
-) : BehaviorSpec({
+    val virtualAccountEntityFixture = virtualAccountEntityFixture()
+    val parentAccountEntityFixture = parentAccountEntityFixture()
+    lateinit var saved: VirtualAccountEntity
 
-    val virtualAccountFixture = VirtualAccountFixture()
+    beforeSpec {
+        val accountNo = generateUUID()
+        val bankCode = "123"
+        val parentAccount = parentAccountEntityFixture.make(null, generateUUID(), bankCode)
+        parentAccountEntityAdapter.save(parentAccount)
+        val virtualAccount = virtualAccountEntityFixture.make(accountNo = accountNo, bankCode = bankCode, parentAccount = parentAccount)
+        saved = virtualAccountEntityAdapter.save(virtualAccount)
+    }
 
-    given("가상 계좌 등록 요청하였지만") {
-        `when`("계좌 번호 요청 정보가 없는 경우") {
+    given("가상 계좌 등록 API 요청되어") {
+        `when`("가상 계좌 번호 요청 정보가 없는 경우") {
             val request = CreateVirtualAccountRequest(
-                accountNo = "",
-                bankCode = "001",
+                accountNo = EMPTY,
+                bankCode = "123",
                 connectType = FIXATION,
                 parentAccountId = 1
             )
 
-            then("MethodArgumentNotValidException 예외 발생하여 실패한다") {
-                mockMvc
-                    .perform(
-                        post("/api/v1/virtual-account")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(jacksonObjectMapper().writeValueAsString(request))
-                    )
-                    .andDo(print())
-                    .andExpect(status().isBadRequest)
-                    .andExpect(jsonPath("result.status").value(ResultStatus.FAILED.name))
-                    .andExpect(jsonPath("result.code").value("218_1000_901"))
+            val result = mockMvc
+                .post(createVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_1000_901] Virtual Account Service Failed. Argument not valid.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isBadRequest() }
+                        content {
+                            jsonPath("result.code", equalTo("218_1000_901"))
+                            jsonPath("result.message", equalTo("Virtual Account Service Failed. Argument not valid."))
+                        }
+                    }
+            }
+        }
+
+        `when`("'parentAccountId' 기준 모계좌 정보가 없는 요청인 경우") {
+            val request = CreateVirtualAccountRequest(
+                accountNo = generateUUID(),
+                bankCode = "123",
+                connectType = FIXATION,
+                parentAccountId = 1
+            )
+
+            val result = mockMvc
+                .post(createVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_1000_023] Virtual Account Service Failed. Parent account not found.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isNotFound() }
+                        content {
+                            jsonPath("result.code", equalTo("218_1000_023"))
+                            jsonPath("result.message", equalTo("Virtual Account Service Failed. Parent account not found."))
+                        }
+                    }
+            }
+        }
+
+        `when`("'accountNo' & 'bankCode' 중복 등록 요청인 경우") {
+            val request = CreateVirtualAccountRequest(
+                accountNo = saved.accountNo,
+                bankCode = saved.bankCode,
+                connectType = FIXATION,
+                parentAccountId = saved.parentAccount.id!!
+            )
+
+            val result = mockMvc
+                .post(createVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_1000_025] Virtual Account Service Failed. Virtual account is duplicated.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isBadRequest() }
+                        content {
+                            jsonPath("result.code", equalTo("218_1000_025"))
+                            jsonPath("result.message", equalTo("Virtual Account Service Failed. Virtual account is duplicated."))
+                        }
+                    }
+            }
+        }
+
+        `when`("정상 신규 등록 요청인 경우") {
+            val accountNo = generateUUID()
+            val request = CreateVirtualAccountRequest(
+                accountNo = accountNo,
+                bankCode = saved.bankCode,
+                connectType = FIXATION,
+                parentAccountId = saved.parentAccount.id!!
+            )
+
+            val result = mockMvc
+                .post(createVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("성공 응답 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isCreated() }
+                        content {
+                            jsonPath("data.accountNo", equalTo(accountNo))
+                            jsonPath("data.bankCode", equalTo(saved.bankCode))
+                            jsonPath("data.parentAccountNo", equalTo(saved.parentAccount.parentAccountNo))
+                        }
+                    }
             }
         }
     }
 
-    given("가상 계좌 등록 요청하면") {
-        val accountNumber = "accountNumber001"
-        val bankCode = "001"
-        val request = CreateVirtualAccountRequest(
-            accountNo = accountNumber,
-            bankCode = bankCode,
-            connectType = FIXATION,
-            parentAccountId = 1
-        )
+    given("가상 계좌 단건 조회 API 요청되어") {
 
-        `when`("중복 계좌번호 & 은행코드 예외 발생하는 경우") {
-            every { virtualAccountManageAdapter.create(any()) } throws InternalServiceException(ErrorCode.INTERNAL_SERVER_ERROR)
+        `when`("요청 정보 없는 경우") {
+            val request = FindOneVirtualAccountRequest()
 
-            then("InternalServerException 예외 발생하여 실패한다") {
-                mockMvc
-                    .perform(
-                        post("/api/v1/virtual-account")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(jacksonObjectMapper().writeValueAsString(request))
-                    )
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError)
-                    .andExpect(jsonPath("result.status").value(ResultStatus.FAILED.name))
-                    .andExpect(jsonPath("result.code").value("218_1000_900"))
+            val result = mockMvc
+                .post(findOneVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_1000_901] Virtual Account Service Failed. Argument not valid.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isBadRequest() }
+                        content {
+                            jsonPath("result.code", equalTo("218_1000_901"))
+                            jsonPath("result.message", equalTo("Virtual Account Service Failed. Argument not valid."))
+                        }
+                    }
             }
         }
 
-        `when`("정상 가상 계좌 등록 정보인 경우") {
-            every { virtualAccountManageAdapter.create(any()) } returns virtualAccountFixture.make()
+        `when`("'accountNo' 요청 정보 기준 일치한 정보 없는 경우") {
+            val request = FindOneVirtualAccountRequest(accountNo = "1234567890")
 
-            then("DB 저장하여 정상 응답한다") {
-                mockMvc
-                    .perform(
-                        post("/api/v1/virtual-account")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(jacksonObjectMapper().writeValueAsString(request))
-                    )
-                    .andDo(print())
-                    .andExpect(status().isCreated)
-                    .andExpect(jsonPath("result.code").isEmpty)
-                    .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
+            val result = mockMvc
+                .post(findOneVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_1000_001] Virtual Account Service Failed. Virtual account not found.' 실패 결과 응답 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isNotFound() }
+                        content {
+                            jsonPath("result.code", equalTo("218_1000_001"))
+                            jsonPath("result.message", equalTo("Virtual Account Service Failed. Virtual account not found."))
+                        }
+                    }
+            }
+        }
+
+        `when`("'accountNo' 요청 정보 기준 일치한 정보 있는 경우") {
+            val request = FindOneVirtualAccountRequest(accountNo = saved.accountNo)
+
+            val result = mockMvc
+                .post(findOneVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("성공 응답 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isOk() }
+                        content {
+                            jsonPath("data.accountNo", equalTo(saved.accountNo))
+                            jsonPath("data.bankCode", equalTo(saved.bankCode))
+                            jsonPath("data.parentAccountNo", equalTo(saved.parentAccount.parentAccountNo))
+                        }
+                    }
             }
         }
     }
 
-    given("가상 계좌 다건 조회 1건 요청하면") {
-        val number = 0
-        val size = 1
+    given("가상 계좌 다건 조회 API 요청되어") {
 
-        `when`("'accountNo' 일치한 가상 계좌 목록 조회인 경우") {
-            val accountNumber = "1234567890"
-            val request = FindAllVirtualAccountRequest(accountNo = accountNumber, pageable = PageableRequest(number, size))
+        `when`("'accountNo' 요청 정보와 일치한 정보가 없는 경우") {
+            val request = FindAllVirtualAccountRequest(accountNo = "1234567890")
 
-            val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(virtualAccountFixture.make())
-            every { virtualAccountFindAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, content)
+            val result = mockMvc
+                .post(findAllVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
 
-            then("1건 조회하여 정상 응답한다") {
-                mockMvc
-                    .perform(
-                        post("/api/v1/virtual-account/all")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(jacksonObjectMapper().writeValueAsString(request))
-                    )
-                    .andDo(print())
-                    .andExpect(status().isOk)
-                    .andExpect(jsonPath("result.code").isEmpty)
-                    .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
-                    .andExpect(jsonPath("pageable.numberOfElements").value(size))
-                    .andExpect(jsonPath("content[0].accountNo").value(accountNumber))
+            then("'0' 건 응답 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isOk() }
+                        content {
+                            jsonPath("content", empty<Any>())
+                        }
+                    }
             }
         }
 
-        `when`("정상 목록 조회인 경우") {
-            val request = FindAllVirtualAccountRequest(pageable = PageableRequest(number, size))
+        `when`("'accountNo' 요청 정보와 일치한 정보 '1' 건 있는 경우") {
+            val request = FindAllVirtualAccountRequest(accountNo = saved.accountNo)
 
-            val pageable = BasePageable.Pageable(numberOfElements = size)
-            val content = listOf(virtualAccountFixture.make())
-            every { virtualAccountFindAdapter.findAllByPredicate(any(), any()) } returns BasePageable(pageable, content)
+            val result = mockMvc
+                .post(findAllVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
 
-            then("조회 결과 정상 응답한다") {
-                mockMvc
-                    .perform(
-                        post("/api/v1/virtual-account/all")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(jacksonObjectMapper().writeValueAsString(request))
-                    )
-                    .andDo(print())
-                    .andExpect(status().isOk)
-                    .andExpect(jsonPath("result.code").isEmpty)
-                    .andExpect(jsonPath("result.status").value(ResultStatus.SUCCESS.name))
-                    .andExpect(jsonPath("pageable.numberOfElements").value(size))
+            then("'1' 건 응답 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isOk() }
+                        content {
+                            jsonPath("content", hasSize<Any>(1))
+                        }
+                    }
             }
         }
     }
