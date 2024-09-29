@@ -2,9 +2,7 @@ package com.konai.vam.api.v1.virtualaccount.service
 
 import com.konai.vam.api.v1.parentaccount.service.ParentAccountFindAdapter
 import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccount
-import com.konai.vam.api.v1.virtualaccount.service.domain.VirtualAccountMapper
 import com.konai.vam.core.repository.parentaccount.jdsl.ParentAccountPredicate
-import com.konai.vam.core.repository.virtualaccount.VirtualAccountEntityAdapter
 import org.springframework.stereotype.Service
 
 @Service
