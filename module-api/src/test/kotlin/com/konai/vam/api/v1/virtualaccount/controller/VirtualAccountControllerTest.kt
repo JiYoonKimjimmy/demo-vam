@@ -157,7 +157,7 @@ class VirtualAccountControllerTest(
 
     given("가상 계좌 단건 조회 API 요청되어") {
 
-        `when`("요청 정보 없는 경우") {
+        `when`("요청 정보 모두 없는 경우") {
             val request = FindOneVirtualAccountRequest()
 
             val result = mockMvc
@@ -179,8 +179,52 @@ class VirtualAccountControllerTest(
             }
         }
 
-        `when`("'accountNo' 요청 정보 기준 일치한 정보 없는 경우") {
+        `when`("'accountNo' 요청 정보 있지만, 'bankCode' 요청 정보 없는 경우") {
             val request = FindOneVirtualAccountRequest(accountNo = "1234567890")
+
+            val result = mockMvc
+                .post(findOneVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_1000_901] Virtual Account Service Failed. Argument not valid.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isBadRequest() }
+                        content {
+                            jsonPath("result.code", equalTo("218_1000_901"))
+                            jsonPath("result.message", equalTo("Virtual Account Service Failed. Argument not valid."))
+                        }
+                    }
+            }
+        }
+
+        `when`("'bankCode' 요청 정보 있지만, 'accountNo' 요청 정보 없는 경우") {
+            val request = FindOneVirtualAccountRequest(bankCode = "123")
+
+            val result = mockMvc
+                .post(findOneVirtualAccountUrl) {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(request)
+                }
+                .andDo { print() }
+
+            then("'[218_1000_901] Virtual Account Service Failed. Argument not valid.' 실패 결과 정상 확인한다") {
+                result
+                    .andExpect {
+                        status { isBadRequest() }
+                        content {
+                            jsonPath("result.code", equalTo("218_1000_901"))
+                            jsonPath("result.message", equalTo("Virtual Account Service Failed. Argument not valid."))
+                        }
+                    }
+            }
+        }
+
+        `when`("'accountNo' 요청 정보 기준 일치한 정보 없는 경우") {
+            val request = FindOneVirtualAccountRequest(accountNo = "1234567890", bankCode = "123")
 
             val result = mockMvc
                 .post(findOneVirtualAccountUrl) {
@@ -202,7 +246,7 @@ class VirtualAccountControllerTest(
         }
 
         `when`("'accountNo' 요청 정보 기준 일치한 정보 있는 경우") {
-            val request = FindOneVirtualAccountRequest(accountNo = saved.accountNo)
+            val request = FindOneVirtualAccountRequest(accountNo = saved.accountNo, bankCode = saved.bankCode)
 
             val result = mockMvc
                 .post(findOneVirtualAccountUrl) {
