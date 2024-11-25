@@ -11,7 +11,7 @@ class ParentAccountEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VAM_MACN_LIST_SNO_SEQ")
     @SequenceGenerator(name = "VAM_MACN_LIST_SNO_SEQ", sequenceName = "VAM_MACN_LIST_SNO_SEQ", allocationSize = 1)
-    @Column(name = "VAM_MACN_LIST_SNO")
+    @Column(name = "MACN_LIST_SNO")
     var id: Long? = null,
 
     @Convert(converter = EncryptionCustomerInfoConverter::class)

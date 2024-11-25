@@ -9,9 +9,9 @@ import jakarta.persistence.*
 class SequenceGeneratorEntity(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SNO_CRE_LIST_SNO_SEQ")
-    @SequenceGenerator(name = "SNO_CRE_LIST_SNO_SEQ", sequenceName = "SNO_CRE_LIST_SNO_SEQ", allocationSize = 1)
-    @Column(name = "VAM_SNO_CRE_LIST_SNO")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VAM_SNO_SEQ")
+    @SequenceGenerator(name = "VAM_SNO_SEQ", sequenceName = "VAM_SNO_SEQ", allocationSize = 1)
+    @Column(name = "VAM_SNO")
     val id: Long? = null,
 
     @Enumerated(EnumType.STRING)

@@ -53,7 +53,7 @@ class VirtualAccountEntity(
     @Column(name = "CRD_ISU_BAT_ID")
     val cardSeBatchId: String? = null,
 
-    @JoinColumn(name = "VAM_MACN_LIST_SNO")
+    @JoinColumn(name = "MACN_LIST_SNO")
     @ManyToOne(fetch = FetchType.EAGER)
     val parentAccount: ParentAccountEntity
 
